@@ -1,9 +1,12 @@
 import os
 from elevenlabs.client import AsyncElevenLabs
+from dotenv import load_dotenv
 
 class Config:
     
     # ------------- API KEYS (CONSTANTS) ------------- #
+
+    load_dotenv()  # Load environment variables from .env file
 
     AZURE_TTS_KEY = os.getenv("AZURE_TTS_KEY")
     AZURE_TTS_REGION = os.getenv("AZURE_TTS_REGION")

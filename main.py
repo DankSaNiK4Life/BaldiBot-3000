@@ -2,7 +2,7 @@ from discord_commands import bot
 import os, psutil
  
 if __name__ == "__main__":
-    exe_path = "C:/Users/Aaron/Desktop/AI Stuff/Baldi_Discord_Bot/venv/Scripts/gpt_sovits_api.exe"
+    exe_path = "venv/Scripts/gpt_sovits_api.exe"
     exe_name = os.path.basename(exe_path)
 
     # If the API is not already running then run it
