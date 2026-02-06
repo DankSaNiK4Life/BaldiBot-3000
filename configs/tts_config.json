@@ -1,0 +1,8 @@
+{
+    "tts_name": "gpt-sovits",
+    "gpt-sovits": {
+    "config_path": "configs/tts_infer.yaml",
+    "gpt_model_path": "models/BaldiMelonHeadV2/GPT_weights/BaldiMelonHeadV2-e10.ckpt",
+    "sovits_model_path": "models/BaldiMelonHeadV2/SoVITS_weights/BaldiMelonHeadV2_e8_s832.pth"
+    }
+}

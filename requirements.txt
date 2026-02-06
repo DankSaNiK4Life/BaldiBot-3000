@@ -1,0 +1,8 @@
+discord
+openai
+discord-ext-voice-recv
+elevenlabs
+tiktoken
+pyscreenshot
+Pillow
+SpeechRecognition
