@@ -1,5 +1,4 @@
 from platform import system as get_os_name
-from sys import platform
 import discord
 import os
 from discord.ext import commands, voice_recv
@@ -55,7 +54,9 @@ async def on_message(message):
             return 
 
         username = str(message.author)
+        print("Username: " + username)
         real_name = get_real_name(username)
+        print("Real name: " + real_name)
         user_message = message.content.lower()
         channel = str(message.channel)
 
