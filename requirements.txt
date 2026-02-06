@@ -1,5 +1,3 @@
-setuptools
-wheel
 discord
 openai
 discord-ext-voice-recv
@@ -9,4 +7,3 @@ pyscreenshot
 Pillow
 SpeechRecognition
 python-dotenv
-rvc-python

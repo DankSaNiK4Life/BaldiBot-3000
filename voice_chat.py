@@ -7,7 +7,7 @@ import time
 import asyncio
 import discord
 import speech_recognition as sr
-from rvc_python.infer import RVCInference
+#from rvc_python.infer import RVCInference
 import requests
 import aiohttp
 from GPT_SoVITS.TTS_infer_pack.TTS import TTS as GPTSoVITSPipeline
