@@ -1,9 +1,12 @@
 from discord_commands import bot
 import os, psutil
+from dotenv import load_dotenv
  
 if __name__ == "__main__":
     exe_path = "venv/Scripts/gpt_sovits_api.exe"
     exe_name = os.path.basename(exe_path)
+
+    load_dotenv()  # Load environment variables from .env file
 
     # If the API is not already running then run it
     if not any(exe_name.lower() in p.info['name'].lower() for p in psutil.process_iter(['name']) if p.info['name']):
