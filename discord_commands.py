@@ -1,3 +1,4 @@
+from platform import system as get_os_name
 from sys import platform
 import discord
 import os
@@ -213,7 +214,7 @@ async def sing(ctx):
         return
 
     # Detect if the bot is on Windows or Linux
-    is_windows = platform.system() == "Windows"
+    is_windows = get_os_name() == "Windows"
     # Use the correct executable for each environment
     ffmpeg_exe = "ffmpeg/bin/ffmpeg.exe" if is_windows else "ffmpeg"
 
