@@ -214,13 +214,13 @@ async def sing(ctx):
     if text == "thick of it":
         # Play the song in the voice channel
         if not vc.is_playing():
-            vc.play(discord.FFmpegPCMAudio(executable="C:/ffmpeg/bin/ffmpeg.exe", source="songs/Baldi_Singing_ThickOfIt.mp3"))
+            vc.play(discord.FFmpegPCMAudio(executable="ffmpeg/bin/ffmpeg.exe", source="songs/Baldi_Singing_ThickOfIt.mp3"))
         else:
             await ctx.send("I am already playing something. Please wait!")
     elif text == "like a prayer":
         # Play the song in the voice channel
         if not vc.is_playing():
-            vc.play(discord.FFmpegPCMAudio(executable="C:/ffmpeg/bin/ffmpeg.exe", source="songs/Baldi_Singing_LikeAPrayer.mp3"))
+            vc.play(discord.FFmpegPCMAudio(executable="ffmpeg/bin/ffmpeg.exe", source="songs/Baldi_Singing_LikeAPrayer.mp3"))
         else:
             await ctx.send("I am already playing something. Please wait!")
     else:
