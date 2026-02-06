@@ -7,3 +7,4 @@ pyscreenshot
 Pillow
 SpeechRecognition
 python-dotenv
+rvc-python
