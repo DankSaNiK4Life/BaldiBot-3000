@@ -54,9 +54,7 @@ async def on_message(message):
             return 
 
         username = str(message.author)
-        print("Username: " + username)
         real_name = get_real_name(username)
-        print("Real name: " + real_name)
         user_message = message.content.lower()
         channel = str(message.channel)
 
@@ -79,6 +77,8 @@ async def on_message(message):
 
         # Check if the bot is mentioned
         if bot.user in message.mentions:
+            print("Username: " + username)
+            print("Real name: " + real_name)
             await message.reply(await chat_with_gpt(user_message, real_name))
 
         await bot.process_commands(message)  # Allows commands to still work
