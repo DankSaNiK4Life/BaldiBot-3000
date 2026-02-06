@@ -10,8 +10,8 @@ import speech_recognition as sr
 #from rvc_python.infer import RVCInference
 import requests
 import aiohttp
-from GPT_SoVITS.TTS_infer_pack.TTS import TTS as GPTSoVITSPipeline
-from GPT_SoVITS.TTS_infer_pack.TTS import TTS_Config as GPTSoVITSConfig
+#from GPT_SoVITS.TTS_infer_pack.TTS import TTS as GPTSoVITSPipeline
+#from GPT_SoVITS.TTS_infer_pack.TTS import TTS_Config as GPTSoVITSConfig
 import json
 import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', handlers=[logging.StreamHandler()])
