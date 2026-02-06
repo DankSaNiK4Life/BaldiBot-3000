@@ -17,7 +17,7 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', handlers=[logging.StreamHandler()])
 import wave
 import io
-import sounddevice as sd
+#import sounddevice as sd
 import os
 
 # Dummy sink that discards audio data (here for now until I figure out a way to clear audio data properly lol)
