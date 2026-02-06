@@ -1,3 +1,4 @@
+from sys import platform
 import discord
 import os
 from discord.ext import commands, voice_recv
@@ -211,16 +212,21 @@ async def sing(ctx):
         await ctx.send("Please provide some text so I know what to sing!")
         return
 
+    # Detect if the bot is on Windows or Linux
+    is_windows = platform.system() == "Windows"
+    # Use the correct executable for each environment
+    ffmpeg_exe = "ffmpeg/bin/ffmpeg.exe" if is_windows else "ffmpeg"
+
     if text == "thick of it":
         # Play the song in the voice channel
         if not vc.is_playing():
-            vc.play(discord.FFmpegPCMAudio(executable="ffmpeg/bin/ffmpeg.exe", source="songs/Baldi_Singing_ThickOfIt.mp3"))
+            vc.play(discord.FFmpegPCMAudio(executable=ffmpeg_exe, source="songs/Baldi_Singing_ThickOfIt.mp3"))
         else:
             await ctx.send("I am already playing something. Please wait!")
     elif text == "like a prayer":
         # Play the song in the voice channel
         if not vc.is_playing():
-            vc.play(discord.FFmpegPCMAudio(executable="ffmpeg/bin/ffmpeg.exe", source="songs/Baldi_Singing_LikeAPrayer.mp3"))
+            vc.play(discord.FFmpegPCMAudio(executable=ffmpeg_exe, source="songs/Baldi_Singing_LikeAPrayer.mp3"))
         else:
             await ctx.send("I am already playing something. Please wait!")
     else:
