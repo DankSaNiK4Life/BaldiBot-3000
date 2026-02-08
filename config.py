@@ -10,6 +10,7 @@ class Config:
     GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY")
+    ASSEMBLYAI_API_KEY = os.getenv("ASSEMBLYAI_API_KEY")
 
     # ------------------- CONSTANTS ------------------- #
 

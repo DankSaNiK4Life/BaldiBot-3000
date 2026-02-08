@@ -81,6 +81,13 @@ async def on_message(message):
             print("Real name: " + real_name)
             await message.reply(await chat_with_gpt(user_message, real_name))
 
+        # This is used to grab Streamer.bot's messages and use them to get chatgpt replies
+        if channel == "streamerbot-to-baldibot":
+            streamerbot_msg = user_message.split(' ', 1)[1]
+            streamerbot_user = user_message.split(' ', 1)[0]
+            print("Username: " + username)
+            await message.reply(await chat_with_gpt(streamerbot_msg, streamerbot_user))
+
         await bot.process_commands(message)  # Allows commands to still work
 
 # Join command - This makes the bot connect to the channel the user is in

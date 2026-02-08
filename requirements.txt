@@ -7,3 +7,5 @@ pyscreenshot
 Pillow
 SpeechRecognition
 python-dotenv
+assemblyai
+pyaudio
