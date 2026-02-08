@@ -1,5 +1,5 @@
 from config import Config as cfg
-from bot_utils import take_screenshot, encode_image
+from bot_utils import encode_image_from_url
 from openai import OpenAI
 import tiktoken
 import asyncio
@@ -46,11 +46,13 @@ async def chat_with_gpt(prompt, user_name, image_attachment):
     if image_attachment:
         print("Showing ChatGPT a image...")
         #base64_image = encode_image(take_screenshot())
+        base64_image = encode_image_from_url(image_attachment)
 
-        # Wait a second or 2 for the screenshot to be taken
-        await asyncio.sleep(2)
-
-        image_message = [
+        if base64_image:
+            # Determine mime type (default to jpeg or use attachment.content_type)
+            mime_type = image_attachment.content_type if image_attachment.content_type else "image/jpeg"
+        
+            image_message = [
                 {
                     "role": "user",
                     "content": [
@@ -58,7 +60,7 @@ async def chat_with_gpt(prompt, user_name, image_attachment):
                         {
                             "type": "image_url",
                             "image_url": {
-                                "url": f"data:image/jpeg;base64,{image_attachment}"
+                                "url": f"data:{mime_type};base64,{base64_image}"
                             },
                         },
                     ],
