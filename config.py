@@ -102,7 +102,7 @@ class Config:
     # MIGHT NEED TO MOVE THIS TO A SEPERATE FILE LATER
     # Uses Streamer.bots Webhook feature to send messages to Twitch (E.g. ChatGPT responses)
     def send_to_twitch(reply_text):
-        if not STREAMERBOT_WEBHOOK_URL:
+        if not Config.STREAMERBOT_WEBHOOK_URL:
             print("Streamer.bot webhook URL is not set. Cannot send message to Twitch.")
             return
 
@@ -111,7 +111,7 @@ class Config:
         }
 
         try:
-            response = requests.post(STREAMERBOT_WEBHOOK_URL, json=payload)
+            response = requests.post(Config.STREAMERBOT_WEBHOOK_URL, json=payload)
             if response.status_code == 200 or response.status_code == 201:
                 print("Message sent to Twitch successfully.")
             else:
