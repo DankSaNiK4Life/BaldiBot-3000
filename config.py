@@ -1,5 +1,6 @@
 import os
 from elevenlabs.client import AsyncElevenLabs
+import requests
 
 class Config:
     
@@ -97,3 +98,23 @@ class Config:
     is_waiting_for_silence = False  # This is used to call the waiting_for_silence function in the cb function
     is_image_message = False        # This is used to determine if the message has a image in it or not
     is_listen_to_all = False        # This is used to determine if the bot should listen to everyone or just someone specific
+
+    # MIGHT NEED TO MOVE THIS TO A SEPERATE FILE LATER
+    # Uses Streamer.bots Webhook feature to send messages to Twitch (E.g. ChatGPT responses)
+    def send_to_twitch(reply_text):
+        if not STREAMERBOT_WEBHOOK_URL:
+            print("Streamer.bot webhook URL is not set. Cannot send message to Twitch.")
+            return
+
+        payload = {
+            "gpt_response": reply_text
+        }
+
+        try:
+            response = requests.post(STREAMERBOT_WEBHOOK_URL, json=payload)
+            if response.status_code == 200 or response.status_code == 201:
+                print("Message sent to Twitch successfully.")
+            else:
+                print(f"Failed to send message to Twitch. Status code: {response.status_code}")
+        except Exception as e:
+            print(f"An error occurred while sending message to Twitch: {e}")
