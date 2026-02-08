@@ -84,6 +84,8 @@ async def on_message(message):
 
             gpt_response = await chat_with_gpt(streamerbot_msg, streamerbot_user)
             cfg.send_to_twitch(gpt_response)
+            print("Baldi's reply on Twitch: " + gpt_response)
+            await message.reply(gpt_response)
         # Check if the bot is mentioned
         elif  bot.user in message.mentions: 
             print("Username: " + username)
