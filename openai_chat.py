@@ -26,7 +26,7 @@ def num_tokens_from_messages(messages, model="gpt-4o"):
         raise NotImplementedError(f"num_tokens_from_messages() is not presently implemented for model {model}.")
 
 # Chat_with_gpt function - This is the logic required to actually speak to openai and be able to gain a response (Uses num_tokens_from_messages)
-async def chat_with_gpt(prompt, user_name):
+async def chat_with_gpt(prompt, user_name, image_attachment):
     if not prompt:
         print("Didn't Recieve input!")
         return
@@ -43,9 +43,9 @@ async def chat_with_gpt(prompt, user_name):
         cfg.chat_history.pop(1)  # We skip the 1st message since it's the system message
         print(f"Popped a message! New token length is: {num_tokens_from_messages(cfg.chat_history)}")
 
-    if cfg.is_image_message:
+    if image_attachment:
         print("Showing ChatGPT a image...")
-        base64_image = encode_image(take_screenshot())
+        #base64_image = encode_image(take_screenshot())
 
         # Wait a second or 2 for the screenshot to be taken
         await asyncio.sleep(2)
@@ -58,7 +58,7 @@ async def chat_with_gpt(prompt, user_name):
                         {
                             "type": "image_url",
                             "image_url": {
-                                "url": f"data:image/jpeg;base64,{base64_image}"
+                                "url": f"data:image/jpeg;base64,{image_attachment}"
                             },
                         },
                     ],

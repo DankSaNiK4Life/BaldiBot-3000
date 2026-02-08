@@ -58,6 +58,7 @@ async def on_message(message):
         real_name = get_real_name(username)
         user_message = message.content.lower()
         channel = str(message.channel)
+        message_attachments = message.attachments
 
         # Define a dictionary mapping keywords to their corresponding replies
         keyword_responses = {
@@ -82,7 +83,9 @@ async def on_message(message):
             streamerbot_user = user_message.split(' ', 1)[0]
             print("Username: " + streamerbot_user + " " + "Message: " + streamerbot_msg)
 
-            gpt_response = await chat_with_gpt(streamerbot_msg, streamerbot_user)
+            if message_attachments:
+                cfg.is_image_message = True
+            gpt_response = await chat_with_gpt(streamerbot_msg, streamerbot_user, message_attachments)
             cfg.send_to_twitch(gpt_response)
             print("Baldi's reply on Twitch: " + gpt_response)
             await message.reply(gpt_response)
