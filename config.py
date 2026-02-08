@@ -11,6 +11,7 @@ class Config:
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY")
     ASSEMBLYAI_API_KEY = os.getenv("ASSEMBLYAI_API_KEY")
+    STREAMERBOT_WEBHOOK_URL = os.getenv("STREAMERBOT_WEBHOOK_URL")
 
     # ------------------- CONSTANTS ------------------- #
 

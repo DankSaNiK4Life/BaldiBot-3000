@@ -9,6 +9,7 @@ from config import Config as cfg
 from bot_utils import get_real_name
 from voice_chat import start_listening, DummySink
 from openai_chat import chat_with_gpt
+import requests
 
 # ----------------------- INITIALIZATION ----------------------- #
 
@@ -46,6 +47,27 @@ async def on_ready():
     cfg.chat_history.remove(cfg.chat_history[0])
     cfg.chat_history.insert(0, cfg.FIRST_SYSTEM_MESSAGE)
 
+def send_to_twitch(reply_text):
+    if not cfg.STREAMERBOT_WEBHOOK_URL:
+        print("Streamer.bot webhook URL is not set. Cannot send message to Twitch.")
+        return
+
+    payload = {
+        "actionName": "ChatGPT Reply",
+        "arguments": {
+            "gpt_content": reply_text,
+        }
+    }
+
+    try:
+        response = requests.post(cfg.STREAMERBOT_WEBHOOK_URL, json=payload)
+        if response.status_code == 200:
+            print("Message sent to Twitch successfully.")
+        else:
+            print(f"Failed to send message to Twitch. Status code: {response.status_code}")
+    except Exception as e:
+        print(f"An error occurred while sending message to Twitch: {e}")
+
 # On_message event - This lets the bot see what is being said in any chat in the server 
 @bot.event
 async def on_message(message):
@@ -79,8 +101,10 @@ async def on_message(message):
         if channel == "streamerbot-to-baldibot":
             streamerbot_msg = user_message.split(' ', 1)[1]
             streamerbot_user = user_message.split(' ', 1)[0]
-            print("Username: " + streamerbot_user + "Message: " + streamerbot_msg)
-            await message.reply(await chat_with_gpt(streamerbot_msg, streamerbot_user))
+            print("Username: " + streamerbot_user + " " + "Message: " + streamerbot_msg)
+
+            gpt_response = await chat_with_gpt(streamerbot_msg, streamerbot_user)
+            send_to_twitch(gpt_response)
         # Check if the bot is mentioned
         elif  bot.user in message.mentions: 
             print("Username: " + username)

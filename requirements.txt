@@ -8,4 +8,5 @@ Pillow
 SpeechRecognition
 python-dotenv
 assemblyai
+requests
 pyaudio
