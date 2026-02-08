@@ -75,18 +75,19 @@ async def on_message(message):
                     await message.reply(response)
                 break  # Stop after the first match
 
-        # Check if the bot is mentioned
-        if bot.user in message.mentions:
-            print("Username: " + username)
-            print("Real name: " + real_name)
-            await message.reply(await chat_with_gpt(user_message, real_name))
-
         # This is used to grab Streamer.bot's messages and use them to get chatgpt replies
         if channel == "streamerbot-to-baldibot":
             streamerbot_msg = user_message.split(' ', 1)[1]
             streamerbot_user = user_message.split(' ', 1)[0]
-            print("Username: " + username)
+            print("Username: " + streamerbot_user + "Message: " + streamerbot_msg)
             await message.reply(await chat_with_gpt(streamerbot_msg, streamerbot_user))
+        # Check if the bot is mentioned
+        elif  bot.user in message.mentions: 
+            print("Username: " + username)
+            print("Real name: " + real_name)
+            await message.reply(await chat_with_gpt(user_message, real_name))
+
+        
 
         await bot.process_commands(message)  # Allows commands to still work
 
