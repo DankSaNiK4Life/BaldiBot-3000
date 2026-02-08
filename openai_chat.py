@@ -47,11 +47,11 @@ async def chat_with_gpt(prompt, user_name, image_attachment):
         for attachment in image_attachment:
             print("Showing ChatGPT a image...")
             #base64_image = encode_image(take_screenshot())
-            base64_image = encode_image_from_url(image_attachment)
+            base64_image = encode_image_from_url(attachment.url)
 
             if base64_image:
                 # Determine mime type (default to jpeg or use attachment.content_type)
-                mime_type = image_attachment.content_type if image_attachment.content_type else "image/jpeg"
+                mime_type = attachment.content_type if attachment.content_type else "image/jpeg"
         
                 image_message = [
                     {
@@ -67,13 +67,15 @@ async def chat_with_gpt(prompt, user_name, image_attachment):
                         ],
                     }
                 ]
+
+                response = client.chat.completions.create(
+                    model="gpt-4o",
+                    messages=image_message,
+                    max_tokens=300,
+                )
         
 
-        response = client.chat.completions.create(
-            model="gpt-4o",
-            messages=image_message,
-            max_tokens=300,
-        )
+        
 
         # adds image to chat history
         #cfg.chat_history.append(image_message)
