@@ -96,7 +96,6 @@ class Config:
     eleven_client = AsyncElevenLabs(api_key=ELEVENLABS_API_KEY) # This assigns the ElevenLabs client
 
     is_waiting_for_silence = False  # This is used to call the waiting_for_silence function in the cb function
-    is_image_message = False        # This is used to determine if the message has a image in it or not
     is_listen_to_all = False        # This is used to determine if the bot should listen to everyone or just someone specific
 
     # MIGHT NEED TO MOVE THIS TO A SEPERATE FILE LATER

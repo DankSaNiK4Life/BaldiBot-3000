@@ -46,7 +46,6 @@ async def chat_with_gpt(prompt, user_name, image_attachment):
     if image_attachment:
         for attachment in image_attachment:
             print("Showing ChatGPT a image...")
-            #base64_image = encode_image(take_screenshot())
             base64_image = encode_image_from_url(attachment.url)
 
             if base64_image:
@@ -74,13 +73,8 @@ async def chat_with_gpt(prompt, user_name, image_attachment):
                     max_tokens=300,
                 )
         
-
-        
-
         # adds image to chat history
         #cfg.chat_history.append(image_message)
-
-        cfg.is_image_message = False
     else:
         print("Asking ChatGPT a question...")
         response = client.chat.completions.create(

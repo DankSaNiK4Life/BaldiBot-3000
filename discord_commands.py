@@ -83,8 +83,6 @@ async def on_message(message):
             streamerbot_user = user_message.split(' ', 1)[0]
             print("Username: " + streamerbot_user + " " + "Message: " + streamerbot_msg)
 
-            if message_attachments:
-                cfg.is_image_message = True
             gpt_response = await chat_with_gpt(streamerbot_msg, streamerbot_user, message_attachments)
             cfg.send_to_twitch(gpt_response)
             print("Baldi's reply on Twitch: " + gpt_response)
@@ -93,7 +91,7 @@ async def on_message(message):
         elif  bot.user in message.mentions: 
             print("Username: " + username)
             print("Real name: " + real_name)
-            await message.reply(await chat_with_gpt(user_message, real_name))
+            await message.reply(await chat_with_gpt(user_message, real_name, message_attachments))
 
         
 
