@@ -44,28 +44,30 @@ async def chat_with_gpt(prompt, user_name, image_attachment):
         print(f"Popped a message! New token length is: {num_tokens_from_messages(cfg.chat_history)}")
 
     if image_attachment:
-        print("Showing ChatGPT a image...")
-        #base64_image = encode_image(take_screenshot())
-        base64_image = encode_image_from_url(image_attachment)
+        for attachment in image_attachment:
+            print("Showing ChatGPT a image...")
+            #base64_image = encode_image(take_screenshot())
+            base64_image = encode_image_from_url(image_attachment)
 
-        if base64_image:
-            # Determine mime type (default to jpeg or use attachment.content_type)
-            mime_type = image_attachment.content_type if image_attachment.content_type else "image/jpeg"
+            if base64_image:
+                # Determine mime type (default to jpeg or use attachment.content_type)
+                mime_type = image_attachment.content_type if image_attachment.content_type else "image/jpeg"
         
-            image_message = [
-                {
-                    "role": "user",
-                    "content": [
-                        {"type": "text", "text": prompt},
-                        {
-                            "type": "image_url",
-                            "image_url": {
-                                "url": f"data:{mime_type};base64,{base64_image}"
+                image_message = [
+                    {
+                        "role": "user",
+                        "content": [
+                            {"type": "text", "text": prompt},
+                            {
+                                "type": "image_url",
+                                "image_url": {
+                                    "url": f"data:{mime_type};base64,{base64_image}"
+                                },
                             },
-                        },
-                    ],
-                }
-            ]
+                        ],
+                    }
+                ]
+        
 
         response = client.chat.completions.create(
             model="gpt-4o",
