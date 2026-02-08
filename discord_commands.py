@@ -53,10 +53,7 @@ def send_to_twitch(reply_text):
         return
 
     payload = {
-        "actionName": "Talk to ChatGPT Discord Bot",
-        "arguments": {
-            "gpt_response": reply_text,
-        }
+        "gpt_response": reply_text
     }
 
     try:
