@@ -34,33 +34,34 @@ aai.settings.api_key = cfg.ASSEMBLYAI_API_KEY
 class AssemblyAIStreamSink(voice_recv.AudioSink):
     def __init__(self):
         super().__init__()
-        # Initialize the transcriber
-        self.transcriber = aai.RealtimeTranscriber(
-            sample_rate=48_000, # Discord uses 48kHz
-            on_data=self.on_data,
-            on_error=self.on_error,
-            on_open=self.on_open,
-            on_close=self.on_close,
+        # Use StreamingTranscriber for Universal Streaming
+        self.transcriber = aai.extras.StreamingTranscriber(
+            sample_rate=48_000 # Matches Discord's 48kHz
         )
+        
+        # Set up event listeners
+        self.transcriber.on("transcript", self.on_transcript)
+        self.transcriber.on("error", self.on_error)
+        self.transcriber.on("open", self.on_open)
+        self.transcriber.on("close", self.on_close)
+        
         self.transcriber.connect()
 
-    def on_data(self, transcript: aai.RealtimeTranscript):
-        # 1. Ignore empty chunks
+    def on_transcript(self, transcript: aai.StreamingTranscript):
         if not transcript.text:
             return
-
-        # 2. Print 'Interim' for live text, 'Final' for the finished sentence
-        if isinstance(transcript, aai.RealtimeFinalTranscript):
-            print(f"\rFinal Sentence: {transcript.text}")
+            
+        # Print the text to the console
+        if transcript.message_type == "FinalTranscript":
+            print(f"\nFinal: {transcript.text}")
         else:
-            # Use \r to overwrite the line for a "live typing" effect
-            print(f"User is saying: {transcript.text}", end="\r")
+            print(f"Interim: {transcript.text}", end="\r")
 
-    def on_error(self, error: aai.RealtimeError):
+    def on_error(self, error: Exception):
         print(f"AAI Error: {error}")
 
-    def on_open(self, session_opened: aai.RealtimeSessionOpened):
-        print(f"Session ID: {session_opened.session_id}")
+    def on_open(self, session_opened: aai.StreamingSessionOpened):
+        print(f"Connected! Session ID: {session_opened.session_id}")
 
     def on_close(self):
         print("Closing AAI connection")
@@ -69,7 +70,7 @@ class AssemblyAIStreamSink(voice_recv.AudioSink):
         return False
 
     def write(self, user, data):
-        # data.pcm contains the raw 16-bit PCM audio bytes
+        # Stream the raw PCM data
         self.transcriber.stream(data.pcm)
 
     def cleanup(self):
