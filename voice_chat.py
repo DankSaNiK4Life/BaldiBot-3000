@@ -12,8 +12,6 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', handlers=[logging.StreamHandler()])
 import wave
 import io
-import assemblyai as aai
-import tempfile
 
 # Dummy sink that discards audio data (here for now until I figure out a way to clear audio data properly lol)
 class DummySink(voice_recv.AudioSink):
@@ -25,10 +23,6 @@ class DummySink(voice_recv.AudioSink):
 
     def wants_opus(self):
         return False  # Indicate that this sink does not want Opus-encoded audio
-    
-def on_turn(transcript):
-    if transcript.text:
-        print(f"Transcript: {transcript.text}")
 
 # Wait_for_silence function - This is used to detect when someone has stopped talking for a certain time or if max_duration was reached (this then calls process_response)
 async def wait_for_silence(max_duration, silence_timeout, ctx):
@@ -681,72 +675,61 @@ async def start_listening(ctx, is_listen_all):
 
 # Cb function - This is a callback function that vc.listen() uses to actually recognize and listen to the user (This calls wait_for_silence)
 def cb(user: discord.Member, audio: sr.AudioData, third=None):
-    user_name = user.display_name if isinstance(user, discord.Member) else "Unknown User"
-    
-    try:
-        # Save audio to a temporary file
-        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-            audio_data = audio.get_wav_data()
-            temp_file.write(audio_data)
-            temp_file_path = temp_file.name
+        #nonlocal all_results, last_speech_time, start_time
+            
+        user_name = user.display_name if isinstance(user, discord.Member) else "Unknown User"
+        recognizer = sr.Recognizer()
         
-        # Upload the audio file to AssemblyAI
-        async def transcribe_audio():
-            url = 'https://api.assemblyai.com/v2/upload'
-            headers = {'authorization': cfg.ASSEMBLYAI_API_KEY}
+        try:
+            # Add a small delay to avoid rate limiting
+            time.sleep(0.5)
+            
+            text, confidence = recognizer.recognize_assemblyai(audio, key=cfg.ASSEMBLYAI_API_KEY, on_turn=on_turn)
+            print(f"Recognized text from {user_name}: {text}")
 
-            # Upload the audio file to AssemblyAI
-            async with aiohttp.ClientSession() as session:
-                with open(temp_file_path, 'rb') as f:
-                    file = f.read()
-                    async with session.post(url, headers=headers, data=file) as resp:
-                        if resp.status == 200:
-                            data = await resp.json()
-                            audio_url = data['upload_url']
-                            print(f"Uploaded to AssemblyAI: {audio_url}")
-                        else:
-                            print("Error uploading audio to AssemblyAI.")
-                            return
+            trigger_phrases = {
+                "screenshot": ["look at this", "check this out", "see this", "see it", "see my", "screenshot this"],
+            }
 
-            # Request transcription
-            transcribe_url = 'https://api.assemblyai.com/v2/transcript'
-            json_data = {'audio_url': audio_url}
-            async with aiohttp.ClientSession() as session:
-                async with session.post(transcribe_url, headers=headers, json=json_data) as response:
-                    if response.status == 200:
-                        transcript_data = await response.json()
-                        transcript_id = transcript_data['id']
-                        print(f"Transcript request sent. ID: {transcript_id}")
-                        # Check the transcript status
-                        await check_transcription_status(transcript_id)
-                    else:
-                        print(f"Error sending transcription request: {response.status}")
-                        return
+            # Check if the user said "stop listening"
+            if "stop listening" in text.lower():
+                from discord_commands import bot, stop
+                asyncio.run_coroutine_threadsafe(stop(cfg.cb_ctx), bot.loop)
+                return  # Exit the callback to stop further processing
 
-        # Define a function to check transcription status
-        async def check_transcription_status(transcript_id):
-            status_url = f'https://api.assemblyai.com/v2/transcript/{transcript_id}'
-            headers = {'authorization': cfg.ASSEMBLYAI_API_KEY}
-            async with aiohttp.ClientSession() as session:
-                while True:
-                    async with session.get(status_url, headers=headers) as resp:
-                        if resp.status == 200:
-                            status_data = await resp.json()
-                            if status_data['status'] == 'completed':
-                                transcript_text = status_data['text']
-                                print(f"Recognized text from {user_name}: {transcript_text}")
-                                if transcript_text:  # If a transcript is available
-                                    cfg.all_results.append(transcript_text)
-                                    cfg.last_speech_time = time.time()  # Reset silence timer
-                                break
-                            elif status_data['status'] == 'failed':
-                                print(f"Transcription failed: {status_data}")
-                                break
-                        await asyncio.sleep(1)  # Wait a bit before checking the status again
+            if any(phrase in text.lower() for phrase in trigger_phrases.get("screenshot", [])):
+                print("Screenshot Triggered")
+                cfg.is_image_message = True
 
-        # Run the transcription process
-        asyncio.run(transcribe_audio())
+            if text: # Recognized text
+                #all_results.append(f"{user_name}: {text}")
+                cfg.all_results.append(text)
+                cfg.last_speech_time = time.time() # Reset silence timer
+                
+        except sr.UnknownValueError:
+            print(f"Did not recognize {user_name if user else 'Unknown User'}'s audio")
+            #print(f"Did not recognize {user.display_name}'s audio")
+            return
+        except sr.RequestError as e:
+            print(f"Azure Speech Service error: {e}")
+            # Retry after a short delay
+            time.sleep(1)
+            return
 
-    except Exception as e:
-        print(f"An error occurred during the speech recognition process: {e}")
+        if not cfg.is_waiting_for_silence:
+                    cfg.is_waiting_for_silence = True
+                    #all_results.clear()
+                    #start_time = time.time()
+                    #last_speech_time = time.time()
+                    from discord_commands import bot
+                    bot.loop.create_task(wait_for_silence(cfg.MAX_DURATION, cfg.SILENCE_TIMEOUT, cfg.cb_ctx))
+
+        # Run silence detection in the background
+        #bot.loop.create_task(wait_for_silence(all_results, last_speech_time, start_time, max_duration, silence_timeout, vc))
+
+        #openai_answer = asyncio.run(chat_with_gpt(final_result))
+        #print(f"Baldi says: {openai_answer}")
+        #bot.loop.create_task(ctx.send(openai_answer))
+        #asyncio.run(text_to_audio_played(openai_answer, vc=vc, voice=ELEVENLABS_VOICE))
+        #return final_result
 
