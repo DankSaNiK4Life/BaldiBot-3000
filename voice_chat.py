@@ -34,12 +34,11 @@ aai.settings.api_key = cfg.ASSEMBLYAI_API_KEY
 class AssemblyAIStreamSink(voice_recv.AudioSink):
     def __init__(self):
         super().__init__()
-        # Use StreamingTranscriber for Universal Streaming
+        # Use the newer Universal Streaming class
         self.transcriber = aai.extras.StreamingTranscriber(
-            sample_rate=48_000 # Matches Discord's 48kHz
+            sample_rate=48_000 
         )
         
-        # Set up event listeners
         self.transcriber.on("transcript", self.on_transcript)
         self.transcriber.on("error", self.on_error)
         self.transcriber.on("open", self.on_open)
@@ -47,11 +46,11 @@ class AssemblyAIStreamSink(voice_recv.AudioSink):
         
         self.transcriber.connect()
 
+    # FIX: Use RealtimeTranscript
     def on_transcript(self, transcript: aai.RealtimeTranscript):
         if not transcript.text:
             return
-        
-        # Universal Streaming uses these message types:
+            
         if transcript.message_type == "FinalTranscript":
             print(f"\nFinal: {transcript.text}")
         else:
@@ -60,7 +59,8 @@ class AssemblyAIStreamSink(voice_recv.AudioSink):
     def on_error(self, error: Exception):
         print(f"AAI Error: {error}")
 
-    def on_open(self, session_opened: aai.StreamingSessionOpened):
+    # FIX: Use RealtimeSessionOpened
+    def on_open(self, session_opened: aai.RealtimeSessionOpened):
         print(f"Connected! Session ID: {session_opened.session_id}")
 
     def on_close(self):
@@ -70,7 +70,7 @@ class AssemblyAIStreamSink(voice_recv.AudioSink):
         return False
 
     def write(self, user, data):
-        # Stream the raw PCM data
+        # discord-ext-voice-recv provides data.pcm
         self.transcriber.stream(data.pcm)
 
     def cleanup(self):
