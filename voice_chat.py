@@ -31,21 +31,43 @@ def on_turn(transcript):
 
 class AssemblyAIStreamSink(voice_recv.AudioSink):
     def __init__(self):
-        self.client = aai.extras.StreamingClient() # Simplified for example
-        self.client.on("transcript", on_turn)
-        self.client.connect()
+        super().__init__()
+        # Initialize the transcriber
+        self.transcriber = aai.RealtimeTranscriber(
+            sample_rate=48_000, # Discord uses 48kHz
+            on_data=self.on_data,
+            on_error=self.on_error,
+            on_open=self.on_open,
+            on_close=self.on_close,
+        )
+        self.transcriber.connect()
 
-    def wants_opus(self):
-        return False # We want decoded PCM audio
-    
-    def cleanup(self):
-        # Close your AssemblyAI connection here safely
-        # self.client.close()
-        pass
+    def on_data(self, transcript: aai.RealtimeTranscript):
+        if not transcript.text:
+            return
+        if isinstance(transcript, aai.RealtimeFinalTranscript):
+            print(f"Final: {transcript.text}")
+        else:
+            print(f"Interim: {transcript.text}")
+
+    def on_error(self, error: aai.RealtimeError):
+        print(f"AAI Error: {error}")
+
+    def on_open(self, session_began: aai.RealtimeSessionBegan):
+        print(f"Session ID: {session_began.session_id}")
+
+    def on_close(self):
+        print("Closing AAI connection")
+
+    def wants_opus(self) -> bool:
+        return False
 
     def write(self, user, data):
-        # Send raw PCM data to AssemblyAI
-        self.client.send_audio(data.pcm)
+        # data.pcm contains the raw 16-bit PCM audio bytes
+        self.transcriber.stream(data.pcm)
+
+    def cleanup(self):
+        self.transcriber.close()
 
 # Wait_for_silence function - This is used to detect when someone has stopped talking for a certain time or if max_duration was reached (this then calls process_response)
 async def wait_for_silence(max_duration, silence_timeout, ctx):
