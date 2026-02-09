@@ -34,34 +34,30 @@ aai.settings.api_key = cfg.ASSEMBLYAI_API_KEY
 class AssemblyAIStreamSink(voice_recv.AudioSink):
     def __init__(self):
         super().__init__()
-        # Use the newer Universal Streaming class
-        self.transcriber = aai.extras.StreamingTranscriber(
-            sample_rate=48_000 
+        # Use RealtimeTranscriber (standard in current SDK)
+        self.transcriber = aai.RealtimeTranscriber(
+            sample_rate=48_000, # Discord's native rate
+            on_data=self.on_data,
+            on_error=self.on_error,
+            on_open=self.on_open,
+            on_close=self.on_close
         )
-        
-        self.transcriber.on("transcript", self.on_transcript)
-        self.transcriber.on("error", self.on_error)
-        self.transcriber.on("open", self.on_open)
-        self.transcriber.on("close", self.on_close)
-        
         self.transcriber.connect()
 
-    # FIX: Use RealtimeTranscript
-    def on_transcript(self, transcript: aai.RealtimeTranscript):
+    def on_data(self, transcript: aai.RealtimeTranscript):
         if not transcript.text:
             return
             
-        if transcript.message_type == "FinalTranscript":
+        if isinstance(transcript, aai.RealtimeFinalTranscript):
             print(f"\nFinal: {transcript.text}")
         else:
             print(f"Interim: {transcript.text}", end="\r")
 
-    def on_error(self, error: Exception):
-        print(f"AAI Error: {error}")
-
-    # FIX: Use RealtimeSessionOpened
     def on_open(self, session_opened: aai.RealtimeSessionOpened):
         print(f"Connected! Session ID: {session_opened.session_id}")
+
+    def on_error(self, error: Exception):
+        print(f"AAI Error: {error}")
 
     def on_close(self):
         print("Closing AAI connection")
@@ -70,11 +66,14 @@ class AssemblyAIStreamSink(voice_recv.AudioSink):
         return False
 
     def write(self, user, data):
-        # discord-ext-voice-recv provides data.pcm
-        self.transcriber.stream(data.pcm)
+        # Only stream if transcriber was successfully initialized
+        if hasattr(self, 'transcriber'):
+            self.transcriber.stream(data.pcm)
 
     def cleanup(self):
-        self.transcriber.close()
+        # Use hasattr to prevent AttributeError if __init__ failed
+        if hasattr(self, 'transcriber'):
+            self.transcriber.close()
 
 # Wait_for_silence function - This is used to detect when someone has stopped talking for a certain time or if max_duration was reached (this then calls process_response)
 async def wait_for_silence(max_duration, silence_timeout, ctx):
