@@ -53,8 +53,8 @@ class AssemblyAIStreamSink(voice_recv.AudioSink):
     def on_error(self, error: aai.RealtimeError):
         print(f"AAI Error: {error}")
 
-    def on_open(self, session_began: aai.RealtimeSessionBegan):
-        print(f"Session ID: {session_began.session_id}")
+    def on_open(self, session_opened: aai.RealtimeSessionOpened):
+        print(f"Session ID: {session_opened.session_id}")
 
     def on_close(self):
         print("Closing AAI connection")
