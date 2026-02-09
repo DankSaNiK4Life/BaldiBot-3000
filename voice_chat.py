@@ -7,18 +7,12 @@ import time
 import asyncio
 import discord
 import speech_recognition as sr
-#from rvc_python.infer import RVCInference
-import requests
 import aiohttp
-#from GPT_SoVITS.TTS_infer_pack.TTS import TTS as GPTSoVITSPipeline
-#from GPT_SoVITS.TTS_infer_pack.TTS import TTS_Config as GPTSoVITSConfig
-import json
 import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', handlers=[logging.StreamHandler()])
 import wave
 import io
-#import sounddevice as sd
-import os
+import assemblyai as aai
 
 # Dummy sink that discards audio data (here for now until I figure out a way to clear audio data properly lol)
 class DummySink(voice_recv.AudioSink):
@@ -30,6 +24,23 @@ class DummySink(voice_recv.AudioSink):
 
     def wants_opus(self):
         return False  # Indicate that this sink does not want Opus-encoded audio
+    
+def on_turn(transcript):
+    if transcript.text:
+        print(f"Transcript: {transcript.text}")
+
+class AssemblyAIStreamSink(voice_recv.AudioSink):
+    def __init__(self):
+        self.client = aai.extras.StreamingClient() # Simplified for example
+        self.client.on("transcript", on_turn)
+        self.client.connect()
+
+    def want_opus(self):
+        return False # We want decoded PCM audio
+
+    def write(self, user, data):
+        # Send raw PCM data to AssemblyAI
+        self.client.send_audio(data.pcm)
 
 # Wait_for_silence function - This is used to detect when someone has stopped talking for a certain time or if max_duration was reached (this then calls process_response)
 async def wait_for_silence(max_duration, silence_timeout, ctx):
@@ -319,7 +330,8 @@ async def start_listening(ctx, is_listen_all):
     '''
 
     if is_listen_all:
-        cfg.voice_client.listen(voice_recv.extras.SpeechRecognitionSink(process_cb=cb, phrase_time_limit=5))
+        #cfg.voice_client.listen(voice_recv.extras.SpeechRecognitionSink(process_cb=cb, phrase_time_limit=5))
+        cfg.voice_client.listen(AssemblyAIStreamSink())
         await ctx.send(f"I am now listening!")
         print("The bot is listening to user")
     else:

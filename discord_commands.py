@@ -89,8 +89,7 @@ async def on_message(message):
             await message.reply(gpt_response)
         # Check if the bot is mentioned
         elif  bot.user in message.mentions: 
-            print("Username: " + username)
-            print("Real name: " + real_name)
+            print("Username: " + username + " " + "Real name: " + real_name + " " "Message: " + user_message)
             await message.reply(await chat_with_gpt(user_message, real_name, message_attachments))
 
         

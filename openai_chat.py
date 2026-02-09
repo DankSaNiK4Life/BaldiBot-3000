@@ -43,6 +43,7 @@ async def chat_with_gpt(prompt, user_name, image_attachment):
         cfg.chat_history.pop(1)  # We skip the 1st message since it's the system message
         print(f"Popped a message! New token length is: {num_tokens_from_messages(cfg.chat_history)}")
 
+    # If there's an image attachment, we need to encode it and send it as part of the message content
     if image_attachment:
         for attachment in image_attachment:
             print("Showing ChatGPT a image...")
@@ -67,6 +68,7 @@ async def chat_with_gpt(prompt, user_name, image_attachment):
                     }
                 ]
 
+                # Send the message with the image to ChatGPT
                 response = client.chat.completions.create(
                     model="gpt-4o",
                     messages=image_message,
