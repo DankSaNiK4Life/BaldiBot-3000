@@ -663,7 +663,7 @@ async def start_listening(ctx, is_listen_all):
     '''
     
     if is_listen_all:
-        cfg.voice_client.listen(voice_recv.extras.speechrecognition.SpeechRecognitionSink(process_cb=cb, phrase_time_limit=5)))
+        cfg.voice_client.listen(voice_recv.extras.speechrecognition.SpeechRecognitionSink(process_cb=cb, phrase_time_limit=5))
         await ctx.send(f"I am now listening!")
         print("The bot is listening to user")
     else:
