@@ -680,7 +680,10 @@ def cb(user: discord.Member, audio: sr.AudioData, third=None):
             # Add a small delay to avoid rate limiting
             time.sleep(0.5)
             
-            text, confidence = recognizer.recognize_assemblyai(audio, api_token=cfg.ASSEMBLYAI_API_KEY, return_confidence=True)
+            wav_data = audio.get_wav_data()
+
+            # Now pass the raw WAV data to the recognize_assemblyai method
+            text, confidence = recognizer.recognize_assemblyai(wav_data, api_token=cfg.ASSEMBLYAI_API_KEY, return_confidence=True)
             print(f"Recognized text from {user_name}: {text}")
 
             trigger_phrases = {
