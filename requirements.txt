@@ -9,3 +9,4 @@ SpeechRecognition
 python-dotenv
 assemblyai
 requests
+aiohttp
