@@ -47,11 +47,11 @@ class AssemblyAIStreamSink(voice_recv.AudioSink):
         
         self.transcriber.connect()
 
-    def on_transcript(self, transcript: aai.StreamingTranscript):
+    def on_transcript(self, transcript: aai.RealtimeTranscript):
         if not transcript.text:
             return
-            
-        # Print the text to the console
+        
+        # Universal Streaming uses these message types:
         if transcript.message_type == "FinalTranscript":
             print(f"\nFinal: {transcript.text}")
         else:
