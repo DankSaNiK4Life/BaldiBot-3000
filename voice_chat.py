@@ -364,10 +364,6 @@ class DummySink(voice_recv.AudioSink):
 
     def wants_opus(self):
         return False  # Indicate that this sink does not want Opus-encoded audio
-    
-def on_turn(transcript):
-    if transcript.text:
-        print(f"Transcript: {transcript.text}")
 
 # Wait_for_silence function - This is used to detect when someone has stopped talking for a certain time or if max_duration was reached (this then calls process_response)
 async def wait_for_silence(max_duration, silence_timeout, ctx):
@@ -684,7 +680,7 @@ def cb(user: discord.Member, audio: sr.AudioData, third=None):
             # Add a small delay to avoid rate limiting
             time.sleep(0.5)
             
-            text, confidence = recognizer.recognize_assemblyai(audio, key=cfg.ASSEMBLYAI_API_KEY, on_turn=on_turn)
+            text, confidence = recognizer.recognize_assemblyai(audio, api_token=cfg.ASSEMBLYAI_API_KEY, return_confidence=True)
             print(f"Recognized text from {user_name}: {text}")
 
             trigger_phrases = {
