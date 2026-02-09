@@ -35,8 +35,13 @@ class AssemblyAIStreamSink(voice_recv.AudioSink):
         self.client.on("transcript", on_turn)
         self.client.connect()
 
-    def want_opus(self):
+    def wants_opus(self):
         return False # We want decoded PCM audio
+    
+    def cleanup(self):
+        # Close your AssemblyAI connection here safely
+        # self.client.close()
+        pass
 
     def write(self, user, data):
         # Send raw PCM data to AssemblyAI
