@@ -12,7 +12,7 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', handlers=[logging.StreamHandler()])
 import wave
 import io
-import assemblyai as aai
+#import assemblyai as aai
 
 # Dummy sink that discards audio data (here for now until I figure out a way to clear audio data properly lol)
 class DummySink(voice_recv.AudioSink):
@@ -31,7 +31,7 @@ def on_turn(transcript):
 
 class AssemblyAIStreamSink(voice_recv.AudioSink):
     def __init__(self):
-        self.client = aai.extras.StreamingClient() # Simplified for example
+        #self.client = aai.extras.StreamingClient() # Simplified for example
         self.client.on("transcript", on_turn)
         self.client.connect()
 
