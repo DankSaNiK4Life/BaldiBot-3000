@@ -64,7 +64,7 @@ async def process_response(final_result, ctx):
         cfg.listen_to_name = None
     else: real_name = "Unknown_User"
 
-    openai_answer = await chat_with_gpt(final_result, real_name)
+    openai_answer = await chat_with_gpt(final_result, real_name, image_attachment=None)
     print(f"Baldi says: {openai_answer}")
     await text_to_audio_played(openai_answer, ctx, cfg.ELEVENLABS_VOICE)  # Play response in voice chat
 
