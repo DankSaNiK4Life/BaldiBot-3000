@@ -29,6 +29,8 @@ def on_turn(transcript):
     if transcript.text:
         print(f"Transcript: {transcript.text}")
 
+aai.settings.api_key = cfg.ASSEMBLYAI_API_KEY
+
 class AssemblyAIStreamSink(voice_recv.AudioSink):
     def __init__(self):
         super().__init__()
