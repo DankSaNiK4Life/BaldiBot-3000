@@ -43,50 +43,48 @@ aai.settings.api_key = cfg.ASSEMBLYAI_API_KEY
 class AssemblyAIStreamSink(voice_recv.AudioSink):
     def __init__(self):
         super().__init__()
-        # 1. Initialize the v3 Client
-        self.client = StreamingClient(
+        # RENAME self.client -> self.aai_client to avoid the conflict
+        self.aai_client = StreamingClient(
             StreamingClientOptions(
                 api_key=aai.settings.api_key,
-                api_host="streaming.assemblyai.com" # Required for v3
+                api_host="streaming.assemblyai.com"
             )
         )
         
-        # 2. Register v3 Event Handlers
-        self.client.on(StreamingEvents.Begin, self.on_begin)
-        self.client.on(StreamingEvents.Turn, self.on_turn)
-        self.client.on(StreamingEvents.Error, self.on_error)
-        self.client.on(StreamingEvents.Termination, self.on_terminated)
+        self.aai_client.on(StreamingEvents.Begin, self.on_begin)
+        self.aai_client.on(StreamingEvents.Turn, self.on_turn)
+        self.aai_client.on(StreamingEvents.Error, self.on_error)
+        self.aai_client.on(StreamingEvents.Termination, self.on_terminated)
 
-        # 3. Connect with 48kHz (Discord rate)
-        self.client.connect(
+        self.aai_client.connect(
             StreamingParameters(sample_rate=48_000)
         )
 
     def on_begin(self, event: BeginEvent):
-        print(f"Session started: {event.id}")
+        print(f"AAI Session started: {event.id}")
 
     def on_turn(self, event: TurnEvent):
         if event.transcript:
-            # Universal Streaming is immutable; transcripts are 'Final' by default
             print(f"Transcript: {event.transcript}")
 
     def on_error(self, error: StreamingError):
         print(f"AAI Error: {error}")
 
     def on_terminated(self, event):
-        print("Session terminated")
+        print("AAI Session terminated")
 
     def wants_opus(self) -> bool:
         return False
 
     def write(self, user, data):
-        # Stream raw PCM bytes
-        if hasattr(self, 'client'):
-            self.client.stream(data.pcm)
+        # Update variable name here too
+        if hasattr(self, 'aai_client'):
+            self.aai_client.stream(data.pcm)
 
     def cleanup(self):
-        if hasattr(self, 'client'):
-            self.client.disconnect(terminate=True)
+        # Update variable name here too
+        if hasattr(self, 'aai_client'):
+            self.aai_client.disconnect(terminate=True)
 
 # Wait_for_silence function - This is used to detect when someone has stopped talking for a certain time or if max_duration was reached (this then calls process_response)
 async def wait_for_silence(max_duration, silence_timeout, ctx):
