@@ -43,12 +43,16 @@ class AssemblyAIStreamSink(voice_recv.AudioSink):
         self.transcriber.connect()
 
     def on_data(self, transcript: aai.RealtimeTranscript):
+        # 1. Ignore empty chunks
         if not transcript.text:
             return
+
+        # 2. Print 'Interim' for live text, 'Final' for the finished sentence
         if isinstance(transcript, aai.RealtimeFinalTranscript):
-            print(f"Final: {transcript.text}")
+            print(f"\rFinal Sentence: {transcript.text}")
         else:
-            print(f"Interim: {transcript.text}")
+            # Use \r to overwrite the line for a "live typing" effect
+            print(f"User is saying: {transcript.text}", end="\r")
 
     def on_error(self, error: aai.RealtimeError):
         print(f"AAI Error: {error}")
