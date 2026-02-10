@@ -71,8 +71,8 @@ async def process_response(final_result, ctx):
 async def gen_with_elevenlabs(input_text, voice):
     audio = await cfg.eleven_client.text_to_speech(
         text=input_text,
-        voice=voice,
-        model="eleven_multilingual_v2"
+        voice_id=voice,
+        model_id="eleven_multilingual_v2"
     )
 
     out = b''

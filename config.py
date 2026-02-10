@@ -1,5 +1,5 @@
 import os
-from elevenlabs.client import AsyncElevenLabs
+from elevenlabs.client import ElevenLabs
 import requests
 
 class Config:
@@ -18,7 +18,7 @@ class Config:
 
     MAX_DURATION = 30                                         # This is how long the user can speak for before the speech is sent
     SILENCE_TIMEOUT = 4                                       # This is how long the user needs to be silent for to be able to send their speech
-    ELEVENLABS_VOICE = "Baldi The Melon Head"                 # Replace this with the name of whatever voice you have created on Elevenlabs
+    ELEVENLABS_VOICE = "CGOMbDUL52Yuc7oiDIm8"                 # Replace this with the name of whatever voice you have created on Elevenlabs (Baldi The Melon Head)
     BACKUP_JSON_FILE = "backups/BaldiHistoryJsonBackup.json"  # Use JSON for structured data
     MAX_TOKENS = 6000                                         # Set a reasonable limit to avoid excessive costs (4000 tokens is about 3000 word)
 
@@ -93,7 +93,7 @@ class Config:
     last_bot_message = " "    # This is used for the "last" command to show the last message sent by the bot
     listen_to_name = None     # This is used to store the name of the user the bot is listening to
 
-    eleven_client = AsyncElevenLabs(api_key=ELEVENLABS_API_KEY) # This assigns the ElevenLabs client
+    eleven_client = ElevenLabs(api_key=ELEVENLABS_API_KEY) # This assigns the ElevenLabs client
 
     is_waiting_for_silence = False  # This is used to call the waiting_for_silence function in the cb function
     is_listen_to_all = False        # This is used to determine if the bot should listen to everyone or just someone specific
