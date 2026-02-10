@@ -21,6 +21,17 @@ class Config:
     ELEVENLABS_VOICE = "CGOMbDUL52Yuc7oiDIm8"                 # Replace this with the name of whatever voice you have created on Elevenlabs (Baldi The Melon Head)
     BACKUP_JSON_FILE = "backups/BaldiHistoryJsonBackup.json"  # Use JSON for structured data
     MAX_TOKENS = 6000                                         # Set a reasonable limit to avoid excessive costs (4000 tokens is about 3000 word)
+    OWNER_ID = 205472888755716107                             # This is who the owner of the bot is (AKA Baldi The Melon Head)
+
+    TRUSTED_USER_IDS = [                                      # This is a list of user IDs that the bot will trust to use important commands
+        OWNER_ID, 
+        257961792867663875, # Ishaq
+        247009258099441664, # Shaun
+        314124876745277440, # Ewan
+        195309114967064587, # Fil
+        872867731580530718, # Taylor
+        838854430111301652, # Bailey
+    ] 
 
     USERNAME_TO_REALNAME = {
     "baldithemelonhead": "Reece",

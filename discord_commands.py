@@ -102,13 +102,14 @@ async def on_message(message):
             
             await message.reply(gpt_response)
 
-        
-
         await bot.process_commands(message)  # Allows commands to still work
 
 # Join command - This makes the bot connect to the channel the user is in
 @bot.command()
 async def join(ctx):
+    if (ctx.author.id not in cfg.TRUSTED_USER_IDS):
+        await ctx.reply("You are not trusted, you cannot use this command!")
+        return
 
     if (ctx.author.voice):
         channel = ctx.message.author.voice.channel
@@ -138,6 +139,10 @@ async def stop(ctx):
 # Listening sub-command - This stops the bot from listening 
 @stop.command()
 async def listening(ctx):
+    if (ctx.author.id not in cfg.TRUSTED_USER_IDS):
+        await ctx.reply("You are not trusted, you cannot use this command!")
+        return
+    
     vc = ctx.voice_client
     if vc and vc.is_listening():
         vc.stop_listening()
@@ -151,6 +156,10 @@ async def listening(ctx):
 # Playing sub-command - Makes the bot stop playing a audio file
 @stop.command(aliases=["singing"])
 async def playing(ctx): 
+    if (ctx.author.id not in cfg.TRUSTED_USER_IDS):
+        await ctx.reply("You are not trusted, you cannot use this command!")
+        return
+    
     vc = ctx.voice_client
     if vc.is_playing():
         vc.stop_playing()
@@ -170,11 +179,19 @@ async def listen(ctx):
 # All sub-command - Makes the bot listen to everyone in the voice chat
 @listen.command()
 async def all(ctx):
+    if (ctx.author.id not in cfg.TRUSTED_USER_IDS):
+        await ctx.reply("You are not trusted, you cannot use this command!")
+        return
+    
     await start_listening(ctx, True)
 
 # To sub-command - Makes the bot listen to the user that was mentioned 
 @listen.command()
 async def to(ctx, user: str):
+    if (ctx.author.id not in cfg.TRUSTED_USER_IDS):
+        await ctx.reply("You are not trusted, you cannot use this command!")
+        return
+    
     if not ctx.message.mentions:
         await ctx.send("You must mention a user to listen to!")
         return
@@ -184,6 +201,10 @@ async def to(ctx, user: str):
 # Say command - Makes the bot say what the user types
 @bot.command()
 async def say(ctx):
+    if (ctx.author.id not in cfg.TRUSTED_USER_IDS):
+        await ctx.reply("You are not trusted, you cannot use this command!")
+        return
+    
     vc = ctx.voice_client
     if not vc:
         await ctx.send("I am not in a voice channel")
@@ -226,6 +247,10 @@ async def say(ctx):
 # Sing command - plays one of the mp3 files in "./songs"
 @bot.command()
 async def sing(ctx):
+    if (ctx.author.id not in cfg.TRUSTED_USER_IDS):
+        await ctx.reply("You are not trusted, you cannot use this command!")
+        return
+    
     vc = ctx.voice_client
     if not vc:
         await ctx.send("I am not in a voice channel")
@@ -267,7 +292,10 @@ async def set(ctx):
 # Context sub-command - Sets the context message for the AI
 @set.command()
 async def context(ctx):
-     
+    if (ctx.author.id not in cfg.TRUSTED_USER_IDS):
+        await ctx.reply("You are not trusted, you cannot use this command!")
+        return
+    
     new_message = ctx.message.content[len(ctx.prefix) + len("set context"):].strip()
 
     if (new_message.lower() == "default"):
@@ -307,6 +335,10 @@ async def context(ctx):
 # Leave command - Leaves the voice chat
 @bot.command()
 async def leave(ctx):
+    if (ctx.author.id not in cfg.TRUSTED_USER_IDS):
+        await ctx.reply("You are not trusted, you cannot use this command!")
+        return
+    
     if (ctx.voice_client):
         await ctx.guild.voice_client.disconnect()
         await ctx.send("Seeya later kid!")
@@ -318,5 +350,9 @@ async def leave(ctx):
 # Die Command - Closes the bot
 @bot.command()
 async def die(ctx):
+    if (ctx.author.id != cfg.OWNER_ID):
+        await ctx.reply("You are not my owner, you cannot use this command!")
+        return
+    
     #ctx.cfg.voice_client.stop()
     await ctx.bot.close()
