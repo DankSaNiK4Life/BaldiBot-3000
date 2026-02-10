@@ -14,6 +14,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 import wave
 import io
 import uuid
+import tempfile
 
 # Dummy sink that discards audio data (here for now until I figure out a way to clear audio data properly lol)
 class DummySink(voice_recv.AudioSink):
@@ -111,7 +112,12 @@ async def gen_with_elevenlabs_streaming(input_text, voice):
     # Reset stream position to the beginning
     audio_stream.seek(0)
 
-    cfg.voice_client.play(discord.FFmpegPCMAudio(executable="ffmpeg", source=audio_stream))
+    # Write the audio stream to a temporary file
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as temp_file:
+        temp_file.write(audio_stream.read())  # Write the entire stream content
+        temp_file_path = temp_file.name  # Get the file path
+
+    cfg.voice_client.play(discord.FFmpegPCMAudio(executable="ffmpeg", source=temp_file_path))
 
 async def gen_with_sovits(input_text, ctx):
 
