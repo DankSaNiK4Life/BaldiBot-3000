@@ -295,12 +295,13 @@ async def text_to_audio_played(input_text, ctx, voice="Bill"):
     response_time = time.time() - response_start_time
     print(f"Response time: {int(response_time // 60):02d}:{int(response_time % 60):02d}.{int((response_time % 1) * 1000):03d}")
 
+
+    # POSSIBLY MOVE THIS INTO GEN FUNCTION 
     # Restart speech recognition after audio playback is complete
     while cfg.voice_client.is_playing():
         cfg.voice_client.stop_listening()
         cfg.voice_client.listen(DummySink())
         await asyncio.sleep(0.5)
-
     from discord_commands import bot
     if cfg.is_listen_to_all: await ctx.invoke(bot.get_command("listen all"))
     else: await ctx.invoke(bot.get_command("listen to"), ctx.author.mention)

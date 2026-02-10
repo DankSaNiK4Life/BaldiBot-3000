@@ -10,6 +10,7 @@ from bot_utils import get_real_name
 from voice_chat import start_listening, DummySink
 from openai_chat import chat_with_gpt
 import requests
+import voice_chat
 
 # ----------------------- INITIALIZATION ----------------------- #
 
@@ -90,7 +91,12 @@ async def on_message(message):
         # Check if the bot is mentioned
         elif  bot.user in message.mentions: 
             print("Username: " + username + " " + "Real name: " + real_name + " " "Message: " + user_message)
-            await message.reply(await chat_with_gpt(user_message, real_name, message_attachments))
+
+            gpt_response = await chat_with_gpt(user_message, real_name, message_attachments)
+            if discord.utils.get(bot.voice_clients, guild=message.guild):
+                voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.ELEVENLABS_VOICE)
+            else:
+                await message.reply(gpt_response)
 
         
 
