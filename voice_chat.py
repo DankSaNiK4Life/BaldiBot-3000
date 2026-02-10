@@ -16,6 +16,10 @@ import io
 import uuid
 import tempfile
 
+# Specifically silence the voice_recv reader and library noise
+logging.getLogger('discord.ext.voice_recv.reader').setLevel(logging.WARNING)
+logging.getLogger('discord.ext.voice_recv').setLevel(logging.WARNING)
+
 # Dummy sink that discards audio data (here for now until I figure out a way to clear audio data properly lol)
 class DummySink(voice_recv.AudioSink):
     def write(self, user, data):

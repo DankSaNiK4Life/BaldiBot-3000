@@ -11,4 +11,3 @@ assemblyai
 requests
 aiohttp
 uuid
-tempfile
