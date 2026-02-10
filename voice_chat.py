@@ -1,6 +1,7 @@
 from config import Config as cfg
 from bot_utils import get_real_name
 from elevenlabs import save
+from elevenlabs.play import play
 from discord.ext import voice_recv
 from openai_chat import chat_with_gpt
 import time
@@ -72,7 +73,8 @@ async def gen_with_elevenlabs(input_text, voice):
     audio = await cfg.eleven_client.text_to_speech(
         text=input_text,
         voice_id=voice,
-        model_id="eleven_multilingual_v2"
+        model_id="eleven_multilingual_v2",
+        output_format="mp3_44100_128"
     )
 
     out = b''
