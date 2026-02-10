@@ -85,6 +85,10 @@ async def on_message(message):
             print("Username: " + streamerbot_user + " " + "Message: " + streamerbot_msg)
 
             gpt_response = await chat_with_gpt(streamerbot_msg, streamerbot_user, message_attachments)
+            
+            if discord.utils.get(bot.voice_clients, guild=message.guild):
+                await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.ELEVENLABS_VOICE)
+            
             cfg.send_to_twitch(gpt_response)
             print("Baldi's reply on Twitch: " + gpt_response)
             await message.reply(gpt_response)
@@ -95,8 +99,8 @@ async def on_message(message):
             gpt_response = await chat_with_gpt(user_message, real_name, message_attachments)
             if discord.utils.get(bot.voice_clients, guild=message.guild):
                 await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.ELEVENLABS_VOICE)
-            else:
-                await message.reply(gpt_response)
+            
+            await message.reply(gpt_response)
 
         
 
