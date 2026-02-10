@@ -389,7 +389,7 @@ def cb(user: discord.Member, audio: sr.AudioData, third=None):
                 cfg.last_speech_time = time.time() # Reset silence timer
                 
         except sr.UnknownValueError:
-            print(f"Did not recognize {user_name if user else 'Unknown User'}'s audio")
+            #print(f"Did not recognize {user_name if user else 'Unknown User'}'s audio")
             #print(f"Did not recognize {user.display_name}'s audio")
             return
         except sr.RequestError as e:
