@@ -69,7 +69,7 @@ async def process_response(final_result, ctx):
     await text_to_audio_played(openai_answer, ctx, cfg.ELEVENLABS_VOICE)  # Play response in voice chat
 
 async def gen_with_elevenlabs(input_text, voice):
-    audio = await cfg.eleven_client.generate(
+    audio = await cfg.eleven_client.text_to_speech(
         text=input_text,
         voice=voice,
         model="eleven_multilingual_v2"
@@ -84,7 +84,7 @@ async def gen_with_elevenlabs(input_text, voice):
     # Wait a moment to ensure audio file is ready
     await asyncio.sleep(1)
 
-    cfg.voice_client.play(discord.FFmpegPCMAudio(executable="C:/ffmpeg/bin/ffmpeg.exe", source="audio.mp3"))
+    cfg.voice_client.play(discord.FFmpegPCMAudio(executable="ffmpeg/bin/ffmpeg.exe", source="audio.mp3"))
 
     return print("--- ElevenLabs Generated & Played Audio. ---")
 
