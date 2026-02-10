@@ -11,7 +11,7 @@ from voice_chat import start_listening, DummySink
 from openai_chat import chat_with_gpt
 import requests
 import voice_chat
-import personalities as p
+from personalities import Personalities as p
 
 # ----------------------- INITIALIZATION ----------------------- #
 
@@ -47,7 +47,7 @@ async def on_ready():
 
     # This adds the system message to the chat history on start
     cfg.chat_history.remove(cfg.chat_history[0])
-    cfg.chat_history.insert(0, cfg.FIRST_SYSTEM_MESSAGE)
+    cfg.chat_history.insert(0, p.SANE_BALDIS_FIRST_SYSTEM_MESSAGE)
 
 # On_message event - This lets the bot see what is being said in any chat in the server 
 @bot.event
@@ -302,7 +302,7 @@ async def context(ctx):
     if (new_message.lower() == "default"):
         new_message = cfg.DEFAULT_CONTEXT_MESSAGE
 
-    cfg.FIRST_SYSTEM_MESSAGE["content"] = cfg.FIRST_SYSTEM_MESSAGE["content"].replace(
+    p.SANE_BALDIS_FIRST_SYSTEM_MESSAGE["content"] = p.SANE_BALDIS_FIRST_SYSTEM_MESSAGE["content"].replace(
         f"Context: {cfg.CONTEXT_MESSAGE}",
         f"Context: {new_message}"
         )
