@@ -261,9 +261,9 @@ async def text_to_audio_played(input_text, ctx, voice="Bill"):
     if cfg.voice_client.is_playing(): return
 
     response_start_time = time.time()
-    #await gen_with_elevenlabs(input_text, voice)
+    await gen_with_elevenlabs(input_text, voice)
     #await gen_with_sovits(input_text, ctx)
-    await gen_with_sovits_streaming(input_text, ctx)
+    #await gen_with_sovits_streaming(input_text, ctx)
 
     response_time = time.time() - response_start_time
     print(f"Response time: {int(response_time // 60):02d}:{int(response_time % 60):02d}.{int((response_time % 1) * 1000):03d}")
