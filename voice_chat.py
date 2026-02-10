@@ -58,9 +58,9 @@ async def wait_for_silence(max_duration, silence_timeout, ctx):
 async def process_response(final_result, ctx):
 
     if not final_result or final_result == " ":
-        final_result = "*stays silent*"
-        print(f"\nFinal result changed to: {final_result}\n")
-        #return  # Don't process empty messages
+        #final_result = "*stays silent*"
+        #print(f"\nFinal result changed to: {final_result}\n")
+        return  # Don't process empty messages
 
     cfg.voice_client.stop_listening()
     print("Stopped listening to speech")
@@ -105,23 +105,15 @@ async def gen_with_elevenlabs_streaming(input_text, voice):
         model_id="eleven_multilingual_v2"
     )
 
-    # Create a BytesIO object to hold the audio data in memory
-    audio_stream = BytesIO()
+    # Collect all chunks into one bytes object
+    audio_data = b"".join([chunk for chunk in response if chunk])
+    
+    # Create a BytesIO object from the collected bytes
+    audio_buffer = io.BytesIO(audio_data)
 
-    # Write each chunk of audio data to the stream
-    for chunk in response:
-        if chunk:
-            audio_stream.write(chunk)
-
-    # Reset stream position to the beginning
-    audio_stream.seek(0)
-
-    # Write the audio stream to a temporary file
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as temp_file:
-        temp_file.write(audio_stream.read())  # Write the entire stream content
-        temp_file_path = temp_file.name  # Get the file path
-
-    cfg.voice_client.play(discord.FFmpegPCMAudio(executable="ffmpeg", source=temp_file_path))
+    # Play directly using pipe=True
+    # Note: We pass the buffer itself as the source
+    cfg.voice_client.play(discord.FFmpegPCMAudio(audio_buffer, pipe=True, executable="ffmpeg"))
 
 async def gen_with_sovits(input_text, ctx):
 
