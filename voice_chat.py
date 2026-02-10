@@ -111,9 +111,12 @@ async def gen_with_elevenlabs_streaming(input_text, voice):
     # Create a BytesIO object from the collected bytes
     audio_buffer = io.BytesIO(audio_data)
 
+    # Use -af "adelay=500|500" to delay both channels by 500ms
+    ffmpeg_options = {'options': '-vn -af "adelay=500|500"'}
+
     # Play directly using pipe=True
     # Note: We pass the buffer itself as the source
-    cfg.voice_client.play(discord.FFmpegPCMAudio(audio_buffer, pipe=True, executable="ffmpeg"))
+    cfg.voice_client.play(discord.FFmpegPCMAudio(audio_buffer, pipe=True, executable="ffmpeg", options=ffmpeg_options))
 
 async def gen_with_sovits(input_text, ctx):
 
