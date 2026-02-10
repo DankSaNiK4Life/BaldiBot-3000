@@ -94,7 +94,7 @@ async def on_message(message):
 
             gpt_response = await chat_with_gpt(user_message, real_name, message_attachments)
             if discord.utils.get(bot.voice_clients, guild=message.guild):
-                voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.ELEVENLABS_VOICE)
+                await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.ELEVENLABS_VOICE)
             else:
                 await message.reply(gpt_response)
 
