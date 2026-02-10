@@ -105,14 +105,6 @@ async def gen_with_elevenlabs_streaming(input_text, voice):
         model_id="eleven_multilingual_v2"
     )
 
-     # Create a BytesIO object to hold the audio data in memory
-    audio_stream = BytesIO()
-
-    # Write each chunk of audio data to the stream
-    for chunk in response:
-        if chunk:
-            audio_stream.write(chunk)
-
     # Collect all chunks into one bytes object
     audio_data = b"".join([chunk for chunk in response if chunk])
     
@@ -121,7 +113,7 @@ async def gen_with_elevenlabs_streaming(input_text, voice):
 
     # Play directly using pipe=True
     # Note: We pass the buffer itself as the source
-    cfg.voice_client.play(discord.FFmpegPCMAudio(audio_stream.read(), pipe=True, executable="ffmpeg"))
+    cfg.voice_client.play(discord.FFmpegPCMAudio(audio_buffer, pipe=True, executable="ffmpeg"))
 
 async def gen_with_sovits(input_text, ctx):
 
