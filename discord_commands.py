@@ -47,7 +47,7 @@ async def on_ready():
 
     # This adds the system message to the chat history on start
     cfg.chat_history.remove(cfg.chat_history[0])
-    cfg.chat_history.insert(0, p.SANE_BALDIS_FIRST_SYSTEM_MESSAGE)
+    cfg.chat_history.insert(0, cfg.DEFAULT_SYSTEM_MESSAGE)
 
 # On_message event - This lets the bot see what is being said in any chat in the server 
 @bot.event
@@ -302,7 +302,7 @@ async def context(ctx):
     if (new_message.lower() == "default"):
         new_message = cfg.DEFAULT_CONTEXT_MESSAGE
 
-    p.SANE_BALDIS_FIRST_SYSTEM_MESSAGE["content"] = p.SANE_BALDIS_FIRST_SYSTEM_MESSAGE["content"].replace(
+    cfg.DEFAULT_SYSTEM_MESSAGE["content"] = cfg.DEFAULT_SYSTEM_MESSAGE["content"].replace(
         f"Context: {cfg.CONTEXT_MESSAGE}",
         f"Context: {new_message}"
         )
@@ -310,10 +310,33 @@ async def context(ctx):
     cfg.CONTEXT_MESSAGE = new_message
 
     cfg.chat_history.remove(cfg.chat_history[0])
-    cfg.chat_history.insert(0, p.SANE_BALDIS_FIRST_SYSTEM_MESSAGE)
+    cfg.chat_history.insert(0, cfg.DEFAULT_SYSTEM_MESSAGE)
 
     print(f"New context message has been set to: {cfg.CONTEXT_MESSAGE}")
     await ctx.send(f"Context message has been set!")
+
+# Personality sub-command - Sets the personality for the AI (different system messages)
+@set.command()
+async def personality(ctx):
+    if (ctx.author.id not in cfg.TRUSTED_USER_IDS):
+        await ctx.reply("You are not trusted, you cannot use this command!")
+        return
+    
+    new_message = ctx.message.content[len(ctx.prefix) + len("set personality"):].strip()
+
+    if new_message.lower() == "sane baldi":
+        cfg.DEFAULT_SYSTEM_MESSAGE = p.SANE_BALDIS_FIRST_SYSTEM_MESSAGE
+        cfg.BACKUP_JSON_FILE = "backups/SaneBaldiChatHistoryJsonBackup.json"
+    elif new_message.lower() == "baldi":
+        cfg.DEFAULT_SYSTEM_MESSAGE = p.BALDIS_FIRST_SYSTEM_MESSAGE
+        cfg.BACKUP_JSON_FILE = "backups/BaldiHistoryJsonBackup.json"
+        
+
+    cfg.chat_history.remove(cfg.chat_history[0])
+    cfg.chat_history.insert(0, cfg.DEFAULT_SYSTEM_MESSAGE)
+
+    print(f"New personality has been set to: {new_message}")
+    await ctx.send(f"Personality has been set!")
 
 # Show command - command used to invoke sub commands
 @bot.group(name="show", invoke_without_command=True)

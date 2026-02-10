@@ -1,6 +1,7 @@
 import os
 from elevenlabs.client import ElevenLabs
 import requests
+from personalities import Personalities as p
 
 class Config:
     
@@ -16,14 +17,15 @@ class Config:
 
     # ------------------- CONSTANTS ------------------- #
 
-    MAX_DURATION = 30                                         # This is how long the user can speak for before the speech is sent
-    SILENCE_TIMEOUT = 4                                       # This is how long the user needs to be silent for to be able to send their speech
-    ELEVENLABS_VOICE = "CGOMbDUL52Yuc7oiDIm8"                 # Replace this with the name of whatever voice you have created on Elevenlabs (Baldi The Melon Head)
-    BACKUP_JSON_FILE = "backups/BaldiHistoryJsonBackup.json"  # Use JSON for structured data
-    MAX_TOKENS = 6000                                         # Set a reasonable limit to avoid excessive costs (4000 tokens is about 3000 word)
-    OWNER_ID = 205472888755716107                             # This is who the owner of the bot is (AKA Baldi The Melon Head)
+    MAX_DURATION = 30                                           # This is how long the user can speak for before the speech is sent
+    SILENCE_TIMEOUT = 4                                         # This is how long the user needs to be silent for to be able to send their speech
+    ELEVENLABS_VOICE = "CGOMbDUL52Yuc7oiDIm8"                   # Replace this with the name of whatever voice you have created on Elevenlabs (Baldi The Melon Head)
+    BACKUP_JSON_FILE = "backups/BaldiHistoryJsonBackup.json"    # Use JSON for structured data
+    MAX_TOKENS = 6000                                           # Set a reasonable limit to avoid excessive costs (4000 tokens is about 3000 word)
+    OWNER_ID = 205472888755716107                               # This is who the owner of the bot is (AKA Baldi The Melon Head)
+    DEFAULT_SYSTEM_MESSAGE = p.BALDIS_FIRST_SYSTEM_MESSAGE      # This is the default system message (personality) that the bot will use on start
 
-    TRUSTED_USER_IDS = [                                      # This is a list of user IDs that the bot will trust to use important commands
+    TRUSTED_USER_IDS = [                                        # This is a list of user IDs that the bot will trust to use important commands
         OWNER_ID, 
         257961792867663875, # Ishaq
         247009258099441664, # Shaun
