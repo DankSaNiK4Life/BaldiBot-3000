@@ -86,7 +86,7 @@ async def on_message(message):
 
             gpt_response = await chat_with_gpt(streamerbot_msg, streamerbot_user, message_attachments)
             
-            if discord.utils.get(bot.voice_clients, guild=message.guild):
+            if discord.utils.get(bot.voice_clients):
                 await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.ELEVENLABS_VOICE)
             
             cfg.send_to_twitch(gpt_response)
