@@ -10,3 +10,5 @@ python-dotenv
 assemblyai
 requests
 aiohttp
+uuid
+io

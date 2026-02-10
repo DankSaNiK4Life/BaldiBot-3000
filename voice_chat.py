@@ -1,9 +1,9 @@
 from config import Config as cfg
 from bot_utils import get_real_name
 from elevenlabs import save
-from elevenlabs.play import play
 from discord.ext import voice_recv
 from openai_chat import chat_with_gpt
+from io import BytesIO
 import time
 import asyncio
 import discord
@@ -13,6 +13,7 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', handlers=[logging.StreamHandler()])
 import wave
 import io
+import uuid
 
 # Dummy sink that discards audio data (here for now until I figure out a way to clear audio data properly lol)
 class DummySink(voice_recv.AudioSink):
@@ -70,25 +71,47 @@ async def process_response(final_result, ctx):
     await text_to_audio_played(openai_answer, ctx, cfg.ELEVENLABS_VOICE)  # Play response in voice chat
 
 async def gen_with_elevenlabs(input_text, voice):
-    audio = await cfg.eleven_client.text_to_speech(
-        text=input_text,
+    # Calling the text_to_speech conversion API with detailed parameters
+    audio = cfg.eleven_client.text_to_speech.convert(
         voice_id=voice,
-        model_id="eleven_multilingual_v2",
-        output_format="mp3_44100_128"
+        output_format="mp3_22050_32",
+        text=input_text,
+        model_id="eleven_multilingual_v2", # use the turbo model for low latency
     )
 
-    out = b''
-    async for value in audio:
-        out += value
+    save_file_path = f"{uuid.uuid4()}.mp3"
 
-    save(out, "audio.mp3")
+    with open(save_file_path, "wb") as f:
+        for chunk in audio:
+            if chunk:
+                f.write(chunk)
 
-    # Wait a moment to ensure audio file is ready
-    await asyncio.sleep(1)
+    print(f"{save_file_path}: A new audio file was saved successfully!")
 
-    cfg.voice_client.play(discord.FFmpegPCMAudio(executable="ffmpeg/bin/ffmpeg.exe", source="audio.mp3"))
+    cfg.voice_client.play(discord.FFmpegPCMAudio(executable="ffmpeg", source=save_file_path))
 
     return print("--- ElevenLabs Generated & Played Audio. ---")
+
+async def gen_with_elevenlabs_streaming(input_text, voice):
+    response = cfg.eleven_client.text_to_speech.stream(
+        voice_id=voice,
+        output_format="mp3_22050_32",
+        text=input_text,
+        model_id="eleven_multilingual_v2"
+    )
+
+    # Create a BytesIO object to hold the audio data in memory
+    audio_stream = BytesIO()
+
+    # Write each chunk of audio data to the stream
+    for chunk in response:
+        if chunk:
+            audio_stream.write(chunk)
+
+    # Reset stream position to the beginning
+    audio_stream.seek(0)
+
+    cfg.voice_client.play(discord.FFmpegPCMAudio(executable="ffmpeg", source=audio_stream))
 
 async def gen_with_sovits(input_text, ctx):
 
@@ -263,7 +286,7 @@ async def text_to_audio_played(input_text, ctx, voice="Bill"):
     if cfg.voice_client.is_playing(): return
 
     response_start_time = time.time()
-    await gen_with_elevenlabs(input_text, voice)
+    await gen_with_elevenlabs_streaming(input_text, voice)
     #await gen_with_sovits(input_text, ctx)
     #await gen_with_sovits_streaming(input_text, ctx)
 
