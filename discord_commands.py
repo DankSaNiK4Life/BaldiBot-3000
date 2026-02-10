@@ -11,6 +11,7 @@ from voice_chat import start_listening, DummySink
 from openai_chat import chat_with_gpt
 import requests
 import voice_chat
+import personalities as p
 
 # ----------------------- INITIALIZATION ----------------------- #
 
@@ -309,7 +310,7 @@ async def context(ctx):
     cfg.CONTEXT_MESSAGE = new_message
 
     cfg.chat_history.remove(cfg.chat_history[0])
-    cfg.chat_history.insert(0, cfg.FIRST_SYSTEM_MESSAGE)
+    cfg.chat_history.insert(0, p.SANE_BALDIS_FIRST_SYSTEM_MESSAGE)
 
     print(f"New context message has been set to: {cfg.CONTEXT_MESSAGE}")
     await ctx.send(f"Context message has been set!")
