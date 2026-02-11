@@ -1,4 +1,5 @@
 from platform import system as get_os_name
+import random
 import discord
 import os
 from discord.ext import commands, voice_recv
@@ -128,8 +129,12 @@ async def join(ctx):
         # Starts listening to the user as soon as it joins
         #await start(ctx)
 
-        random_sound = get_random_sound()  # Start playing random sounds in the background
-        cfg.voice_client.play(discord.FFmpegPCMAudio(executable="ffmpeg", source=random_sound))
+        while discord.utils.get(bot.voice_clients, guild=ctx.guild):
+            random_sound = get_random_sound()  # Start playing random sounds in the background
+            cfg.voice_client.play(discord.FFmpegPCMAudio(executable="ffmpeg", source=random_sound))
+            print("Played Random Sound: " + random_sound)
+            # random interval between 30 seconds and 2 minutes
+            await asyncio.sleep(random.randint(5, 10))
     else:
         await ctx.send("You are not in a voice channel buddy!")
         print("The user is not in a channel")
