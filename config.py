@@ -25,6 +25,7 @@ class Config:
     OWNER_ID = 205472888755716107                               # This is who the owner of the bot is (AKA Baldi The Melon Head)
     DEFAULT_SYSTEM_MESSAGE = p.BALDIS_FIRST_SYSTEM_MESSAGE      # This is the default system message (personality) that the bot will use on start
     SOUND_FOLDER = "sounds"                                     # This is the folder where the sound files are stored
+    RANDOM_SOUND_INTERVAL = (300, 3600)                         # This is the interval (in seconds) at which random sounds will be played (between 5 minutes and 1 hour)
 
     TRUSTED_USER_IDS = [                                        # This is a list of user IDs that the bot will trust to use important commands
         OWNER_ID, 
