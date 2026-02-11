@@ -82,10 +82,12 @@ async def on_message(message):
 
         # This is used to grab Streamer.bot's messages and use them to get chatgpt replies
         if channel == "streamerbot-to-baldibot":
-            if user_message.startswith("SPEAKER: "):
+            if user_message.startswith("SPEAKER:"):
                 streamerbot_msg = user_message.split(' ', 1)[1]
+                print("SPEAKER MESSAGE: " + streamerbot_msg)
+                await message.reply("Received speaker message!")
                 await voice_chat.gen_with_elevenlabs_streaming(streamerbot_msg)
-            else:
+            elif not user_message.startswith("SPEAKER:"):
                 streamerbot_msg = user_message.split(' ', 1)[1]
                 streamerbot_user = user_message.split(' ', 1)[0]
                 print("Username: " + streamerbot_user + " " + "Message: " + streamerbot_msg)
