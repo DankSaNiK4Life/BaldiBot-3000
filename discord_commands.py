@@ -98,7 +98,9 @@ async def on_message(message):
                 gpt_response = await chat_with_gpt(streamerbot_msg, streamerbot_user, message_attachments)
             
                 if discord.utils.get(bot.voice_clients):
+                    await stop_random_sounds() # Stop random sounds while the bot is speaking
                     await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.elevenlabs_voice)
+                    await play_random_sounds() # Start random sounds again after the bot has finished speaking
             
                 cfg.send_to_twitch(gpt_response)
                 print("Baldi's reply on Twitch: " + gpt_response)

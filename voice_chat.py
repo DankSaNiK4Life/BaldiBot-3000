@@ -290,7 +290,7 @@ async def text_to_audio_played(input_text, ctx):
     response_start_time = time.time()
     
     from discord_commands import play_random_sounds, stop_random_sounds
-    stop_random_sounds() # Stop random sounds while the bot is speaking
+    await stop_random_sounds() # Stop random sounds while the bot is speaking
     await gen_with_elevenlabs_streaming(input_text)
     await play_random_sounds()
     #await gen_with_sovits(input_text, ctx)
