@@ -223,8 +223,8 @@ async def sounds(ctx):
         await ctx.reply("You are not trusted, you cannot use this command!")
         return
     
-    await play_random_sounds()
     await ctx.send("I have started playing random sounds in the background.")
+    await play_random_sounds()
 
     
 
