@@ -291,7 +291,7 @@ async def text_to_audio_played(input_text, ctx):
     cfg.random_sounds_enabled = False # Disable random sounds while the bot is speaking
     await gen_with_elevenlabs_streaming(input_text)
     from discord_commands import sounds
-    sounds(ctx=None)
+    sounds(ctx)
     #await gen_with_sovits(input_text, ctx)
     #await gen_with_sovits_streaming(input_text, ctx)
 
