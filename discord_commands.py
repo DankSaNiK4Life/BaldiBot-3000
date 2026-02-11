@@ -88,7 +88,7 @@ async def on_message(message):
                 await message.reply("Received speaker message!")
                 
                 await stop_random_sounds() # Stop random sounds while the bot is speaking
-                await voice_chat.gen_with_elevenlabs_streaming(streamerbot_msg, model="eleven_turbo_v2_5")
+                await voice_chat.gen_with_elevenlabs_streaming(streamerbot_msg)
                 await play_random_sounds() # Start random sounds again after the bot has finished speaking
             else:
                 streamerbot_msg = user_message.split(' ', 1)[1]
