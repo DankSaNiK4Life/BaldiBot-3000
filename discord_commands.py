@@ -133,10 +133,10 @@ async def join(ctx):
         while discord.utils.get(bot.voice_clients, guild=ctx.guild) and cfg.random_sounds_enabled:
             await asyncio.sleep(random.randint(cfg.RANDOM_SOUND_INTERVAL[0], cfg.RANDOM_SOUND_INTERVAL[1])) # random interval between 5 minutes and 1 hour
             if not cfg.random_sounds_enabled: break
-            random_sound = get_random_sound()  # Start playing random sounds in the background
             if not cfg.voice_client.is_playing():
+                random_sound = get_random_sound()  # Start playing random sounds in the background
                 cfg.voice_client.play(discord.FFmpegPCMAudio(executable="ffmpeg", source=random_sound))
-            print("Played Random Sound: " + random_sound)
+                print("Played Random Sound: " + random_sound)
     else:
         await ctx.send("You are not in a voice channel buddy!")
         print("The user is not in a channel")
@@ -203,10 +203,10 @@ async def sounds(ctx):
     while discord.utils.get(bot.voice_clients, guild=ctx.guild) and cfg.random_sounds_enabled:
             await asyncio.sleep(random.randint(cfg.RANDOM_SOUND_INTERVAL[0], cfg.RANDOM_SOUND_INTERVAL[1])) # random interval between 5 minutes and 1 hour
             if not cfg.random_sounds_enabled: break
-            random_sound = get_random_sound()  # Start playing random sounds in the background
             if not cfg.voice_client.is_playing():
+                random_sound = get_random_sound()  # Start playing random sounds in the background
                 cfg.voice_client.play(discord.FFmpegPCMAudio(executable="ffmpeg", source=random_sound))
-            print("Played Random Sound: " + random_sound)
+                print("Played Random Sound: " + random_sound)
 
 
 # Listen command - command used to invoke sub commands
