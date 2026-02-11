@@ -373,6 +373,8 @@ async def personality(ctx):
     cfg.chat_history.insert(0, cfg.DEFAULT_SYSTEM_MESSAGE)
 
     print(f"New personality has been set to: {new_message}")
+    print(f"New voice has been set to: {cfg.elevenlabs_voice}")
+    print(f"New model has been set to: {cfg.elevenlabs_model}")
     await ctx.send(f"Personality has been set!")
 
 # Show command - command used to invoke sub commands
