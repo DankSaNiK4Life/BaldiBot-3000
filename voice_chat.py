@@ -118,7 +118,9 @@ async def gen_with_elevenlabs_streaming(input_text, voice=cfg.elevenlabs_voice, 
     # Note: We pass the buffer itself as the source
     cfg.voice_client.play(discord.FFmpegPCMAudio(audio_buffer, pipe=True, executable="ffmpeg"))
     print("--- ElevenLabs Streaming Generated & Played Audio. ---")
-    
+    print(f"Voice used: {voice}")
+    print(f"Model used: {model}")
+
     await play_random_sounds() # Start random sounds again after the bot has finished speaking
 
 async def gen_with_sovits(input_text, ctx):
