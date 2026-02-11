@@ -97,7 +97,7 @@ async def gen_with_elevenlabs(input_text, voice):
 
     return print("--- ElevenLabs Generated & Played Audio. ---")
 
-async def gen_with_elevenlabs_streaming(input_text, voice=cfg.elevenlabs_voice, model=cfg.elevenlabs_model):
+async def gen_with_elevenlabs_streaming(input_text, voice, model):
     from discord_commands import play_random_sounds, stop_random_sounds
     await stop_random_sounds() # Stop random sounds while the bot is speaking
     

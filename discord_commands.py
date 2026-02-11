@@ -87,7 +87,7 @@ async def on_message(message):
                 print("SPEAKER MESSAGE: " + streamerbot_msg)
                 await message.reply("Received speaker message!")
                 
-                await voice_chat.gen_with_elevenlabs_streaming(streamerbot_msg)
+                await voice_chat.gen_with_elevenlabs_streaming(streamerbot_msg, cfg.elevenlabs_voice, cfg.elevenlabs_model)
             else:
                 streamerbot_msg = user_message.split(' ', 1)[1]
                 streamerbot_user = user_message.split(' ', 1)[0]
@@ -96,7 +96,7 @@ async def on_message(message):
                 gpt_response = await chat_with_gpt(streamerbot_msg, streamerbot_user, message_attachments)
             
                 if discord.utils.get(bot.voice_clients):
-                    await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.elevenlabs_voice)
+                    await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.elevenlabs_voice, cfg.elevenlabs_model)
             
                 cfg.send_to_twitch(gpt_response)
                 print("Baldi's reply on Twitch: " + gpt_response)
@@ -107,7 +107,7 @@ async def on_message(message):
 
             gpt_response = await chat_with_gpt(user_message, real_name, message_attachments)
             if discord.utils.get(bot.voice_clients, guild=message.guild):
-                await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.elevenlabs_voice)
+                await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.elevenlabs_voice, cfg.elevenlabs_model)
             
             await message.reply(gpt_response)
 
@@ -269,7 +269,7 @@ async def say(ctx):
     try:
         # Play the audio in the voice channel
         if not vc.is_playing():
-            await voice_chat.gen_with_elevenlabs_streaming(text)
+            await voice_chat.gen_with_elevenlabs_streaming(text, cfg.elevenlabs_voice, cfg.elevenlabs_model)
             print(f"Saying: {text}")
         else:
             await ctx.send("I am already playing something. Please wait!")
