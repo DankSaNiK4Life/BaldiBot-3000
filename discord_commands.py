@@ -113,7 +113,6 @@ async def join(ctx):
         return
 
     if (ctx.author.voice):
-        vc = ctx.voice_client
         channel = ctx.message.author.voice.channel
         
         if discord.utils.get(bot.voice_clients, guild=ctx.guild):
@@ -130,7 +129,7 @@ async def join(ctx):
         #await start(ctx)
 
         random_sound = get_random_sound()  # Start playing random sounds in the background
-        vc.play(discord.FFmpegPCMAudio(executable="ffmpeg", source=random_sound))
+        cfg.voice_client.play(discord.FFmpegPCMAudio(executable="ffmpeg", source=random_sound))
     else:
         await ctx.send("You are not in a voice channel buddy!")
         print("The user is not in a channel")
