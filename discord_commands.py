@@ -6,7 +6,7 @@ import asyncio
 from elevenlabs import save
 import json
 from config import Config as cfg
-from bot_utils import get_real_name
+from bot_utils import get_real_name, get_random_sound
 from voice_chat import start_listening, DummySink
 from openai_chat import chat_with_gpt
 import requests
@@ -113,6 +113,7 @@ async def join(ctx):
         return
 
     if (ctx.author.voice):
+        vc = ctx.voice_client
         channel = ctx.message.author.voice.channel
         
         if discord.utils.get(bot.voice_clients, guild=ctx.guild):
@@ -127,6 +128,9 @@ async def join(ctx):
 
         # Starts listening to the user as soon as it joins
         #await start(ctx)
+
+        random_sound = get_random_sound()  # Start playing random sounds in the background
+        vc.play(discord.FFmpegPCMAudio(executable="ffmpeg", source=random_sound))
     else:
         await ctx.send("You are not in a voice channel buddy!")
         print("The user is not in a channel")

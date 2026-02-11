@@ -24,6 +24,7 @@ class Config:
     MAX_TOKENS = 6000                                           # Set a reasonable limit to avoid excessive costs (4000 tokens is about 3000 word)
     OWNER_ID = 205472888755716107                               # This is who the owner of the bot is (AKA Baldi The Melon Head)
     DEFAULT_SYSTEM_MESSAGE = p.BALDIS_FIRST_SYSTEM_MESSAGE      # This is the default system message (personality) that the bot will use on start
+    SOUND_FOLDER = "sounds"                                     # This is the folder where the sound files are stored
 
     TRUSTED_USER_IDS = [                                        # This is a list of user IDs that the bot will trust to use important commands
         OWNER_ID, 
