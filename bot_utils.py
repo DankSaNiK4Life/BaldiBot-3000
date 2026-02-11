@@ -22,4 +22,5 @@ def get_random_sound():
     if sound_files:
         sound_file = random.choice(sound_files)
         print(f"Random sound selected: {sound_file}") 
-        return sound_file
+        sound_file_dir = os.path.join(cfg.SOUND_FOLDER, sound_file)
+        return sound_file_dir
