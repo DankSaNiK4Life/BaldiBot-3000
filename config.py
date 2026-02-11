@@ -20,6 +20,7 @@ class Config:
     MAX_DURATION = 30                                           # This is how long the user can speak for before the speech is sent
     SILENCE_TIMEOUT = 4                                         # This is how long the user needs to be silent for to be able to send their speech
     ELEVENLABS_VOICE = "CGOMbDUL52Yuc7oiDIm8"                   # Replace this with the name of whatever voice you have created on Elevenlabs (Baldi The Melon Head V2 - vrkuGKtvocSoZvsaAeUM, Baldi The Melon Head - CGOMbDUL52Yuc7oiDIm8)
+    ELEVENLABS_MODEL = "eleven_multilingual_v2"                 # This is the ElevenLabs model we will be using for TTS
     BACKUP_JSON_FILE = "backups/BaldiHistoryJsonBackup.json"    # Use JSON for structured data
     MAX_TOKENS = 6000                                           # Set a reasonable limit to avoid excessive costs (4000 tokens is about 3000 word)
     OWNER_ID = 205472888755716107                               # This is who the owner of the bot is (AKA Baldi The Melon Head)

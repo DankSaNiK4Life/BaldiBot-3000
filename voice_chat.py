@@ -73,7 +73,7 @@ async def process_response(final_result, ctx):
 
     openai_answer = await chat_with_gpt(final_result, real_name, image_attachment=None)
     print(f"Baldi says: {openai_answer}")
-    await text_to_audio_played(openai_answer, ctx, cfg.ELEVENLABS_VOICE)  # Play response in voice chat
+    await text_to_audio_played(openai_answer, ctx)  # Play response in voice chat
 
 async def gen_with_elevenlabs(input_text, voice):
     # Calling the text_to_speech conversion API with detailed parameters
@@ -97,12 +97,12 @@ async def gen_with_elevenlabs(input_text, voice):
 
     return print("--- ElevenLabs Generated & Played Audio. ---")
 
-async def gen_with_elevenlabs_streaming(input_text, voice):
+async def gen_with_elevenlabs_streaming(input_text, voice=cfg.ELEVENLABS_VOICE, model=cfg.ELEVENLABS_MODEL):
     response = cfg.eleven_client.text_to_speech.stream(
         voice_id=voice,
         output_format="mp3_22050_32",
         text=input_text,
-        model_id="eleven_multilingual_v2"
+        model_id=model
     )
 
     # Collect all chunks into one bytes object
@@ -283,13 +283,13 @@ async def gen_with_sovits_streaming(input_text, ctx):
     print("\n--- GPT-SoVITS/RTC Generated & Played Audio. ---\n")
 
 # Text_to_audio_played function - This is used to generate a mp3 file from openai's reply and then play it
-async def text_to_audio_played(input_text, ctx, voice="Bill"):
+async def text_to_audio_played(input_text, ctx):
 
     if cfg.voice_client.is_playing(): return
 
     response_start_time = time.time()
     cfg.random_sounds_enabled = False # Disable random sounds while the bot is speaking
-    await gen_with_elevenlabs_streaming(input_text, voice)
+    await gen_with_elevenlabs_streaming(input_text)
     from discord_commands import sounds
     sounds(ctx=None)
     #await gen_with_sovits(input_text, ctx)

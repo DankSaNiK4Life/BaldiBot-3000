@@ -362,12 +362,14 @@ async def personality(ctx):
     if new_message.lower() == "sane baldi":
         cfg.DEFAULT_SYSTEM_MESSAGE = p.SANE_BALDIS_FIRST_SYSTEM_MESSAGE
         cfg.BACKUP_JSON_FILE = "backups/SaneBaldiChatHistoryJsonBackup.json"
-        cfg.ELEVENLABS_VOICE = "CGOMbDUL52Yuc7oiDIm8"
+        cfg.ELEVENLABS_VOICE = "vrkuGKtvocSoZvsaAeUM"
+        cfg.ELEVENLABS_MODEL = "eleven_v3"
         p.CURRENT_PERSONALITY = "sane baldi"
     elif new_message.lower() == "baldi":
         cfg.DEFAULT_SYSTEM_MESSAGE = p.BALDIS_FIRST_SYSTEM_MESSAGE
         cfg.BACKUP_JSON_FILE = "backups/BaldiHistoryJsonBackup.json"
         cfg.ELEVENLABS_VOICE = "CGOMbDUL52Yuc7oiDIm8"
+        cfg.ELEVENLABS_MODEL = "eleven_multilingual_v2"
         p.CURRENT_PERSONALITY = "baldi"
     else:
         await ctx.send("Unknown personality! Available personalities are: 'Baldi' and 'Sane Baldi'")
