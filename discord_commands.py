@@ -248,10 +248,6 @@ async def say(ctx):
 # Sing command - plays one of the mp3 files in "./songs"
 @bot.command()
 async def sing(ctx):
-    if (ctx.author.id not in cfg.TRUSTED_USER_IDS):
-        await ctx.reply("You are not trusted, you cannot use this command!")
-        return
-    
     vc = ctx.voice_client
     if not vc:
         await ctx.send("I am not in a voice channel")
@@ -328,10 +324,12 @@ async def personality(ctx):
         cfg.DEFAULT_SYSTEM_MESSAGE = p.SANE_BALDIS_FIRST_SYSTEM_MESSAGE
         cfg.BACKUP_JSON_FILE = "backups/SaneBaldiChatHistoryJsonBackup.json"
         cfg.ELEVENLABS_VOICE = "CGOMbDUL52Yuc7oiDIm8"
+        p.CURRENT_PERSONALITY = "sane baldi"
     elif new_message.lower() == "baldi":
         cfg.DEFAULT_SYSTEM_MESSAGE = p.BALDIS_FIRST_SYSTEM_MESSAGE
         cfg.BACKUP_JSON_FILE = "backups/BaldiHistoryJsonBackup.json"
         cfg.ELEVENLABS_VOICE = "CGOMbDUL52Yuc7oiDIm8"
+        p.CURRENT_PERSONALITY = "baldi"
     else:
         await ctx.send("Unknown personality! Available personalities are: 'Baldi' and 'Sane Baldi'")
         return
@@ -361,6 +359,46 @@ async def last(ctx):
 async def context(ctx):
     await ctx.send(f"Context: {cfg.CONTEXT_MESSAGE}")
 
+# Personality sub-command - Sends the current personality to the user
+@show.command()
+async def personality(ctx):
+    await ctx.send(f"Current Personality: {p.CURRENT_PERSONALITY}")
+
+# Commands sub-command - Lists all commands
+@show.command()
+async def commands(ctx):
+    commands_message = { f'''**Available commands for BaldiBot 3000: **
+`@BaldiBot 3000 - Allows you to talk to the bot and get responses (Will play audio if in a vc)
+baldi show - used for sub commands:
+    last - Sends the last message of both user and bot
+    context - Sends the context message
+    personality - Sends the current personality name
+    commands - Sends this exact message!`
+
+**For Trusted Members:**
+`baldi join - Makes bot join voice channel that you are currently in
+baldi stop - used for sub commands:
+    listening - Stops the bot from listening to anyone 
+    playing (or singing) - Stops the bot from playing any audio files
+baldi listen - used for sub commands:
+    all - Makes bot listen to everyone in the voice chat (Will combine peoples sentences together)
+    to - Makes bot listen to a specific person (More stable option)
+baldi say - Makes bot generate anything you want using elevenlabs
+baldi sing - Makes bot play available audio files:
+    thick of it
+    like a prayer
+baldi set - used for sub commands:
+    context - Used to tell the bot what you and or they are doing right now
+    personality - Used to set how the bot will act (and can change voice):
+        baldi
+        sane baldi
+baldi leave - Makes bot leave the voice channel`
+
+**For Owner ONLY:**
+`baldi die - turns off the bot`'''}
+    
+    await ctx.send(commands_message)
+
 # Leave command - Leaves the voice chat
 @bot.command()
 async def leave(ctx):
@@ -385,3 +423,4 @@ async def die(ctx):
     
     #ctx.cfg.voice_client.stop()
     await ctx.bot.close()
+
