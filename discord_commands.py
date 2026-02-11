@@ -178,6 +178,27 @@ async def playing(ctx):
         await ctx.send("I am not playing anything.")
         print("The bot is not playing anything")
 
+# Sounds sub-command - Makes the bot stop playing random sounds in the background
+@stop.command()
+async def sounds(ctx):
+    if (ctx.author.id not in cfg.TRUSTED_USER_IDS):
+        await ctx.reply("You are not trusted, you cannot use this command!")
+        return
+    
+    cfg.RANDOM_SOUNDS_ENABLED = False
+    await ctx.send("I have stopped playing random sounds in the background.")
+
+# sounds command - This makes the bot continue making random sounds in the background
+@bot.command()
+async def sounds(ctx):
+    if (ctx.author.id not in cfg.TRUSTED_USER_IDS):
+        await ctx.reply("You are not trusted, you cannot use this command!")
+        return
+    
+    cfg.RANDOM_SOUNDS_ENABLED = True
+    await ctx.send("I have started playing random sounds in the background.")
+
+
 # Listen command - command used to invoke sub commands
 @bot.group(name="listen", invoke_without_command=True)
 async def listen(ctx):
@@ -388,6 +409,7 @@ baldi show - used for sub commands:
 baldi stop - used for sub commands:
     listening - Stops the bot from listening to anyone 
     playing (or singing) - Stops the bot from playing any audio files
+    sounds - Stops bot from playing random sounds every 5 - 60 minutes
 baldi listen - used for sub commands:
     all - Makes bot listen to everyone in the voice chat (Will combine peoples sentences together)
     to - Makes bot listen to a specific person (More stable option)
@@ -401,6 +423,7 @@ baldi set - used for sub commands:
         baldi
         sane baldi
 baldi leave - Makes bot leave the voice channel`
+baldi sounds - This makes the bot continue making random sounds in the background
 
 **For Owner ONLY:**
 `baldi die - turns off the bot`'''
