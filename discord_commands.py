@@ -82,18 +82,22 @@ async def on_message(message):
 
         # This is used to grab Streamer.bot's messages and use them to get chatgpt replies
         if channel == "streamerbot-to-baldibot":
-            streamerbot_msg = user_message.split(' ', 1)[1]
-            streamerbot_user = user_message.split(' ', 1)[0]
-            print("Username: " + streamerbot_user + " " + "Message: " + streamerbot_msg)
+            if user_message.startswith("SPEAKER: "):
+                streamerbot_msg = user_message.split(' ', 1)[1]
+                await voice_chat.gen_with_elevenlabs_streaming(streamerbot_msg)
+            else:
+                streamerbot_msg = user_message.split(' ', 1)[1]
+                streamerbot_user = user_message.split(' ', 1)[0]
+                print("Username: " + streamerbot_user + " " + "Message: " + streamerbot_msg)
 
-            gpt_response = await chat_with_gpt(streamerbot_msg, streamerbot_user, message_attachments)
+                gpt_response = await chat_with_gpt(streamerbot_msg, streamerbot_user, message_attachments)
             
-            if discord.utils.get(bot.voice_clients):
-                await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.elevenlabs_voice)
+                if discord.utils.get(bot.voice_clients):
+                    await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.elevenlabs_voice)
             
-            cfg.send_to_twitch(gpt_response)
-            print("Baldi's reply on Twitch: " + gpt_response)
-            await message.reply(gpt_response)
+                cfg.send_to_twitch(gpt_response)
+                print("Baldi's reply on Twitch: " + gpt_response)
+                await message.reply(gpt_response)
         # Check if the bot is mentioned
         elif  bot.user in message.mentions: 
             print("Username: " + username + " " + "Real name: " + real_name + " " "Message: " + user_message)
