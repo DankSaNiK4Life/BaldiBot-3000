@@ -367,7 +367,7 @@ async def personality(ctx):
 # Commands sub-command - Lists all commands
 @show.command()
 async def commands(ctx):
-    commands_message = { f'''**Available commands for BaldiBot 3000: **
+    commands_message = f'''**Available commands for BaldiBot 3000: **
 `@BaldiBot 3000 - Allows you to talk to the bot and get responses (Will play audio if in a vc)
 baldi show - used for sub commands:
     last - Sends the last message of both user and bot
@@ -395,7 +395,7 @@ baldi set - used for sub commands:
 baldi leave - Makes bot leave the voice channel`
 
 **For Owner ONLY:**
-`baldi die - turns off the bot`'''}
+`baldi die - turns off the bot`'''
     
     await ctx.send(commands_message)
 
