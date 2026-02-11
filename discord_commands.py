@@ -130,10 +130,10 @@ async def join(ctx):
         #await start(ctx)
 
         while discord.utils.get(bot.voice_clients, guild=ctx.guild):
+            await asyncio.sleep(random.randint(cfg.RANDOM_SOUND_INTERVAL[0], cfg.RANDOM_SOUND_INTERVAL[1])) # random interval between 5 minutes and 1 hour
             random_sound = get_random_sound()  # Start playing random sounds in the background
             cfg.voice_client.play(discord.FFmpegPCMAudio(executable="ffmpeg", source=random_sound))
             print("Played Random Sound: " + random_sound)
-            await asyncio.sleep(random.randint(cfg.RANDOM_SOUND_INTERVAL[0], cfg.RANDOM_SOUND_INTERVAL[1])) # random interval between 5 minutes and 1 hour
     else:
         await ctx.send("You are not in a voice channel buddy!")
         print("The user is not in a channel")
