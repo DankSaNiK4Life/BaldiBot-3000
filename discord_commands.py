@@ -134,7 +134,8 @@ async def join(ctx):
             await asyncio.sleep(random.randint(cfg.RANDOM_SOUND_INTERVAL[0], cfg.RANDOM_SOUND_INTERVAL[1])) # random interval between 5 minutes and 1 hour
             if not cfg.random_sounds_enabled: break
             random_sound = get_random_sound()  # Start playing random sounds in the background
-            cfg.voice_client.play(discord.FFmpegPCMAudio(executable="ffmpeg", source=random_sound))
+            if not cfg.voice_client.is_playing():
+                cfg.voice_client.play(discord.FFmpegPCMAudio(executable="ffmpeg", source=random_sound))
             print("Played Random Sound: " + random_sound)
     else:
         await ctx.send("You are not in a voice channel buddy!")
@@ -203,7 +204,8 @@ async def sounds(ctx):
             await asyncio.sleep(random.randint(cfg.RANDOM_SOUND_INTERVAL[0], cfg.RANDOM_SOUND_INTERVAL[1])) # random interval between 5 minutes and 1 hour
             if not cfg.random_sounds_enabled: break
             random_sound = get_random_sound()  # Start playing random sounds in the background
-            cfg.voice_client.play(discord.FFmpegPCMAudio(executable="ffmpeg", source=random_sound))
+            if not cfg.voice_client.is_playing():
+                cfg.voice_client.play(discord.FFmpegPCMAudio(executable="ffmpeg", source=random_sound))
             print("Played Random Sound: " + random_sound)
 
 
