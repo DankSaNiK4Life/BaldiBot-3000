@@ -87,9 +87,7 @@ async def on_message(message):
                 print("SPEAKER MESSAGE: " + streamerbot_msg)
                 await message.reply("Received speaker message!")
                 
-                await stop_random_sounds() # Stop random sounds while the bot is speaking
                 await voice_chat.gen_with_elevenlabs_streaming(streamerbot_msg)
-                await play_random_sounds() # Start random sounds again after the bot has finished speaking
             else:
                 streamerbot_msg = user_message.split(' ', 1)[1]
                 streamerbot_user = user_message.split(' ', 1)[0]
@@ -98,9 +96,7 @@ async def on_message(message):
                 gpt_response = await chat_with_gpt(streamerbot_msg, streamerbot_user, message_attachments)
             
                 if discord.utils.get(bot.voice_clients):
-                    await stop_random_sounds() # Stop random sounds while the bot is speaking
                     await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.elevenlabs_voice)
-                    await play_random_sounds() # Start random sounds again after the bot has finished speaking
             
                 cfg.send_to_twitch(gpt_response)
                 print("Baldi's reply on Twitch: " + gpt_response)
@@ -140,14 +136,7 @@ async def join(ctx):
         # Starts listening to the user as soon as it joins
         #await start(ctx)
 
-    
-        while discord.utils.get(bot.voice_clients, guild=ctx.guild) and cfg.random_sounds_enabled:
-            await asyncio.sleep(random.randint(cfg.RANDOM_SOUND_INTERVAL[0], cfg.RANDOM_SOUND_INTERVAL[1])) # random interval between 5 minutes and 1 hour
-            if not cfg.random_sounds_enabled: break
-            if not cfg.voice_client.is_playing():
-                random_sound = get_random_sound()  # Start playing random sounds in the background
-                cfg.voice_client.play(discord.FFmpegPCMAudio(executable="ffmpeg", source=random_sound))
-                print("Played Random Sound: " + random_sound)
+        await play_random_sounds() # Start random sounds when the bot joins a channel
     else:
         await ctx.send("You are not in a voice channel buddy!")
         print("The user is not in a channel")
@@ -278,25 +267,9 @@ async def say(ctx):
 
     # Generate audio with ElevenLabs
     try:
-        audio = await cfg.eleven_client.generate(
-            text=text,
-            voice=cfg.elevenlabs_voice,
-            model="eleven_multilingual_v2"
-        )
-
-        out = b''
-        async for value in audio:
-            out += value
-
-        # Save the audio to a file
-        save(out, "say.mp3")
-
-        # Wait a moment to ensure the audio file is ready
-        await asyncio.sleep(1)
-
         # Play the audio in the voice channel
         if not vc.is_playing():
-            vc.play(discord.FFmpegPCMAudio(executable="C:/ffmpeg/bin/ffmpeg.exe", source="say.mp3"))
+            voice_chat.gen_with_elevenlabs_streaming(text, cfg.elevenlabs_voice)
             print(f"Saying: {text}")
         else:
             await ctx.send("I am already playing something. Please wait!")
