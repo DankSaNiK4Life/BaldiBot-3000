@@ -79,10 +79,10 @@ async def on_message(message):
                 else:
                     await message.reply(response)
                 break  # Stop after the first match
-
+    
         # This is used to grab Streamer.bot's messages and use them to get chatgpt replies
         if channel == "streamerbot-to-baldibot":
-            if "speaker:" in user_message or not user_message.startswith("!"):
+            if "speaker:" in user_message or not "!" in user_message:
                 streamerbot_msg = user_message.split(' ', 1)[1]
                 print("SPEAKER MESSAGE: " + streamerbot_msg)
                 await message.reply("Received speaker message!")
