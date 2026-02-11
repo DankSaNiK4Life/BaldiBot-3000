@@ -4,7 +4,7 @@ from elevenlabs import save
 from discord.ext import voice_recv
 from openai_chat import chat_with_gpt
 from io import BytesIO
-from discord_commands import sounds
+from discord_commands import sounds as random_sounds_command
 import time
 import asyncio
 import discord
@@ -291,7 +291,7 @@ async def text_to_audio_played(input_text, ctx, voice="Bill"):
     response_start_time = time.time()
     cfg.random_sounds_enabled = False # Disable random sounds while the bot is speaking
     await gen_with_elevenlabs_streaming(input_text, voice)
-    sounds(ctx=None)
+    random_sounds_command(ctx=None)
     #await gen_with_sovits(input_text, ctx)
     #await gen_with_sovits_streaming(input_text, ctx)
 
