@@ -26,7 +26,7 @@ class Config:
     DEFAULT_SYSTEM_MESSAGE = p.BALDIS_FIRST_SYSTEM_MESSAGE      # This is the default system message (personality) that the bot will use on start
     SOUND_FOLDER = "sounds"                                     # This is the folder where the sound files are stored
     RANDOM_SOUND_INTERVAL = (5, 10)                         # This is the interval (in seconds) at which random sounds will be played (between 5 minutes and 1 hour)
-    RANDOM_SOUNDS_ENABLED = True                                # This is used to enable or disable the random sounds feature
+    
 
     TRUSTED_USER_IDS = [                                        # This is a list of user IDs that the bot will trust to use important commands
         OWNER_ID, 
@@ -54,15 +54,16 @@ class Config:
 
     # -------------------- GLOBAL -------------------- #
 
-    cb_ctx = None             # This is a global variable used in the cb function
-    voice_client = None       # This acts as a global voice client so I dont have to use it as a parameter for like every functions lol
-    start_time = 0            # This is used later to check when the bot first started listening
-    last_speech_time = 0      # This is used later to check the last time the user spoke
-    chat_history = []         # This is used to store all previous chat messages so the AI can rememeber them
-    all_results = []          # This stores every thing the user has said during the listening phase
-    last_user_message = " "   # This is used for the "last" command to show the last message sent by the user
-    last_bot_message = " "    # This is used for the "last" command to show the last message sent by the bot
-    listen_to_name = None     # This is used to store the name of the user the bot is listening to
+    cb_ctx = None                # This is a global variable used in the cb function
+    voice_client = None          # This acts as a global voice client so I dont have to use it as a parameter for like every functions lol
+    start_time = 0               # This is used later to check when the bot first started listening
+    last_speech_time = 0         # This is used later to check the last time the user spoke
+    chat_history = []            # This is used to store all previous chat messages so the AI can rememeber them
+    all_results = []             # This stores every thing the user has said during the listening phase
+    last_user_message = " "      # This is used for the "last" command to show the last message sent by the user
+    last_bot_message = " "       # This is used for the "last" command to show the last message sent by the bot
+    listen_to_name = None        # This is used to store the name of the user the bot is listening to
+    random_sounds_enabled = True # This is used to enable or disable the random sounds feature
 
     eleven_client = ElevenLabs(api_key=ELEVENLABS_API_KEY) # This assigns the ElevenLabs client
 

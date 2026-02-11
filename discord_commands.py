@@ -129,12 +129,12 @@ async def join(ctx):
         # Starts listening to the user as soon as it joins
         #await start(ctx)
 
-        if cfg.RANDOM_SOUNDS_ENABLED:
-            while discord.utils.get(bot.voice_clients, guild=ctx.guild):
-                await asyncio.sleep(random.randint(cfg.RANDOM_SOUND_INTERVAL[0], cfg.RANDOM_SOUND_INTERVAL[1])) # random interval between 5 minutes and 1 hour
-                random_sound = get_random_sound()  # Start playing random sounds in the background
-                cfg.voice_client.play(discord.FFmpegPCMAudio(executable="ffmpeg", source=random_sound))
-                print("Played Random Sound: " + random_sound)
+    
+        while discord.utils.get(bot.voice_clients, guild=ctx.guild) and cfg.random_sounds_enabled:
+            await asyncio.sleep(random.randint(cfg.RANDOM_SOUND_INTERVAL[0], cfg.RANDOM_SOUND_INTERVAL[1])) # random interval between 5 minutes and 1 hour
+            random_sound = get_random_sound()  # Start playing random sounds in the background
+            cfg.voice_client.play(discord.FFmpegPCMAudio(executable="ffmpeg", source=random_sound))
+            print("Played Random Sound: " + random_sound)
     else:
         await ctx.send("You are not in a voice channel buddy!")
         print("The user is not in a channel")
@@ -185,7 +185,7 @@ async def sounds(ctx):
         await ctx.reply("You are not trusted, you cannot use this command!")
         return
     
-    cfg.RANDOM_SOUNDS_ENABLED = False
+    cfg.random_sounds_enabled = False
     await ctx.send("I have stopped playing random sounds in the background.")
 
 # sounds command - This makes the bot continue making random sounds in the background
@@ -195,7 +195,7 @@ async def sounds(ctx):
         await ctx.reply("You are not trusted, you cannot use this command!")
         return
     
-    cfg.RANDOM_SOUNDS_ENABLED = True
+    cfg.random_sounds_enabled = True
     await ctx.send("I have started playing random sounds in the background.")
 
 
