@@ -330,6 +330,9 @@ async def personality(ctx):
     elif new_message.lower() == "baldi":
         cfg.DEFAULT_SYSTEM_MESSAGE = p.BALDIS_FIRST_SYSTEM_MESSAGE
         cfg.BACKUP_JSON_FILE = "backups/BaldiHistoryJsonBackup.json"
+    else:
+        await ctx.send("Unknown personality! Available personalities are: 'Baldi' and 'Sane Baldi'")
+        return
         
 
     cfg.chat_history.remove(cfg.chat_history[0])
