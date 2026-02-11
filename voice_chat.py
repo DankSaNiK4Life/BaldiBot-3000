@@ -97,7 +97,7 @@ async def gen_with_elevenlabs(input_text, voice):
 
     return print("--- ElevenLabs Generated & Played Audio. ---")
 
-async def gen_with_elevenlabs_streaming(input_text, voice=cfg.ELEVENLABS_VOICE, model=cfg.ELEVENLABS_MODEL):
+async def gen_with_elevenlabs_streaming(input_text, voice=cfg.elevenlabs_voice, model=cfg.elevenlabs_model):
     response = cfg.eleven_client.text_to_speech.stream(
         voice_id=voice,
         output_format="mp3_22050_32",
@@ -416,6 +416,6 @@ def cb(user: discord.Member, audio: sr.AudioData, third=None):
         #openai_answer = asyncio.run(chat_with_gpt(final_result))
         #print(f"Baldi says: {openai_answer}")
         #bot.loop.create_task(ctx.send(openai_answer))
-        #asyncio.run(text_to_audio_played(openai_answer, vc=vc, voice=ELEVENLABS_VOICE))
+        #asyncio.run(text_to_audio_played(openai_answer, vc=vc, voice=elevenlabs_voice))
         #return final_result
 

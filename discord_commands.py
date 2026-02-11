@@ -89,7 +89,7 @@ async def on_message(message):
             gpt_response = await chat_with_gpt(streamerbot_msg, streamerbot_user, message_attachments)
             
             if discord.utils.get(bot.voice_clients):
-                await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.ELEVENLABS_VOICE)
+                await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.elevenlabs_voice)
             
             cfg.send_to_twitch(gpt_response)
             print("Baldi's reply on Twitch: " + gpt_response)
@@ -100,7 +100,7 @@ async def on_message(message):
 
             gpt_response = await chat_with_gpt(user_message, real_name, message_attachments)
             if discord.utils.get(bot.voice_clients, guild=message.guild):
-                await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.ELEVENLABS_VOICE)
+                await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.elevenlabs_voice)
             
             await message.reply(gpt_response)
 
@@ -260,7 +260,7 @@ async def say(ctx):
     try:
         audio = await cfg.eleven_client.generate(
             text=text,
-            voice=cfg.ELEVENLABS_VOICE,
+            voice=cfg.elevenlabs_voice,
             model="eleven_multilingual_v2"
         )
 
@@ -362,14 +362,14 @@ async def personality(ctx):
     if new_message.lower() == "sane baldi":
         cfg.DEFAULT_SYSTEM_MESSAGE = p.SANE_BALDIS_FIRST_SYSTEM_MESSAGE
         cfg.BACKUP_JSON_FILE = "backups/SaneBaldiChatHistoryJsonBackup.json"
-        cfg.ELEVENLABS_VOICE = "vrkuGKtvocSoZvsaAeUM"
-        cfg.ELEVENLABS_MODEL = "eleven_v3"
+        cfg.elevenlabs_voice = "vrkuGKtvocSoZvsaAeUM"
+        cfg.elevenlabs_model = "eleven_v3"
         p.CURRENT_PERSONALITY = "sane baldi"
     elif new_message.lower() == "baldi":
         cfg.DEFAULT_SYSTEM_MESSAGE = p.BALDIS_FIRST_SYSTEM_MESSAGE
         cfg.BACKUP_JSON_FILE = "backups/BaldiHistoryJsonBackup.json"
-        cfg.ELEVENLABS_VOICE = "CGOMbDUL52Yuc7oiDIm8"
-        cfg.ELEVENLABS_MODEL = "eleven_multilingual_v2"
+        cfg.elevenlabs_voice = "CGOMbDUL52Yuc7oiDIm8"
+        cfg.elevenlabs_model = "eleven_multilingual_v2"
         p.CURRENT_PERSONALITY = "baldi"
     else:
         await ctx.send("Unknown personality! Available personalities are: 'Baldi' and 'Sane Baldi'")
