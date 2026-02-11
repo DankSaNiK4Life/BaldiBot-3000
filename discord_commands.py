@@ -196,6 +196,13 @@ async def sounds(ctx):
         return
     
     cfg.random_sounds_enabled = True
+
+    while discord.utils.get(bot.voice_clients, guild=ctx.guild) and cfg.random_sounds_enabled:
+            await asyncio.sleep(random.randint(cfg.RANDOM_SOUND_INTERVAL[0], cfg.RANDOM_SOUND_INTERVAL[1])) # random interval between 5 minutes and 1 hour
+            random_sound = get_random_sound()  # Start playing random sounds in the background
+            cfg.voice_client.play(discord.FFmpegPCMAudio(executable="ffmpeg", source=random_sound))
+            print("Played Random Sound: " + random_sound)
+    
     await ctx.send("I have started playing random sounds in the background.")
 
 
