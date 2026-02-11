@@ -82,7 +82,7 @@ async def on_message(message):
     
         # This is used to grab Streamer.bot's messages and use them to get chatgpt replies
         if channel == "streamerbot-to-baldibot":
-            if "speaker:" in user_message or not "!" in user_message:
+            if "speaker:" in user_message and not "!" in user_message:
                 streamerbot_msg = user_message.split(' ', 1)[1]
                 print("SPEAKER MESSAGE: " + streamerbot_msg)
                 await message.reply("Received speaker message!")
@@ -192,8 +192,8 @@ async def playing(ctx):
         print("The bot is not playing anything")
 
 async def stop_random_sounds():
-    cfg.random_sounds_enabled = False
     print("Random sounds disabled.")
+    cfg.random_sounds_enabled = False
 
 # Sounds sub-command - Makes the bot stop playing random sounds in the background
 @stop.command()
