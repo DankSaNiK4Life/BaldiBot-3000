@@ -269,7 +269,7 @@ async def say(ctx):
     try:
         # Play the audio in the voice channel
         if not vc.is_playing():
-            voice_chat.gen_with_elevenlabs_streaming(text, cfg.elevenlabs_voice)
+            await voice_chat.gen_with_elevenlabs_streaming(text, cfg.elevenlabs_voice)
             print(f"Saying: {text}")
         else:
             await ctx.send("I am already playing something. Please wait!")
