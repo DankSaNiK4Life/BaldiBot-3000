@@ -82,7 +82,7 @@ async def on_message(message):
 
         # This is used to grab Streamer.bot's messages and use them to get chatgpt replies
         if channel == "streamerbot-to-baldibot":
-            if "SPEAKER:" in user_message:
+            if "speaker:" in user_message:
                 streamerbot_msg = user_message.split(' ', 1)[1]
                 print("SPEAKER MESSAGE: " + streamerbot_msg)
                 await message.reply("Received speaker message!")
