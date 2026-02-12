@@ -11,3 +11,4 @@ assemblyai
 requests
 aiohttp
 uuid
+pynacl
