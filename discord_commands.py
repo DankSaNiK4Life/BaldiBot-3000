@@ -14,6 +14,7 @@ import requests
 import voice_chat
 from personalities import Personalities as p
 import sys
+import logging
 
 # ----------------------- INITIALIZATION ----------------------- #
 
@@ -33,7 +34,15 @@ bot = commands.Bot(command_prefix=prefixes, intents=intents)    # Creating the b
 @bot.event
 async def on_ready():
     log_channel = bot.get_channel(cfg.LOG_CHANNEL_ID)
-    sys.stdout.write = lambda msg: bot.loop.create_task(log_channel.send(f"```\n{msg}\n```")) if msg.strip() else None
+    
+    # Saves original console 'write' function so we can still print to console while also sending logs to the channel
+    original_write = sys.stdout.write
+
+    sys.stdout.write = lambda msg: (
+        original_write(msg), # This keeps it in the HypeServ Panel
+        bot.loop.create_task(log_channel.send(f"```\n{msg[:1990]}\n```")) if msg.strip() else None
+    )
+    #logging.getLogger().info = lambda msg, *args: bot.loop.create_task(log_channel.send(f"```\nINFO: {msg % args if args else msg}\n```"))
 
     print("\n-------------------------")
     print("Baldi is ready to teach!")
