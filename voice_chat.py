@@ -108,7 +108,7 @@ async def gen_with_elevenlabs_remote(audio_data):
         f.write(audio_data)
 
     # 2. Tell OBS to LOAD and PLAY this URL
-    audio_url = "http://your-server-ip/temp_audio.mp3"
+    audio_url = "http://ava.hysrv.eu:10000/temp_audio.mp3"
     
     # SHOW Image & Trigger Audio
     ws.call(obs_requests.SetInputSettings(
