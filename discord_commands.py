@@ -24,7 +24,7 @@ intents.voice_states = True
 intents.message_content = True 
 prefixes = ["Baldi ", "baldi ", "hey baldi ", "hey Baldi "]     # List of prefixes the bot will respond to
 bot = commands.Bot(command_prefix=prefixes, intents=intents)    # Creating the bot with permissions
-log_channel = bot.get_channel(cfg.LOG_CHANNEL_ID)
+
 # --------------------------------------------------------- #
 # --------------- DISCORD EVENTS & COMMANDS --------------- #
 # --------------------------------------------------------- #
@@ -32,6 +32,7 @@ log_channel = bot.get_channel(cfg.LOG_CHANNEL_ID)
 # On_ready event - This is called when the bot has fully loaded
 @bot.event
 async def on_ready():
+    log_channel = bot.get_channel(cfg.LOG_CHANNEL_ID)
     sys.stdout.write = lambda msg: bot.loop.create_task(log_channel.send(f"```\n{msg}\n```")) if msg.strip() else None
 
     print("\n-------------------------")
