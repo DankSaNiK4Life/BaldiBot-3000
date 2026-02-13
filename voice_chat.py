@@ -104,7 +104,7 @@ async def gen_with_elevenlabs_remote(audio_data):
     
     # ... (ElevenLabs generation code here) ...
     # SAVE the audio to a web-accessible folder on your server
-    with open("/var/www/html/temp_audio.mp3", "wb") as f:
+    with open("temp_audio.mp3", "wb") as f:
         f.write(audio_data)
 
     # 2. Tell OBS to LOAD and PLAY this URL
