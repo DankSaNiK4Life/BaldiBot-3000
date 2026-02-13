@@ -14,11 +14,11 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 import wave
 import io
 import uuid
-import tempfile
+from obswebsocket import obsws, requests as obs_requests
 
 # Specifically silence the voice_recv reader and library noise
 logging.getLogger('discord.ext.voice_recv.reader').setLevel(logging.WARNING)
-logging.getLogger('discord.ext.voice_recv').setLevel(logging.WARNING)
+logging.getLogger('discord.ext.voice_recv').setLevel(logging.WARNING) 
 
 # Dummy sink that discards audio data (here for now until I figure out a way to clear audio data properly lol)
 class DummySink(voice_recv.AudioSink):
@@ -97,6 +97,31 @@ async def gen_with_elevenlabs(input_text, voice):
 
     return print("--- ElevenLabs Generated & Played Audio. ---")
 
+async def gen_with_elevenlabs_remote(audio_data):
+    ws = obsws(cfg.WEBSOCKET_HOST, cfg.WEBSOCKET_PORT, cfg.WEBSOCKET_PASSWORD)
+    ws.connect()
+    
+    # ... (ElevenLabs generation code here) ...
+    # SAVE the audio to a web-accessible folder on your server
+    with open("/var/www/html/temp_audio.mp3", "wb") as f:
+        f.write(audio_data)
+
+    # 2. Tell OBS to LOAD and PLAY this URL
+    audio_url = "http://your-server-ip/temp_audio.mp3"
+    
+    # SHOW Image & Trigger Audio
+    ws.call(obs_requests.SetInputSettings(
+        inputName="RemoteAudio",
+        inputSettings={"input": audio_url, "is_local_file": False}
+    ))
+    
+    ID = ws.call(obs_requests.GetSceneItemId(sceneName="GLOBAL Scene", sourceName="AIBaldiTop"))
+    # Enable the Image source (triggers Audio Move)
+    ws.call(obs_requests.SetSceneItemEnabled(sceneName="GLOBAL Scene", sceneItemId=ID, sceneItemEnabled=True))
+
+    # NOTE: You will need a way to detect when the audio ends 
+    # to hide the image, such as a timer based on audio length.
+
 async def gen_with_elevenlabs_streaming(input_text, voice, model):
     from discord_commands import play_random_sounds, stop_random_sounds
     await stop_random_sounds() # Stop random sounds while the bot is speaking
@@ -114,8 +139,7 @@ async def gen_with_elevenlabs_streaming(input_text, voice, model):
     # Create a BytesIO object from the collected bytes
     audio_buffer = io.BytesIO(audio_data)
 
-    # Play directly using pipe=True
-    # Note: We pass the buffer itself as the source
+    gen_with_elevenlabs_remote(audio_buffer) # Stream the audio to OBS (if using OBS for audio playback)
     cfg.voice_client.play(discord.FFmpegPCMAudio(audio_buffer, pipe=True, executable="ffmpeg"))
     print("--- ElevenLabs Streaming Generated & Played Audio. ---")
     print(f"Voice used: {voice}")
