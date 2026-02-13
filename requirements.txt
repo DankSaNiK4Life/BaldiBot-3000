@@ -12,3 +12,4 @@ requests
 aiohttp
 uuid
 pynacl
+obs_websocket_py

@@ -14,6 +14,9 @@ class Config:
     ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY")
     ASSEMBLYAI_API_KEY = os.getenv("ASSEMBLYAI_API_KEY")
     STREAMERBOT_WEBHOOK_URL = os.getenv("STREAMERBOT_WEBHOOK_URL")
+    WEBSOCKET_HOST = os.getenv("WEBSOCKET_HOST")
+    WEBSOCKET_PORT = os.getenv("WEBSOCKET_PORT")
+    WEBSOCKET_PASSWORD = os.getenv("WEBSOCKET_PASSWORD")
 
     # ------------------- CONSTANTS ------------------- #
 
@@ -25,7 +28,7 @@ class Config:
     DEFAULT_SYSTEM_MESSAGE = p.BALDIS_FIRST_SYSTEM_MESSAGE      # This is the default system message (personality) that the bot will use on start
     SOUND_FOLDER = "sounds"                                     # This is the folder where the sound files are stored
     RANDOM_SOUND_INTERVAL = (300, 3600)                         # This is the interval (in seconds) at which random sounds will be played (between 5 minutes and 1 hour)
-    
+    LOG_CHANNEL_ID = 1471673659998343333                        # This is the channel ID of the channel where the bot will send logs (e.g. errors, when it starts listening, etc)
 
     TRUSTED_USER_IDS = [                                        # This is a list of user IDs that the bot will trust to use important commands
         OWNER_ID, 
