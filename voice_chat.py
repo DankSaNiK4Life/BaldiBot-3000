@@ -140,7 +140,7 @@ async def gen_with_elevenlabs_streaming(input_text, voice, model):
     # Create a BytesIO object from the collected bytes
     audio_buffer = io.BytesIO(audio_data)
 
-    await gen_with_elevenlabs_remote(audio_buffer) # Stream the audio to OBS (if using OBS for audio playback)
+    await gen_with_elevenlabs_remote(audio_data) # Stream the audio to OBS (if using OBS for audio playback)
     cfg.voice_client.play(discord.FFmpegPCMAudio(audio_buffer, pipe=True, executable="ffmpeg"))
     print("--- ElevenLabs Streaming Generated & Played Audio. ---")
     print(f"Voice used: {voice}")
