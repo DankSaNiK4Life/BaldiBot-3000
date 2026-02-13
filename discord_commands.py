@@ -38,7 +38,7 @@ async def on_ready():
     # Saves original console 'write' function so we can still print to console while also sending logs to the channel
     original_write = sys.stdout.write
 
-    sys.stdout.write = lambda msg: (
+    await sys.stdout.write = lambda msg: (
         original_write(msg), # This keeps it in the HypeServ Panel
         bot.loop.create_task(log_channel.send(f"```\n{msg[:1990]}\n```")) if msg.strip() else None
     )
