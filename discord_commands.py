@@ -42,8 +42,7 @@ async def on_ready():
         original_write(msg), # This keeps it in the HypeServ Panel
         bot.loop.create_task(log_channel.send(f"```\n{msg[:1990]}\n```")) if msg.strip() else None
     )
-    logging.getLogger().info = lambda msg, *args: bot.loop.create_task(log_channel.send(f"```\nINFO: {msg % args if args else msg}\n```"))
-
+    
     print("\n-------------------------")
     print("Baldi is ready to teach!")
     print("-------------------------\n")
