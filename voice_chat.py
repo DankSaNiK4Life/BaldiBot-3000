@@ -100,6 +100,7 @@ async def gen_with_elevenlabs(input_text, voice):
 async def gen_with_elevenlabs_remote(audio_data):
     ws = obsws(cfg.WEBSOCKET_HOST, cfg.WEBSOCKET_PORT, cfg.WEBSOCKET_PASSWORD)
     ws.connect()
+    print("Connected to OBS WebSocket")
     
     # ... (ElevenLabs generation code here) ...
     # SAVE the audio to a web-accessible folder on your server
