@@ -108,12 +108,16 @@ async def gen_with_elevenlabs_remote(audio_data):
         f.write(audio_data)
 
     # 2. Tell OBS to LOAD and PLAY this URL
-    audio_url = "http://ava.hysrv.eu:10000/temp_audio.mp3"
+    audio_url = f"https://panel.baldibot.com{int(time.time())}"
     
     # SHOW Image & Trigger Audio
     ws.call(obs_requests.SetInputSettings(
         inputName="RemoteAudio",
-        inputSettings={"input": audio_url, "is_local_file": False}
+        inputSettings={
+            "input": audio_url, 
+            "is_local_file": False,
+            "restart_on_activate": True # This forces it to play immediately
+        }
     ))
     
     response = ws.call(obs_requests.GetSceneItemId(sceneName="GLOBAL Scene", sourceName="AIBaldiTop"))
@@ -121,8 +125,8 @@ async def gen_with_elevenlabs_remote(audio_data):
     # Enable the Image source (triggers Audio Move)
     ws.call(obs_requests.SetSceneItemEnabled(sceneName="GLOBAL Scene", sceneItemId=ID, sceneItemEnabled=True))
 
-    # NOTE: You will need a way to detect when the audio ends 
-    # to hide the image, such as a timer based on audio length.
+    print(f"Sent URL to OBS: {audio_url}")
+    ws.disconnect()
 
 async def gen_with_elevenlabs_streaming(input_text, voice, model):
     from discord_commands import play_random_sounds, stop_random_sounds
