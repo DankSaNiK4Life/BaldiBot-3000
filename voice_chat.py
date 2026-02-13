@@ -116,7 +116,8 @@ async def gen_with_elevenlabs_remote(audio_data):
         inputSettings={"input": audio_url, "is_local_file": False}
     ))
     
-    ID = ws.call(obs_requests.GetSceneItemId(sceneName="GLOBAL Scene", sourceName="AIBaldiTop"))
+    response = ws.call(obs_requests.GetSceneItemId(sceneName="GLOBAL Scene", sourceName="AIBaldiTop"))
+    ID = response.datain['sceneItemId']
     # Enable the Image source (triggers Audio Move)
     ws.call(obs_requests.SetSceneItemEnabled(sceneName="GLOBAL Scene", sceneItemId=ID, sceneItemEnabled=True))
 
