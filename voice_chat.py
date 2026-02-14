@@ -115,15 +115,6 @@ async def gen_with_elevenlabs_remote(audio_data):
         inputName="RemoteAudio",
         mediaAction="OBS_WEBSOCKET_MEDIA_INPUT_ACTION_RESTART"
     ))
-
-    #while True:
-    #    status = ws.call(obs_requests.GetMediaInputStatus(sourceName="RemoteAudio"))
-    #    if not status.getMediaPlaying():
-    #        break
-    #    await asyncio.sleep(0.1)  # Small delay to avoid excessive polling
-
-    set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="BaldiAI", source_visible=False)
-    set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="RemoteAudio", source_visible=False)
     
     ws.disconnect()
 
