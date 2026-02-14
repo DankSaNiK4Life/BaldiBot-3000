@@ -4,6 +4,9 @@ import requests
 import random
 import time
 import os
+from fastapi import FastAPI
+from fastapi.responses import FileResponse
+import uvicorn
 
 def encode_image_from_url(url):
     response = requests.get(url)
@@ -24,3 +27,15 @@ def get_random_sound():
         print(f"Random sound selected: {sound_file}") 
         sound_file_dir = os.path.join(cfg.SOUND_FOLDER, sound_file)
         return sound_file_dir
+
+app = FastAPI()
+
+@app.get("/audio.mp3")
+async def get_audio():
+    if os.path.exists("temp_audio.mp3"):
+        return FileResponse("temp_audio.mp3", media_type="audio/mpeg")
+    return {"error": "No audio file found"}
+
+def start_http_server():
+    uvicorn.run(app, host="0.0.0.0", port=10000, log_level="warning")
+    print("Started HTTP server for audio files")

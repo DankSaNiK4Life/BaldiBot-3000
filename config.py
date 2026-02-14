@@ -17,6 +17,10 @@ class Config:
     WEBSOCKET_HOST = os.getenv("WEBSOCKET_HOST")
     WEBSOCKET_PORT = os.getenv("WEBSOCKET_PORT")
     WEBSOCKET_PASSWORD = os.getenv("WEBSOCKET_PASSWORD")
+    SFTP_HOST = os.getenv("SFTP_HOST")
+    SFTP_PORT = os.getenv("SFTP_PORT")
+    SFTP_USERNAME = os.getenv("SFTP_USERNAME")
+    SFTP_PASSWORD = os.getenv("SFTP_PASSWORD")
 
     # ------------------- CONSTANTS ------------------- #
 

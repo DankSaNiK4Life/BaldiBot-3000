@@ -13,3 +13,5 @@ aiohttp
 uuid
 pynacl
 obs_websocket_py
+fastapi 
+uvicorn

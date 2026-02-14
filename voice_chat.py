@@ -98,22 +98,16 @@ async def gen_with_elevenlabs(input_text, voice):
     return print("--- ElevenLabs Generated & Played Audio. ---")
 
 async def gen_with_elevenlabs_remote(audio_data):
-    ws = obsws(cfg.WEBSOCKET_HOST, cfg.WEBSOCKET_PORT, cfg.WEBSOCKET_PASSWORD)
-    ws.connect()
-    print("Connected to OBS WebSocket")
-    
-    # ... (ElevenLabs generation code here) ...
     # SAVE the audio to a web-accessible folder on your server
     with open("temp_audio.mp3", "wb") as f:
         f.write(audio_data)
+    print("Saved new audio file")
 
-    ws.call(obs_requests.SetInputSettings(
-        inputName="RemoteAudio",
-        inputSettings={'local_file': "Z:/temp_audio.mp3"},
-        overlay=True
-    ))
-    
-    # 2. Restart the media to play the new file
+    ws = obsws(cfg.WEBSOCKET_HOST, cfg.WEBSOCKET_PORT, cfg.WEBSOCKET_PASSWORD)
+    ws.connect()
+    print("Connected to OBS WebSocket")
+
+    # Just restart media (no need to change path every time)
     ws.call(obs_requests.TriggerMediaInputAction(
         inputName="RemoteAudio",
         mediaAction="OBS_WEBSOCKET_MEDIA_INPUT_ACTION_RESTART"

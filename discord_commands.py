@@ -7,7 +7,7 @@ import asyncio
 from elevenlabs import save
 import json
 from config import Config as cfg
-from bot_utils import get_real_name, get_random_sound
+from bot_utils import get_real_name, get_random_sound, start_http_server
 from voice_chat import start_listening, DummySink
 from openai_chat import chat_with_gpt
 import requests
@@ -15,6 +15,7 @@ import voice_chat
 from personalities import Personalities as p
 import sys
 import logging
+import threading
 
 # ----------------------- INITIALIZATION ----------------------- #
 
@@ -61,6 +62,9 @@ async def on_ready():
     # This adds the system message to the chat history on start
     cfg.chat_history.remove(cfg.chat_history[0])
     cfg.chat_history.insert(0, cfg.DEFAULT_SYSTEM_MESSAGE)
+
+    # Start the HTTP server for serving audio files
+    threading.Thread(target=start_http_server, daemon=True).start()
 
 # On_message event - This lets the bot see what is being said in any chat in the server 
 @bot.event
