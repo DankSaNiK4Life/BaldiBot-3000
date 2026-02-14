@@ -108,10 +108,10 @@ async def gen_with_elevenlabs_remote(audio_data):
     print("Connected to OBS WebSocket")
 
     # Just restart media (no need to change path every time)
-    ws.call(obs_requests.TriggerMediaInputAction(
-        inputName="RemoteAudio",
-        mediaAction="OBS_WEBSOCKET_MEDIA_INPUT_ACTION_RESTART"
-    ))
+    #ws.call(obs_requests.TriggerMediaInputAction(
+    #    inputName="RemoteAudio",
+   #     mediaAction="OBS_WEBSOCKET_MEDIA_INPUT_ACTION_RESTART"
+    #))
     
     ws.disconnect()
 
