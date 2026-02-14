@@ -107,11 +107,7 @@ async def gen_with_elevenlabs_remote(audio_data):
     ws.connect()
     print("Connected to OBS WebSocket")
     
-    # Just restart media (no need to change path every time)
-    ws.call(obs_requests.TriggerMediaInputAction(
-        inputName="RemoteAudio",
-        mediaAction="OBS_WEBSOCKET_MEDIA_INPUT_ACTION_RESTART"
-    ))
+    asyncio.sleep(1)  # Wait a moment to ensure the file is ready
 
     set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="BaldiAI", source_visible=True)
     set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="RemoteAudio", source_visible=True)
