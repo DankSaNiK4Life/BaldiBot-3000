@@ -1,6 +1,7 @@
 from config import Config as cfg
 import base64
 import requests
+from obswebsocket import requests as obs_requests
 import random
 import time
 import os
@@ -40,6 +41,6 @@ def start_http_server():
     uvicorn.run(app, host="0.0.0.0", port=10000, log_level="warning")
 
 def set_source_visibility(ws, scene_name, source_name, source_visible=True):
-        response = ws.call(requests.GetSceneItemId(sceneName=scene_name, sourceName=source_name))
+        response = ws.call(obs_requests.GetSceneItemId(sceneName=scene_name, sourceName=source_name))
         myItemID = response.datain['sceneItemId']
-        ws.call(requests.SetSceneItemEnabled(sceneName=scene_name, sceneItemId=myItemID, sceneItemEnabled=source_visible))
+        ws.call(obs_requests.SetSceneItemEnabled(sceneName=scene_name, sceneItemId=myItemID, sceneItemEnabled=source_visible))
