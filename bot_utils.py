@@ -38,4 +38,3 @@ async def get_audio():
 
 def start_http_server():
     uvicorn.run(app, host="0.0.0.0", port=10000, log_level="warning")
-    print("Started HTTP server for audio files")

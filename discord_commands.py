@@ -65,6 +65,7 @@ async def on_ready():
 
     # Start the HTTP server for serving audio files
     threading.Thread(target=start_http_server, daemon=True).start()
+    print("Started HTTP server for audio files")
 
 # On_message event - This lets the bot see what is being said in any chat in the server 
 @bot.event
