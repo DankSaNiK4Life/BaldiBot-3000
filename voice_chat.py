@@ -107,8 +107,11 @@ async def gen_with_elevenlabs_remote(audio_data):
     ws.connect()
     print("Connected to OBS WebSocket")
     
-    ws.call(obs_requests.SetSceneItemProperties(item="BaldiAI", visible=True, sceneName="GLOBAL Scene"))
-    ws.call(obs_requests.SetSceneItemProperties(item="RemoteAudio", visible=True, sceneName="GLOBAL Scene"))
+    response = ws.call(obs_requests.GetSceneItemId(sceneName="GLOBAL Scene", sourceName="BaldiAI"))
+    BaldiAIID = response.datain['sceneItemId']
+    ws.call(obs_requests.SetSceneItemEnabled(sceneName="GLOBAL Scene", sceneItemId=BaldiAIID, sceneItemEnabled=True))
+    #ws.call(obs_requests.SetSceneItemProperties(item="BaldiAI", visible=True, sceneName="GLOBAL Scene"))
+    #ws.call(obs_requests.SetSceneItemProperties(item="RemoteAudio", visible=True, sceneName="GLOBAL Scene"))
 
     # Just restart media (no need to change path every time)
     ws.call(obs_requests.TriggerMediaInputAction(
@@ -116,14 +119,14 @@ async def gen_with_elevenlabs_remote(audio_data):
         mediaAction="OBS_WEBSOCKET_MEDIA_INPUT_ACTION_RESTART"
     ))
 
-    while True:
-        status = ws.call(obs_requests.GetMediaInputStatus(inputName="RemoteAudio"))
-        if status.get("mediaState") != "OBS_MEDIA_STATE_PLAYING":
-            break
-        await asyncio.sleep(0.1)
+    #while True:
+    #    status = ws.call(obs_requests.GetMediaInputStatus(sourceName="RemoteAudio"))
+    #    if not status.getMediaPlaying():
+    #        break
+    #    await asyncio.sleep(0.1)  # Small delay to avoid excessive polling
 
     ws.call(obs_requests.SetSceneItemProperties(item="BaldiAI", visible=False, sceneName="GLOBAL Scene"))
-    ws.call(obs_requests.SetSceneItemProperties(item="RemoteAudio", visible=False, sceneName="GLOBAL Scene"))
+    #ws.call(obs_requests.SetSceneItemProperties(item="RemoteAudio", visible=False, sceneName="GLOBAL Scene"))
     
     ws.disconnect()
 
