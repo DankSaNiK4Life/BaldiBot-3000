@@ -117,10 +117,10 @@ async def gen_with_elevenlabs_remote(audio_data):
     ))
 
     while True:
-        status = ws.call(obs_requests.GetMediaInputStatus(sourceName="RemoteAudio"))
-        if not status.getMediaPlaying():
+        status = ws.call(obs_requests.GetMediaInputStatus(inputName="RemoteAudio"))
+        if status.get("mediaState") != "OBS_MEDIA_STATE_PLAYING":
             break
-        await asyncio.sleep(0.1)  # Small delay to avoid excessive polling
+        await asyncio.sleep(0.1)
 
     ws.call(obs_requests.SetSceneItemProperties(item="BaldiAI", visible=False, sceneName="GLOBAL Scene"))
     ws.call(obs_requests.SetSceneItemProperties(item="RemoteAudio", visible=False, sceneName="GLOBAL Scene"))
