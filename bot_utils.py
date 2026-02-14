@@ -38,3 +38,8 @@ async def get_audio():
 
 def start_http_server():
     uvicorn.run(app, host="0.0.0.0", port=10000, log_level="warning")
+
+def set_source_visibility(ws, scene_name, source_name, source_visible=True):
+        response = ws.call(requests.GetSceneItemId(sceneName=scene_name, sourceName=source_name))
+        myItemID = response.datain['sceneItemId']
+        ws.call(requests.SetSceneItemEnabled(sceneName=scene_name, sceneItemId=myItemID, sceneItemEnabled=source_visible))

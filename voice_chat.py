@@ -1,5 +1,5 @@
 from config import Config as cfg
-from bot_utils import get_real_name
+from bot_utils import get_real_name, set_source_visibility
 from elevenlabs import save
 from discord.ext import voice_recv
 from openai_chat import chat_with_gpt
@@ -107,11 +107,8 @@ async def gen_with_elevenlabs_remote(audio_data):
     ws.connect()
     print("Connected to OBS WebSocket")
     
-    response = ws.call(obs_requests.GetSceneItemId(sceneName="GLOBAL Scene", sourceName="BaldiAI"))
-    BaldiAIID = response.datain['sceneItemId']
-    ws.call(obs_requests.SetSceneItemEnabled(sceneName="GLOBAL Scene", sceneItemId=BaldiAIID, sceneItemEnabled=True))
-    #ws.call(obs_requests.SetSceneItemProperties(item="BaldiAI", visible=True, sceneName="GLOBAL Scene"))
-    #ws.call(obs_requests.SetSceneItemProperties(item="RemoteAudio", visible=True, sceneName="GLOBAL Scene"))
+    set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="BaldiAI", source_visible=True)
+    set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="RemoteAudio", source_visible=True)
 
     # Just restart media (no need to change path every time)
     ws.call(obs_requests.TriggerMediaInputAction(
@@ -125,8 +122,8 @@ async def gen_with_elevenlabs_remote(audio_data):
     #        break
     #    await asyncio.sleep(0.1)  # Small delay to avoid excessive polling
 
-    ws.call(obs_requests.SetSceneItemProperties(item="BaldiAI", visible=False, sceneName="GLOBAL Scene"))
-    #ws.call(obs_requests.SetSceneItemProperties(item="RemoteAudio", visible=False, sceneName="GLOBAL Scene"))
+    set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="BaldiAI", source_visible=False)
+    set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="RemoteAudio", source_visible=False)
     
     ws.disconnect()
 
