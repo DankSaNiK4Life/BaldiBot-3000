@@ -34,15 +34,7 @@ app = FastAPI()
 @app.get("/audio.mp3")
 async def get_audio():
     if os.path.exists("temp_audio.mp3"):
-        return FileResponse(
-            "temp_audio.mp3",
-            media_type="audio/mpeg",
-            headers={
-                "Cache-Control": "no-cache, no-store, must-revalidate",
-                "Pragma": "no-cache",
-                "Expires": "0"
-            }
-        )
+        return FileResponse("temp_audio.mp3", media_type="audio/mpeg")
     return {"error": "No audio file found"}
 
 def start_http_server():
