@@ -123,10 +123,11 @@ async def on_message(message):
             print("Username: " + username + " " + "Real name: " + real_name + " " "Message: " + user_message)
 
             gpt_response = await chat_with_gpt(user_message, real_name, message_attachments)
+
+            await message.reply(gpt_response)
+
             if discord.utils.get(bot.voice_clients, guild=message.guild):
                 await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.elevenlabs_voice, cfg.elevenlabs_model)
-            
-            await message.reply(gpt_response)
 
         await bot.process_commands(message)  # Allows commands to still work
 
