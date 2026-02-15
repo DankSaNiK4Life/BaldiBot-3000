@@ -109,8 +109,6 @@ async def gen_with_elevenlabs_remote(audio_data):
 
     set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="BaldiAI", source_visible=True)
     set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="RemoteAudio", source_visible=True)
-    set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="RemoteAudio", source_visible=False)
-    set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="RemoteAudio", source_visible=True)
     
     ws.disconnect()
 
