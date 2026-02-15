@@ -98,15 +98,11 @@ async def gen_with_elevenlabs(input_text, voice):
 
     return print("--- ElevenLabs Generated & Played Audio. ---")
 
-async def gen_with_elevenlabs_remote(audio_data, input_text):
+async def gen_with_elevenlabs_remote(ws, audio_data, input_text):
     # SAVE the audio to a web-accessible folder on your server
     with open("temp_audio.mp3", "wb") as f:
         f.write(audio_data)
     print("Saved new audio file")
-
-    ws = obsws(cfg.WEBSOCKET_HOST, cfg.WEBSOCKET_PORT, cfg.WEBSOCKET_PASSWORD)
-    ws.connect()
-    print("Connected to OBS WebSocket")
 
     #ws.call(obs_requests.SetInputSettings(inputName="AIBaldiMessage", inputSettings = {'text': input_text}))
     testresponse = ws.call(obs_requests.GetSourceFilter(
@@ -145,8 +141,15 @@ async def gen_with_elevenlabs_streaming(input_text, voice, model):
     # Create a BytesIO object from the collected bytes
     audio_buffer = io.BytesIO(audio_data)
 
-    cfg.voice_client.play(discord.FFmpegPCMAudio(audio_buffer, pipe=True, executable="ffmpeg"))
-    await gen_with_elevenlabs_remote(audio_data, input_text) # Stream the audio to OBS (if using OBS for audio playback)
+    ws = obsws(cfg.WEBSOCKET_HOST, cfg.WEBSOCKET_PORT, cfg.WEBSOCKET_PASSWORD)
+    ws.connect()
+    print("Connected to OBS WebSocket")
+
+    if ws.answers.get("GetVersion"):
+        await gen_with_elevenlabs_remote(ws, audio_data, input_text) # Stream the audio to OBS (if using OBS for audio playback)
+    else:
+        cfg.voice_client.play(discord.FFmpegPCMAudio(audio_buffer, pipe=True, executable="ffmpeg"))
+    
     print("--- ElevenLabs Streaming Generated & Played Audio. ---")
     print(f"Voice used: {voice}")
     print(f"Model used: {model}")
