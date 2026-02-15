@@ -142,9 +142,10 @@ async def gen_with_elevenlabs_streaming(input_text, voice, model):
     audio_buffer = io.BytesIO(audio_data)
 
     ws = obsws(cfg.WEBSOCKET_HOST, cfg.WEBSOCKET_PORT, cfg.WEBSOCKET_PASSWORD, timeout=5)
-    connected = await safe_obs_connect(ws)
-    
-    if connected:
+    #connected = await safe_obs_connect(ws)
+    ws.connect()
+
+    if ws.ws.connected:
         print("Connected to OBS WebSocket")
         await gen_with_elevenlabs_remote(ws, audio_data, input_text) # Stream the audio to OBS (if using OBS for audio playback)
     else:
