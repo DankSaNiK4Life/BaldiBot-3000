@@ -352,10 +352,10 @@ async def context(ctx):
     new_message = ctx.message.content[len(ctx.prefix) + len("set context"):].strip()
 
     if (new_message.lower() == "default"):
-        new_message = cfg.DEFAULT_CONTEXT_MESSAGE
+        new_message = p.DEFAULT_CONTEXT_MESSAGE
 
     cfg.DEFAULT_SYSTEM_MESSAGE["content"] = cfg.DEFAULT_SYSTEM_MESSAGE["content"].replace(
-        f"Context: {cfg.CONTEXT_MESSAGE}",
+        f"Context: {p.CONTEXT_MESSAGE}",
         f"Context: {new_message}"
         )
     
