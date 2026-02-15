@@ -142,7 +142,7 @@ async def gen_with_elevenlabs_streaming(input_text, voice, model):
     audio_buffer = io.BytesIO(audio_data)
 
     ws = obsws(cfg.WEBSOCKET_HOST, cfg.WEBSOCKET_PORT, cfg.WEBSOCKET_PASSWORD, timeout=1)
-    ws.connect
+    ws.connect()
     
     cfg.voice_client.play(discord.FFmpegPCMAudio(audio_buffer, pipe=True, executable="ffmpeg"))
     await gen_with_elevenlabs_remote(ws, audio_data, input_text) # Stream the audio to OBS (if using OBS for audio playback)

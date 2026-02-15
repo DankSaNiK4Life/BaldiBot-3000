@@ -8,7 +8,6 @@ import os
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 import uvicorn
-import asyncio
 
 def encode_image_from_url(url):
     response = requests.get(url)
