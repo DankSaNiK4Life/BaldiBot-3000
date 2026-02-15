@@ -1,3 +1,4 @@
+from urllib import response
 from config import Config as cfg
 from bot_utils import get_real_name, set_source_visibility
 from elevenlabs import save
@@ -108,6 +109,12 @@ async def gen_with_elevenlabs_remote(audio_data, input_text):
     print("Connected to OBS WebSocket")
 
     #ws.call(obs_requests.SetInputSettings(inputName="AIBaldiMessage", inputSettings = {'text': input_text}))
+    testresponse = ws.call(obs_requests.GetSourceFilter(
+        sourceName="AIBaldiMessage",
+        filterName="Move Value"
+    ))
+    print(testresponse.datain)
+
     ws.call(obs_requests.SetSourceFilterSettings(
         sourceName="AIBaldiMessage",
         filterName="Move Value",
