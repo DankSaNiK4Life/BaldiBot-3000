@@ -110,20 +110,20 @@ async def gen_with_elevenlabs_remote(audio_data, input_text):
 
     #ws.call(obs_requests.SetInputSettings(inputName="AIBaldiMessage", inputSettings = {'text': input_text}))
     testresponse = ws.call(obs_requests.GetSourceFilter(
-        sourceName="AIBaldiMessage",
+        sourceName=cfg.message_source,
         filterName="Move Value"
     ))
     print(testresponse.datain)
 
     ws.call(obs_requests.SetSourceFilterSettings(
-        sourceName="AIBaldiMessage",
+        sourceName=cfg.message_source,
         filterName="Move Value",
         filterSettings={
             "setting_text": input_text
         },
         overlay=True
     ))
-    set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="BaldiAI", source_visible=True)
+    set_source_visibility(ws, scene_name="GLOBAL Scene", source_name=cfg.ai_image_source, source_visible=True)
     set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="RemoteAudio", source_visible=True)
     
     ws.disconnect()

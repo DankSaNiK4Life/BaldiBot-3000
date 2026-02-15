@@ -60,18 +60,20 @@ class Config:
 
     # -------------------- GLOBAL -------------------- #
 
-    cb_ctx = None                # This is a global variable used in the cb function
-    voice_client = None          # This acts as a global voice client so I dont have to use it as a parameter for like every functions lol
-    start_time = 0               # This is used later to check when the bot first started listening
-    last_speech_time = 0         # This is used later to check the last time the user spoke
-    chat_history = []            # This is used to store all previous chat messages so the AI can rememeber them
-    all_results = []             # This stores every thing the user has said during the listening phase
-    last_user_message = " "      # This is used for the "last" command to show the last message sent by the user
-    last_bot_message = " "       # This is used for the "last" command to show the last message sent by the bot
-    listen_to_name = None        # This is used to store the name of the user the bot is listening to
-    random_sounds_enabled = True # This is used to enable or disable the random sounds feature
-    elevenlabs_voice = "CGOMbDUL52Yuc7oiDIm8"                   # Replace this with the name of whatever voice you have created on Elevenlabs (Baldi The Melon Head V2 - vrkuGKtvocSoZvsaAeUM, Baldi The Melon Head - CGOMbDUL52Yuc7oiDIm8)
-    elevenlabs_model = "eleven_multilingual_v2"                 # This is the ElevenLabs model we will be using for TTS
+    cb_ctx = None                               # This is a global variable used in the cb function
+    voice_client = None                         # This acts as a global voice client so I dont have to use it as a parameter for like every functions lol
+    start_time = 0                              # This is used later to check when the bot first started listening
+    last_speech_time = 0                        # This is used later to check the last time the user spoke
+    chat_history = []                           # This is used to store all previous chat messages so the AI can rememeber them
+    all_results = []                            # This stores every thing the user has said during the listening phase
+    last_user_message = " "                     # This is used for the "last" command to show the last message sent by the user
+    last_bot_message = " "                      # This is used for the "last" command to show the last message sent by the bot
+    listen_to_name = None                       # This is used to store the name of the user the bot is listening to
+    random_sounds_enabled = True                # This is used to enable or disable the random sounds feature
+    elevenlabs_voice = "CGOMbDUL52Yuc7oiDIm8"   # Replace this with the name of whatever voice you have created on Elevenlabs (Baldi The Melon Head V2 - vrkuGKtvocSoZvsaAeUM, Baldi The Melon Head - CGOMbDUL52Yuc7oiDIm8)
+    elevenlabs_model = "eleven_multilingual_v2" # This is the ElevenLabs model we will be using for TTS
+    ai_image_source = "BaldiAI"                    # This is the name of the image source in OBS that will show the AI's image (if using OBS for audio playback)
+    message_source = "AIBaldiMessage"           # This is the name of the text source in OBS that will show the user's message (if using OBS for audio playback)
 
     eleven_client = ElevenLabs(api_key=ELEVENLABS_API_KEY) # This assigns the ElevenLabs client
 
