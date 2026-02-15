@@ -107,7 +107,15 @@ async def gen_with_elevenlabs_remote(audio_data, input_text):
     ws.connect()
     print("Connected to OBS WebSocket")
 
-    ws.call(obs_requests.SetInputSettings(inputName="AIBaldiMessage", inputSettings = {'text': input_text}))
+    #ws.call(obs_requests.SetInputSettings(inputName="AIBaldiMessage", inputSettings = {'text': input_text}))
+    ws.call(obs_requests.SetSourceFilterSettings(
+        sourceName="RemoteAudio",
+        filterName="Move Value",
+        filterSettings={
+            "value": input_text
+        },
+        overlay=True
+    ))
     set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="BaldiAI", source_visible=True)
     set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="RemoteAudio", source_visible=True)
     
