@@ -109,7 +109,7 @@ async def gen_with_elevenlabs_remote(audio_data, input_text):
 
     #ws.call(obs_requests.SetInputSettings(inputName="AIBaldiMessage", inputSettings = {'text': input_text}))
     ws.call(obs_requests.SetSourceFilterSettings(
-        sourceName="RemoteAudio",
+        sourceName="AIBaldiMessage",
         filterName="Move Value",
         filterSettings={
             "value": input_text
