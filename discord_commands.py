@@ -379,7 +379,7 @@ async def personality(ctx):
     new_message = ctx.message.content[len(ctx.prefix) + len("set personality"):].strip()
 
     if new_message.lower() == "sane baldi":
-        with open("./images/RealisticBaldiAI.png", "rb") as image:
+        with open("./images/pfps/RealisticBaldiAI.png", "rb") as image:
             new_avatar = image.read()
         await bot.user.edit(avatar=new_avatar)
         cfg.DEFAULT_SYSTEM_MESSAGE = p.SANE_BALDIS_FIRST_SYSTEM_MESSAGE
@@ -391,7 +391,7 @@ async def personality(ctx):
         cfg.join_vc_audio = "./sounds/RealisticBaldiAIVoiceTest.mp3"
         p.CURRENT_PERSONALITY = "sane baldi"
     elif new_message.lower() == "baldi":
-        with open("./images/BaldiAI.png", "rb") as image:
+        with open("./images/pfps/BaldiAI.png", "rb") as image:
             new_avatar = image.read()
         await bot.user.edit(avatar=new_avatar)
         cfg.DEFAULT_SYSTEM_MESSAGE = p.BALDIS_FIRST_SYSTEM_MESSAGE
