@@ -48,7 +48,7 @@ def set_source_visibility(ws, scene_name, source_name, source_visible=True):
 
 async def safe_obs_connect(ws):
     try:
-        await asyncio.to_thread(ws.connect())
+        await asyncio.to_thread(ws.connect)
         return True
     except Exception:
         return False
