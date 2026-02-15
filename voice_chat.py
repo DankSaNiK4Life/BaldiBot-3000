@@ -97,7 +97,7 @@ async def gen_with_elevenlabs(input_text, voice):
 
     return print("--- ElevenLabs Generated & Played Audio. ---")
 
-async def gen_with_elevenlabs_remote(audio_data):
+async def gen_with_elevenlabs_remote(audio_data, input_text):
     # SAVE the audio to a web-accessible folder on your server
     with open("temp_audio.mp3", "wb") as f:
         f.write(audio_data)
@@ -107,6 +107,7 @@ async def gen_with_elevenlabs_remote(audio_data):
     ws.connect()
     print("Connected to OBS WebSocket")
 
+    ws.call(obs_requests.SetInputSettings(inputName="AIBaldiMessage", inputSettings = {'text': input_text}))
     set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="BaldiAI", source_visible=True)
     set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="RemoteAudio", source_visible=True)
     
@@ -130,7 +131,7 @@ async def gen_with_elevenlabs_streaming(input_text, voice, model):
     audio_buffer = io.BytesIO(audio_data)
 
     cfg.voice_client.play(discord.FFmpegPCMAudio(audio_buffer, pipe=True, executable="ffmpeg"))
-    await gen_with_elevenlabs_remote(audio_data) # Stream the audio to OBS (if using OBS for audio playback)
+    await gen_with_elevenlabs_remote(audio_data, input_text) # Stream the audio to OBS (if using OBS for audio playback)
     print("--- ElevenLabs Streaming Generated & Played Audio. ---")
     print(f"Voice used: {voice}")
     print(f"Model used: {model}")
