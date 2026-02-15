@@ -1,6 +1,6 @@
 from urllib import response
 from config import Config as cfg
-from bot_utils import get_real_name, set_source_visibility, safe_obs_connect
+from bot_utils import get_real_name, set_source_visibility
 from elevenlabs import save
 from discord.ext import voice_recv
 from openai_chat import chat_with_gpt
@@ -141,16 +141,17 @@ async def gen_with_elevenlabs_streaming(input_text, voice, model):
     # Create a BytesIO object from the collected bytes
     audio_buffer = io.BytesIO(audio_data)
 
-    ws = obsws(cfg.WEBSOCKET_HOST, cfg.WEBSOCKET_PORT, cfg.WEBSOCKET_PASSWORD)
-    ws.timeout = 5
-    connected = await safe_obs_connect(ws)
+    ws = obsws(cfg.WEBSOCKET_HOST, cfg.WEBSOCKET_PORT, cfg.WEBSOCKET_PASSWORD, timeout=1)
+    ws.connect
     
-    if connected:
-        print("Connected to OBS WebSocket")
-        await gen_with_elevenlabs_remote(ws, audio_data, input_text) # Stream the audio to OBS (if using OBS for audio playback)
-    else:
-        print("Failed to connect to OBS WebSocket. Playing audio directly in Discord.")
-        cfg.voice_client.play(discord.FFmpegPCMAudio(audio_buffer, pipe=True, executable="ffmpeg"))
+    cfg.voice_client.play(discord.FFmpegPCMAudio(audio_buffer, pipe=True, executable="ffmpeg"))
+    await gen_with_elevenlabs_remote(ws, audio_data, input_text) # Stream the audio to OBS (if using OBS for audio playback)
+    #if ws.ws.connected:
+    #    print("Connected to OBS WebSocket")
+    #    await gen_with_elevenlabs_remote(ws, audio_data, input_text) # Stream the audio to OBS (if using OBS for audio playback)
+    #else:
+    #    print("Failed to connect to OBS WebSocket. Playing audio directly in Discord.")
+    #    cfg.voice_client.play(discord.FFmpegPCMAudio(audio_buffer, pipe=True, executable="ffmpeg"))
     
     print("--- ElevenLabs Streaming Generated & Played Audio. ---")
     print(f"Voice used: {voice}")

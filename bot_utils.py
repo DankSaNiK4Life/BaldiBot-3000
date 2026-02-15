@@ -45,10 +45,3 @@ def set_source_visibility(ws, scene_name, source_name, source_visible=True):
         response = ws.call(obs_requests.GetSceneItemId(sceneName=scene_name, sourceName=source_name))
         myItemID = response.datain['sceneItemId']
         ws.call(obs_requests.SetSceneItemEnabled(sceneName=scene_name, sceneItemId=myItemID, sceneItemEnabled=source_visible))
-
-async def safe_obs_connect(ws):
-    try:
-        await asyncio.to_thread(ws.connect)
-        return True
-    except Exception:
-        return False
