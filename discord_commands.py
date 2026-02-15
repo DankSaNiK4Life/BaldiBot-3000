@@ -160,6 +160,8 @@ async def join(ctx):
         # Starts listening to the user as soon as it joins
         #await start(ctx)
 
+        cfg.voice_client.play(discord.FFmpegPCMAudio(executable="ffmpeg", source=cfg.join_vc_audio))
+
         await play_random_sounds() # Start random sounds when the bot joins a channel
     else:
         await ctx.send("You are not in a voice channel buddy!")
@@ -383,6 +385,7 @@ async def personality(ctx):
         cfg.elevenlabs_model = "eleven_v3"
         cfg.ai_image_source = "RealisticBaldiAI"
         cfg.message_source = "RealisticAIBaldiMessage"
+        cfg.join_vc_audio = "./RealisticBaldiAIVoiceTest.mp3"
         p.CURRENT_PERSONALITY = "sane baldi"
     elif new_message.lower() == "baldi":
         cfg.DEFAULT_SYSTEM_MESSAGE = p.BALDIS_FIRST_SYSTEM_MESSAGE
@@ -391,6 +394,7 @@ async def personality(ctx):
         cfg.elevenlabs_model = "eleven_multilingual_v2"
         cfg.ai_image_source = "BaldiAI"
         cfg.message_source = "AIBaldiMessage"
+        cfg.join_vc_audio = "./BaldiAIVoiceTest.mp3"
         p.CURRENT_PERSONALITY = "baldi"
     else:
         await ctx.send("Unknown personality! Available personalities are: 'Baldi' and 'Sane Baldi'")

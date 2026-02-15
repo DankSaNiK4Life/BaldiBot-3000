@@ -34,6 +34,7 @@ class Config:
     RANDOM_SOUND_INTERVAL = (1200, 3600)                        # This is the interval (in seconds) at which random sounds will be played (between 5 minutes and 1 hour)
     LOG_CHANNEL_ID = 1471673659998343333                        # This is the channel ID of the channel where the bot will send logs (e.g. errors, when it starts listening, etc)
 
+
     TRUSTED_USER_IDS = [                                        # This is a list of user IDs that the bot will trust to use important commands
         OWNER_ID, 
         257961792867663875, # Ishaq
@@ -72,8 +73,9 @@ class Config:
     random_sounds_enabled = True                # This is used to enable or disable the random sounds feature
     elevenlabs_voice = "CGOMbDUL52Yuc7oiDIm8"   # Replace this with the name of whatever voice you have created on Elevenlabs (Baldi The Melon Head V2 - vrkuGKtvocSoZvsaAeUM, Baldi The Melon Head - CGOMbDUL52Yuc7oiDIm8)
     elevenlabs_model = "eleven_multilingual_v2" # This is the ElevenLabs model we will be using for TTS
-    ai_image_source = "BaldiAI"                    # This is the name of the image source in OBS that will show the AI's image (if using OBS for audio playback)
+    ai_image_source = "BaldiAI"                 # This is the name of the image source in OBS that will show the AI's image (if using OBS for audio playback)
     message_source = "AIBaldiMessage"           # This is the name of the text source in OBS that will show the user's message (if using OBS for audio playback)
+    join_vc_audio = "./BaldiAIVoiceTest.mp3"
 
     eleven_client = ElevenLabs(api_key=ELEVENLABS_API_KEY) # This assigns the ElevenLabs client
 
