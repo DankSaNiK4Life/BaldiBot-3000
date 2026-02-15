@@ -141,7 +141,7 @@ async def gen_with_elevenlabs_streaming(input_text, voice, model):
     # Create a BytesIO object from the collected bytes
     audio_buffer = io.BytesIO(audio_data)
 
-    ws = obsws(cfg.WEBSOCKET_HOST, cfg.WEBSOCKET_PORT, cfg.WEBSOCKET_PASSWORD)
+    ws = obsws(cfg.WEBSOCKET_HOST, cfg.WEBSOCKET_PORT, cfg.WEBSOCKET_PASSWORD, timeout=5)
     connected = await safe_obs_connect(ws)
     
     if connected:
