@@ -119,7 +119,7 @@ async def gen_with_elevenlabs_remote(audio_data, input_text):
         sourceName="AIBaldiMessage",
         filterName="Move Value",
         filterSettings={
-            "value": input_text
+            "setting_text": input_text
         },
         overlay=True
     ))
