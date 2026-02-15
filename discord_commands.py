@@ -417,7 +417,7 @@ async def last(ctx):
 # Context sub-command - Sends the context message to the user
 @show.command()
 async def context(ctx):
-    await ctx.send(f"Context: {cfg.CONTEXT_MESSAGE}")
+    await ctx.send(f"Context: {p.CONTEXT_MESSAGE}")
 
 # Personality sub-command - Sends the current personality to the user
 @show.command()
