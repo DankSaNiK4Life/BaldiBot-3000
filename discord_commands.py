@@ -105,7 +105,7 @@ async def on_message(message):
                 await message.reply("Received speaker message!")
                 
                 await voice_chat.gen_with_elevenlabs_streaming(streamerbot_msg, cfg.elevenlabs_voice, cfg.elevenlabs_model)
-            else:
+            elif not "speaker:" in user_message:
                 streamerbot_msg = user_message.split(' ', 1)[1]
                 streamerbot_user = user_message.split(' ', 1)[0]
                 print("Username: " + streamerbot_user + " " + "Message: " + streamerbot_msg)
