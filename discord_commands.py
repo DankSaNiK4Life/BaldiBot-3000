@@ -379,22 +379,28 @@ async def personality(ctx):
     new_message = ctx.message.content[len(ctx.prefix) + len("set personality"):].strip()
 
     if new_message.lower() == "sane baldi":
+        with open("./images/RealisticBaldiAI.png", "rb") as image:
+            new_avatar = image.read()
+        await bot.user.edit(avatar=new_avatar)
         cfg.DEFAULT_SYSTEM_MESSAGE = p.SANE_BALDIS_FIRST_SYSTEM_MESSAGE
         cfg.BACKUP_JSON_FILE = "backups/SaneBaldiChatHistoryJsonBackup.json"
         cfg.elevenlabs_voice = "vrkuGKtvocSoZvsaAeUM"
         cfg.elevenlabs_model = "eleven_v3"
         cfg.ai_image_source = "RealisticBaldiAI"
         cfg.message_source = "RealisticAIBaldiMessage"
-        cfg.join_vc_audio = "./RealisticBaldiAIVoiceTest.mp3"
+        cfg.join_vc_audio = "./sounds/RealisticBaldiAIVoiceTest.mp3"
         p.CURRENT_PERSONALITY = "sane baldi"
     elif new_message.lower() == "baldi":
+        with open("./images/BaldiAI.png", "rb") as image:
+            new_avatar = image.read()
+        await bot.user.edit(avatar=new_avatar)
         cfg.DEFAULT_SYSTEM_MESSAGE = p.BALDIS_FIRST_SYSTEM_MESSAGE
         cfg.BACKUP_JSON_FILE = "backups/BaldiHistoryJsonBackup.json"
         cfg.elevenlabs_voice = "CGOMbDUL52Yuc7oiDIm8"
         cfg.elevenlabs_model = "eleven_multilingual_v2"
         cfg.ai_image_source = "BaldiAI"
         cfg.message_source = "AIBaldiMessage"
-        cfg.join_vc_audio = "./BaldiAIVoiceTest.mp3"
+        cfg.join_vc_audio = "./sounds/BaldiAIVoiceTest.mp3"
         p.CURRENT_PERSONALITY = "baldi"
     else:
         await ctx.send("Unknown personality! Available personalities are: 'Baldi' and 'Sane Baldi'")
