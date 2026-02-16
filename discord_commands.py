@@ -361,12 +361,12 @@ async def context(ctx):
         f"Context: {new_message}"
         )
     
-    cfg.CONTEXT_MESSAGE = new_message
+    p.CONTEXT_MESSAGE = new_message
 
     cfg.chat_history.remove(cfg.chat_history[0])
     cfg.chat_history.insert(0, cfg.DEFAULT_SYSTEM_MESSAGE)
 
-    print(f"New context message has been set to: {cfg.CONTEXT_MESSAGE}")
+    print(f"New context message has been set to: {p.CONTEXT_MESSAGE}")
     await ctx.send(f"Context message has been set!")
 
 # Personality sub-command - Sets the personality for the AI (different system messages)
