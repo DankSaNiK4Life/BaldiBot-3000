@@ -24,7 +24,7 @@ bot = commands.Bot(command_prefix=prefixes, intents=intents)    # Creating the b
 # On_ready event - This is called when the bot has fully loaded
 @bot.event
 async def on_ready():
-    print("-------------------------------------------------------------------------------------------------------------------------------------------------")
+    print("-------------------------------------------------------------------------------------------------------------------------------------------------\n")
 
     log_channel = bot.get_channel(cfg.LOG_CHANNEL_ID)
     
@@ -41,11 +41,11 @@ async def on_ready():
         with open(cfg.BACKUP_JSON_FILE, "r") as file:
             try:
                 cfg.chat_history = json.load(file)  # Load JSON data into cfg.chat_history list
-                print("--- Chat history was loaded. ---\n")
+                print("--- Chat history was loaded. ---")
             except json.JSONDecodeError:
-                print("--- Chat history file is empty or corrupted. Starting fresh. ---\n")
+                print("--- Chat history file is empty or corrupted. Starting fresh. ---")
     else:
-        print("--- JSON file does not exist. Will create a new one on the first message ---\n")
+        print("--- JSON file does not exist. Will create a new one on the first message ---")
 
     # Set the default personality on startup
     # This also adds the system message to the chat history on start
@@ -56,7 +56,7 @@ async def on_ready():
     print("--- Started HTTP server for audio files ---")
 
     print("\n-------------------------")
-    print("Baldi is ready to teach!")
+    print("\nBaldi is ready to teach!\n")
     print("-------------------------\n")
 
 # On_message event - This lets the bot see what is being said in any chat in the server 
