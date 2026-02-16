@@ -42,12 +42,12 @@ def set_source_visibility(ws, scene_name, source_name, source_visible=True):
         ws.call(obs_requests.SetSceneItemEnabled(sceneName=scene_name, sceneItemId=myItemID, sceneItemEnabled=source_visible))
 
 # This function is used to change the bot's personality (e.g. change the system message, change the avatar, change the ElevenLabs voice/model, etc.)
-def set_personality(personality_name, ctx, bot):
+async def set_personality(personality_name, ctx, bot):
     # ------- Sane Baldi ------- #
     if personality_name.lower() == "sane baldi":
         with open("./images/pfps/RealisticBaldiAI.png", "rb") as image:
             new_avatar = image.read()
-        bot.user.edit(avatar=new_avatar)
+        await bot.user.edit(avatar=new_avatar)
         cfg.DEFAULT_SYSTEM_MESSAGE = p.SANE_BALDIS_FIRST_SYSTEM_MESSAGE
         cfg.BACKUP_JSON_FILE = "backups/SaneBaldiChatHistoryJsonBackup.json"
         cfg.elevenlabs_voice = "vrkuGKtvocSoZvsaAeUM"
@@ -61,7 +61,7 @@ def set_personality(personality_name, ctx, bot):
     elif personality_name.lower() == "baldi":
         with open("./images/pfps/BaldiAI.png", "rb") as image:
             new_avatar = image.read()
-        bot.user.edit(avatar=new_avatar)
+        await bot.user.edit(avatar=new_avatar)
         cfg.DEFAULT_SYSTEM_MESSAGE = p.BALDIS_FIRST_SYSTEM_MESSAGE
         cfg.BACKUP_JSON_FILE = "backups/BaldiHistoryJsonBackup.json"
         cfg.elevenlabs_voice = "CGOMbDUL52Yuc7oiDIm8"
@@ -73,7 +73,8 @@ def set_personality(personality_name, ctx, bot):
     
     # If the personality name is not recognized, send an error message
     else:
-        ctx.send("Unknown personality! Available personalities are: 'Baldi' and 'Sane Baldi'")
+        print(f"Unknown personality: {personality_name}")
+        await ctx.send("Unknown personality! use 'baldi commands' to see the list of available personalities.")
         return
     
     # After changing the personality, we need to update the system message in the chat history so the AI can use the new personality immediately
