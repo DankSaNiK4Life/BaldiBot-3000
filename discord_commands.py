@@ -24,6 +24,8 @@ bot = commands.Bot(command_prefix=prefixes, intents=intents)    # Creating the b
 # On_ready event - This is called when the bot has fully loaded
 @bot.event
 async def on_ready():
+    print("-------------------------------------------------------------------")
+
     log_channel = bot.get_channel(cfg.LOG_CHANNEL_ID)
     
     # Saves original console 'write' function so we can still print to console while also sending logs to the channel
