@@ -2,7 +2,7 @@ import random, discord, os, asyncio, json, threading, sys, voice_chat
 from platform import system as get_os_name
 from discord.ext import commands, voice_recv
 from config import Config as cfg
-from bot_utils import get_real_name, get_random_sound, start_http_server
+from bot_utils import get_real_name, get_random_sound, start_http_server, set_personality
 from voice_chat import start_listening, DummySink
 from openai_chat import chat_with_gpt
 from personalities import Personalities as p
@@ -386,43 +386,15 @@ async def personality(ctx):
         await ctx.reply("You are not trusted, you cannot use this command!")
         return
     
-    new_message = ctx.message.content[len(ctx.prefix) + len("set personality"):].strip()
+    # Extract the personality name (remove the command prefix)
+    personality_name = ctx.message.content[len(ctx.prefix) + len("set personality"):].strip()
 
-    if new_message.lower() == "sane baldi":
-        with open("./images/pfps/RealisticBaldiAI.png", "rb") as image:
-            new_avatar = image.read()
-        await bot.user.edit(avatar=new_avatar)
-        cfg.DEFAULT_SYSTEM_MESSAGE = p.SANE_BALDIS_FIRST_SYSTEM_MESSAGE
-        cfg.BACKUP_JSON_FILE = "backups/SaneBaldiChatHistoryJsonBackup.json"
-        cfg.elevenlabs_voice = "vrkuGKtvocSoZvsaAeUM"
-        cfg.elevenlabs_model = "eleven_v3"
-        cfg.ai_image_source = "RealisticBaldiAI"
-        cfg.message_source = "RealisticAIBaldiMessage"
-        cfg.join_vc_audio = "./sounds/RealisticBaldiAIVoiceTest.mp3"
-        p.CURRENT_PERSONALITY = "sane baldi"
-    elif new_message.lower() == "baldi":
-        with open("./images/pfps/BaldiAI.png", "rb") as image:
-            new_avatar = image.read()
-        await bot.user.edit(avatar=new_avatar)
-        cfg.DEFAULT_SYSTEM_MESSAGE = p.BALDIS_FIRST_SYSTEM_MESSAGE
-        cfg.BACKUP_JSON_FILE = "backups/BaldiHistoryJsonBackup.json"
-        cfg.elevenlabs_voice = "CGOMbDUL52Yuc7oiDIm8"
-        cfg.elevenlabs_model = "eleven_multilingual_v2"
-        cfg.ai_image_source = "BaldiAI"
-        cfg.message_source = "AIBaldiMessage"
-        cfg.join_vc_audio = "./sounds/BaldiAIVoiceTest.mp3"
-        p.CURRENT_PERSONALITY = "baldi"
-    else:
-        await ctx.send("Unknown personality! Available personalities are: 'Baldi' and 'Sane Baldi'")
-        return
-        
+    # Call the utility function to set the personality
+    set_personality(personality_name, ctx, bot)
 
-    cfg.chat_history.remove(cfg.chat_history[0])
-    cfg.chat_history.insert(0, cfg.DEFAULT_SYSTEM_MESSAGE)
-
-    print(f"New personality has been set to: {new_message}")
-    print(f"New voice has been set to: {cfg.elevenlabs_voice}")
-    print(f"New model has been set to: {cfg.elevenlabs_model}")
+    print(f"New personality: {personality_name}")
+    print(f"New voice: {cfg.elevenlabs_voice}")
+    print(f"New model: {cfg.elevenlabs_model}")
     await ctx.send(f"Personality has been set!")
 
 # Show command - command used to invoke sub commands

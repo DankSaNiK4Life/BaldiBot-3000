@@ -3,6 +3,7 @@ from config import Config as cfg
 from obswebsocket import requests as obs_requests
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
+from personalities import Personalities as p
 
 def encode_image_from_url(url):
     response = requests.get(url)
@@ -39,3 +40,42 @@ def set_source_visibility(ws, scene_name, source_name, source_visible=True):
         response = ws.call(obs_requests.GetSceneItemId(sceneName=scene_name, sourceName=source_name))
         myItemID = response.datain['sceneItemId']
         ws.call(obs_requests.SetSceneItemEnabled(sceneName=scene_name, sceneItemId=myItemID, sceneItemEnabled=source_visible))
+
+# This function is used to change the bot's personality (e.g. change the system message, change the avatar, change the ElevenLabs voice/model, etc.)
+def set_personality(personality_name, ctx, bot):
+    # ------- Sane Baldi ------- #
+    if personality_name.lower() == "sane baldi":
+        with open("./images/pfps/RealisticBaldiAI.png", "rb") as image:
+            new_avatar = image.read()
+        bot.user.edit(avatar=new_avatar)
+        cfg.DEFAULT_SYSTEM_MESSAGE = p.SANE_BALDIS_FIRST_SYSTEM_MESSAGE
+        cfg.BACKUP_JSON_FILE = "backups/SaneBaldiChatHistoryJsonBackup.json"
+        cfg.elevenlabs_voice = "vrkuGKtvocSoZvsaAeUM"
+        cfg.elevenlabs_model = "eleven_v3"
+        cfg.ai_image_source = "RealisticBaldiAI"
+        cfg.message_source = "RealisticAIBaldiMessage"
+        cfg.join_vc_audio = "./sounds/RealisticBaldiAIVoiceTest.mp3"
+        p.CURRENT_PERSONALITY = "sane baldi"
+    
+    # --------- Baldi --------- #
+    elif personality_name.lower() == "baldi":
+        with open("./images/pfps/BaldiAI.png", "rb") as image:
+            new_avatar = image.read()
+        bot.user.edit(avatar=new_avatar)
+        cfg.DEFAULT_SYSTEM_MESSAGE = p.BALDIS_FIRST_SYSTEM_MESSAGE
+        cfg.BACKUP_JSON_FILE = "backups/BaldiHistoryJsonBackup.json"
+        cfg.elevenlabs_voice = "CGOMbDUL52Yuc7oiDIm8"
+        cfg.elevenlabs_model = "eleven_multilingual_v2"
+        cfg.ai_image_source = "BaldiAI"
+        cfg.message_source = "AIBaldiMessage"
+        cfg.join_vc_audio = "./sounds/BaldiAIVoiceTest.mp3"
+        p.CURRENT_PERSONALITY = "baldi"
+    
+    # If the personality name is not recognized, send an error message
+    else:
+        ctx.send("Unknown personality! Available personalities are: 'Baldi' and 'Sane Baldi'")
+        return
+    
+    # After changing the personality, we need to update the system message in the chat history so the AI can use the new personality immediately
+    cfg.chat_history.remove(cfg.chat_history[0])
+    cfg.chat_history.insert(0, cfg.DEFAULT_SYSTEM_MESSAGE)
