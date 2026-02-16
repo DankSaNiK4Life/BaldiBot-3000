@@ -390,7 +390,7 @@ async def personality(ctx):
     personality_name = ctx.message.content[len(ctx.prefix) + len("set personality"):].strip()
 
     # Call the utility function to set the personality
-    set_personality(personality_name, ctx, bot)
+    await set_personality(personality_name, ctx, bot)
 
     print(f"New personality: {personality_name}")
     print(f"New voice: {cfg.elevenlabs_voice}")
