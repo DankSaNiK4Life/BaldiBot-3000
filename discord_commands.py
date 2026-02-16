@@ -33,8 +33,6 @@ async def on_ready():
         original_write(msg), # This keeps it in the HypeServ Panel
         bot.loop.create_task(log_channel.send(f"```\n{msg[:1990]}\n```")) if msg.strip() else None
     )
-
-    await set_personality("baldi", ctx=None, bot=bot) # Set the default personality on startup
     
     print("\n-------------------------")
     print("Baldi is ready to teach!")
@@ -51,9 +49,9 @@ async def on_ready():
     else:
         print("--- JSON file does not exist. Will create a new one on the first message ---\n")
 
-    # This adds the system message to the chat history on start
-    cfg.chat_history.remove(cfg.chat_history[0])
-    cfg.chat_history.insert(0, cfg.DEFAULT_SYSTEM_MESSAGE)
+    # Set the default personality on startup
+    # This also adds the system message to the chat history on start
+    await set_personality("baldi", ctx=None, bot=bot) 
 
     # Start the HTTP server for serving audio files
     threading.Thread(target=start_http_server, daemon=True).start()
