@@ -102,7 +102,7 @@ async def on_message(message):
                 print("CHEER MESSAGE: " + streamerbot_msg)
                 await message.reply("Cheer detected!")
 
-                await voice_chat.gen_with_elevenlabs_streaming(streamerbot_msg, cfg.elevenlabs_voice, cfg.elevenlabs_model)
+                await voice_chat.gen_with_elevenlabs_streaming(streamerbot_msg, "h1IssowVS2h4nL5ZbkkK", "eleven_v3", msg_type="cheer")
             elif not "speaker:" in user_message:
                 streamerbot_msg = user_message.split(' ', 1)[1]
                 streamerbot_user = user_message.split(' ', 1)[0]

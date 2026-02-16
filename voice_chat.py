@@ -67,7 +67,7 @@ async def process_response(final_result, ctx):
     print(f"Baldi says: {openai_answer}")
     await text_to_audio_played(openai_answer, ctx)  # Play response in voice chat
 
-async def gen_with_elevenlabs_remote(ws, audio_data, input_text):
+async def gen_with_elevenlabs_remote(ws, audio_data, input_text, msg_type="normal"):
     # SAVE the audio to a web-accessible folder on your server
     with open("./sounds/temp_audio.mp3", "wb") as f:
         f.write(audio_data)
@@ -82,23 +82,39 @@ async def gen_with_elevenlabs_remote(ws, audio_data, input_text):
     print(testresponse.datain)
     """
 
-    # Sets "Move Value" filter text to the user's message (this is used to show the user's message in OBS as a text source filter)
-    ws.call(obs_requests.SetSourceFilterSettings(
-        sourceName=cfg.message_source,
-        filterName="Move Value",
-        filterSettings={
-            "setting_text": input_text
-        },
-        overlay=True
-    ))
+    # This is used if someone gives bits and a message on Twitch
+    if msg_type == "cheer":
+        print("Cheer message detected.")
+        ws.call(obs_requests.SetSourceFilterSettings(
+                sourceName="ChatterTTSMelonMessage",
+                filterName="Move Value",
+                filterSettings={"setting_text": input_text},
+                overlay=True
+            )
+        )
 
-    # This is used to make the AI's image and audio source visible in OBS (if using OBS for audio playback)
-    set_source_visibility(ws, scene_name="GLOBAL Scene", source_name=cfg.ai_image_source, source_visible=True)
-    set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="RemoteAudio", source_visible=True)
+        set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="ChatterTTSMelon", source_visible=True)
+        set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="RemoteAudio", source_visible=True)
+
+    # This is used for normal messages (e.g. from the user speaking)
+    elif msg_type == "normal":
+        print("Normal message detected.")
+        # Sets "Move Value" filter text to the user's message (this is used to show the user's message in OBS as a text source filter)
+        ws.call(obs_requests.SetSourceFilterSettings(
+                sourceName=cfg.message_source,
+                filterName="Move Value",
+                filterSettings={"setting_text": input_text},
+                overlay=True
+            )
+        )
+
+        # This is used to make the AI's image and audio source visible in OBS (if using OBS for audio playback)
+        set_source_visibility(ws, scene_name="GLOBAL Scene", source_name=cfg.ai_image_source, source_visible=True)
+        set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="RemoteAudio", source_visible=True)
     
     ws.disconnect() # Disconnect from OBS WebSocket after we're done controlling the sources
 
-async def gen_with_elevenlabs_streaming(input_text, voice, model):
+async def gen_with_elevenlabs_streaming(input_text, voice, model, msg_type="normal"):
     from discord_commands import play_random_sounds, stop_random_sounds
     await stop_random_sounds() # Stop random sounds while the bot is speaking
     
@@ -120,7 +136,7 @@ async def gen_with_elevenlabs_streaming(input_text, voice, model):
     ws.connect()
     
     cfg.voice_client.play(discord.FFmpegPCMAudio(audio_buffer, pipe=True, executable="ffmpeg"))
-    await gen_with_elevenlabs_remote(ws, audio_data, input_text) # Stream the audio to OBS (if using OBS for audio playback)
+    await gen_with_elevenlabs_remote(ws, audio_data, input_text, msg_type) # Stream the audio to OBS (if using OBS for audio playback)
     
     #if ws.ws.connected:
     #    print("Connected to OBS WebSocket")
