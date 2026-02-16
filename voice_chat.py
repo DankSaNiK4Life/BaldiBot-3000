@@ -67,7 +67,7 @@ async def process_response(final_result, ctx):
     print(f"Baldi says: {openai_answer}")
     await text_to_audio_played(openai_answer, ctx)  # Play response in voice chat
 
-async def gen_with_elevenlabs_remote(ws, audio_data, input_text, msg_type="normal"):
+async def gen_with_elevenlabs_remote(ws, audio_data, input_text, msg_type="normal", username=""):
     # SAVE the audio to a web-accessible folder on your server
     with open("./sounds/temp_audio.mp3", "wb") as f:
         f.write(audio_data)
@@ -93,6 +93,9 @@ async def gen_with_elevenlabs_remote(ws, audio_data, input_text, msg_type="norma
             )
         )
 
+        # This is used to set the username text in OBS (if using OBS for audio playback)
+        ws.call(obs_requests.SetInputSettings(inputName="ChatterTTSMelonUsername", inputSettings = {'text': username}))
+
         set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="ChatterTTSMelon", source_visible=True)
         set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="RemoteAudio", source_visible=True)
 
@@ -114,7 +117,7 @@ async def gen_with_elevenlabs_remote(ws, audio_data, input_text, msg_type="norma
     
     ws.disconnect() # Disconnect from OBS WebSocket after we're done controlling the sources
 
-async def gen_with_elevenlabs_streaming(input_text, voice, model, msg_type="normal"):
+async def gen_with_elevenlabs_streaming(input_text, voice, model, msg_type="normal", username=""):
     from discord_commands import play_random_sounds, stop_random_sounds
     await stop_random_sounds() # Stop random sounds while the bot is speaking
     
@@ -136,7 +139,7 @@ async def gen_with_elevenlabs_streaming(input_text, voice, model, msg_type="norm
     ws.connect()
     
     cfg.voice_client.play(discord.FFmpegPCMAudio(audio_buffer, pipe=True, executable="ffmpeg"))
-    await gen_with_elevenlabs_remote(ws, audio_data, input_text, msg_type) # Stream the audio to OBS (if using OBS for audio playback)
+    await gen_with_elevenlabs_remote(ws, audio_data, input_text, msg_type, username) # Stream the audio to OBS (if using OBS for audio playback)
     
     #if ws.ws.connected:
     #    print("Connected to OBS WebSocket")
