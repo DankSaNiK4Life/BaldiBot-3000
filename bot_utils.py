@@ -81,4 +81,4 @@ async def set_personality(personality_name, ctx, bot):
     cfg.chat_history.remove(cfg.chat_history[0])
     cfg.chat_history.insert(0, cfg.DEFAULT_SYSTEM_MESSAGE)
 
-    print("Personality has been set")
+    print("--- Personality has been set ---")
