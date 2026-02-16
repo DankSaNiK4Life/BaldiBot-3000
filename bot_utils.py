@@ -80,3 +80,5 @@ async def set_personality(personality_name, ctx, bot):
     # After changing the personality, we need to update the system message in the chat history so the AI can use the new personality immediately
     cfg.chat_history.remove(cfg.chat_history[0])
     cfg.chat_history.insert(0, cfg.DEFAULT_SYSTEM_MESSAGE)
+
+    print("Personality has been set")
