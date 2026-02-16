@@ -221,15 +221,35 @@ async def sounds(ctx):
     await ctx.send("I have stopped playing random sounds in the background.")
 
 async def play_random_sounds():
-    cfg.random_sounds_enabled = True
-    print("Random sounds enabled.")
-    while discord.utils.get(bot.voice_clients) and cfg.random_sounds_enabled:
-            await asyncio.sleep(random.randint(cfg.RANDOM_SOUND_INTERVAL[0], cfg.RANDOM_SOUND_INTERVAL[1])) # random interval between 5 minutes and 1 hour
-            if not cfg.random_sounds_enabled: break
-            if not cfg.voice_client.is_playing():
-                random_sound = get_random_sound()  # Start playing random sounds in the background
-                cfg.voice_client.play(discord.FFmpegPCMAudio(executable="ffmpeg", source=random_sound))
-                print("Played Random Sound: " + random_sound)
+    while cfg.voice_client and cfg.voice_client.is_connected() and cfg.random_sounds_enabled:
+
+        interval = random.randint(
+            cfg.RANDOM_SOUND_INTERVAL[0],
+            cfg.RANDOM_SOUND_INTERVAL[1]
+        )
+
+        # Interruptible sleep
+        for _ in range(interval):
+            if not cfg.random_sounds_enabled:
+                return
+            await asyncio.sleep(1)
+
+        if not cfg.voice_client.is_connected():
+            break
+
+        if not cfg.voice_client.is_playing():
+            random_sound = get_random_sound()
+
+            cfg.voice_client.play(
+                discord.FFmpegPCMAudio(
+                    executable="ffmpeg",
+                    source=random_sound,
+                    options="-vn"
+                )
+            )
+
+            print("Played Random Sound:", random_sound)
+
 
 # sounds command - This makes the bot continue making random sounds in the background
 @bot.command()
