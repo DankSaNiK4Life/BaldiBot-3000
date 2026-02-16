@@ -1,13 +1,8 @@
+import base64, requests, random, os, uvicorn
 from config import Config as cfg
-import base64
-import requests
 from obswebsocket import requests as obs_requests
-import random
-import time
-import os
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
-import uvicorn
 
 def encode_image_from_url(url):
     response = requests.get(url)
@@ -33,8 +28,8 @@ app = FastAPI()
 
 @app.get("/audio.mp3")
 async def get_audio():
-    if os.path.exists("temp_audio.mp3"):
-        return FileResponse("temp_audio.mp3", media_type="audio/mpeg")
+    if os.path.exists("./sounds/temp_audio.mp3"):
+        return FileResponse("./sounds/temp_audio.mp3", media_type="audio/mpeg")
     return {"error": "No audio file found"}
 
 def start_http_server():

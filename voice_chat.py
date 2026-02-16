@@ -1,21 +1,12 @@
-from urllib import response
+import time, asyncio, discord, logging, io, speech_recognition as sr
 from config import Config as cfg
 from bot_utils import get_real_name, set_source_visibility
-from elevenlabs import save
 from discord.ext import voice_recv
 from openai_chat import chat_with_gpt
-from io import BytesIO
-import time
-import asyncio
-import discord
-import speech_recognition as sr
-import aiohttp
-import logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', handlers=[logging.StreamHandler()])
-import wave
-import io
-import uuid
 from obswebsocket import obsws, requests as obs_requests
+
+# Set up logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', handlers=[logging.StreamHandler()])
 
 # Specifically silence the voice_recv reader and library noise
 logging.getLogger('discord.ext.voice_recv.reader').setLevel(logging.WARNING)
@@ -76,41 +67,22 @@ async def process_response(final_result, ctx):
     print(f"Baldi says: {openai_answer}")
     await text_to_audio_played(openai_answer, ctx)  # Play response in voice chat
 
-async def gen_with_elevenlabs(input_text, voice):
-    # Calling the text_to_speech conversion API with detailed parameters
-    audio = cfg.eleven_client.text_to_speech.convert(
-        voice_id=voice,
-        output_format="mp3_22050_32",
-        text=input_text,
-        model_id="eleven_multilingual_v2", # use the turbo model for low latency
-    )
-
-    save_file_path = f"{uuid.uuid4()}.mp3"
-
-    with open(save_file_path, "wb") as f:
-        for chunk in audio:
-            if chunk:
-                f.write(chunk)
-
-    print(f"{save_file_path}: A new audio file was saved successfully!")
-
-    cfg.voice_client.play(discord.FFmpegPCMAudio(executable="ffmpeg", source=save_file_path))
-
-    return print("--- ElevenLabs Generated & Played Audio. ---")
-
 async def gen_with_elevenlabs_remote(ws, audio_data, input_text):
     # SAVE the audio to a web-accessible folder on your server
-    with open("temp_audio.mp3", "wb") as f:
+    with open("./sounds/temp_audio.mp3", "wb") as f:
         f.write(audio_data)
     print("Saved new audio file")
 
-    #ws.call(obs_requests.SetInputSettings(inputName="AIBaldiMessage", inputSettings = {'text': input_text}))
+    # Used to test getting the filter settings and data from OBS (not needed anymore but might be useful in the future)    
+    """
     testresponse = ws.call(obs_requests.GetSourceFilter(
         sourceName=cfg.message_source,
         filterName="Move Value"
     ))
     print(testresponse.datain)
+    """
 
+    # Sets "Move Value" filter text to the user's message (this is used to show the user's message in OBS as a text source filter)
     ws.call(obs_requests.SetSourceFilterSettings(
         sourceName=cfg.message_source,
         filterName="Move Value",
@@ -119,10 +91,12 @@ async def gen_with_elevenlabs_remote(ws, audio_data, input_text):
         },
         overlay=True
     ))
+
+    # This is used to make the AI's image and audio source visible in OBS (if using OBS for audio playback)
     set_source_visibility(ws, scene_name="GLOBAL Scene", source_name=cfg.ai_image_source, source_visible=True)
     set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="RemoteAudio", source_visible=True)
     
-    ws.disconnect()
+    ws.disconnect() # Disconnect from OBS WebSocket after we're done controlling the sources
 
 async def gen_with_elevenlabs_streaming(input_text, voice, model):
     from discord_commands import play_random_sounds, stop_random_sounds
@@ -141,11 +115,13 @@ async def gen_with_elevenlabs_streaming(input_text, voice, model):
     # Create a BytesIO object from the collected bytes
     audio_buffer = io.BytesIO(audio_data)
 
+    # Connect to OBS WebSocket to control source visibility and streaming (if using OBS for audio playback)
     ws = obsws(cfg.WEBSOCKET_HOST, cfg.WEBSOCKET_PORT, cfg.WEBSOCKET_PASSWORD, timeout=1)
     ws.connect()
     
     cfg.voice_client.play(discord.FFmpegPCMAudio(audio_buffer, pipe=True, executable="ffmpeg"))
     await gen_with_elevenlabs_remote(ws, audio_data, input_text) # Stream the audio to OBS (if using OBS for audio playback)
+    
     #if ws.ws.connected:
     #    print("Connected to OBS WebSocket")
     #    await gen_with_elevenlabs_remote(ws, audio_data, input_text) # Stream the audio to OBS (if using OBS for audio playback)
@@ -158,173 +134,6 @@ async def gen_with_elevenlabs_streaming(input_text, voice, model):
     print(f"Model used: {model}")
 
     await play_random_sounds() # Start random sounds again after the bot has finished speaking
-
-async def gen_with_sovits(input_text, ctx):
-
-    '''config_path = "configs/tts_infer.yaml"
-
-    tts_config = GPTSoVITSConfig(config_path)
-    tts_pipeline = GPTSoVITSPipeline(tts_config)
-
-    gpt_model_path = "models/BaldiMelonHeadV2/GPT_weights/BaldiMelonHeadV2-e10.ckpt"
-    sovits_model_path = "models/BaldiMelonHeadV2/SoVITS_weights/BaldiMelonHeadV2_e8_s832.pth"
-    tts_pipeline.init_t2s_weights(weights_path=gpt_model_path)
-    tts_pipeline.init_vits_weights(weights_path=sovits_model_path)'''
-
-    # API configuration
-    host = '127.0.0.1'
-    port = 9880
-    url = f'http://{host}:{port}/tts'
-
-    '''json
-    {
-        "text": "",                   # str.(required) text to be synthesized
-        "text_lang: "",               # str.(required) language of the text to be synthesized
-        "ref_audio_path": "",         # str.(required) reference audio path
-        "aux_ref_audio_paths": [],    # list.(optional) auxiliary reference audio paths for multi-speaker tone fusion
-        "prompt_text": "",            # str.(optional) prompt text for the reference audio
-        "prompt_lang": "",            # str.(required) language of the prompt text for the reference audio
-        "top_k": 5,                   # int. top k sampling
-        "top_p": 1,                   # float. top p sampling
-        "temperature": 1,             # float. temperature for sampling
-        "text_split_method": "cut0",  # str. text split method, see text_segmentation_method.py for details.
-        "batch_size": 1,              # int. batch size for inference
-        "batch_threshold": 0.75,      # float. threshold for batch splitting.
-        "split_bucket: True,          # bool. whether to split the batch into multiple buckets.
-        "speed_factor":1.0,           # float. control the speed of the synthesized audio.
-        "streaming_mode": False,      # bool. whether to return a streaming response.
-        "seed": -1,                   # int. random seed for reproducibility.
-        "parallel_infer": True,       # bool. whether to use parallel inference.
-        "repetition_penalty": 1.35    # float. repetition penalty for T2S model.
-    }
-    '''
-
-    # Parameters for the request
-    params = {
-        'text': input_text,
-        'text_lang': 'en',
-        'ref_audio_path': 'balditest.wav',
-        'prompt_lang': 'en',
-        'prompt_text': 'Oh, Hi. Welcome to my school house!',
-        'text_split_method': 'cut0',
-        'batch_size': 4,
-        'media_type': 'wav',
-        'streaming_mode': 'false',
-    }
-    
-    try:
-          # Use aiohttp for asynchronous HTTP requests
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url, params=params) as response:
-
-                # Check if the request was successful
-                if response.status == 200:
-                    audio_data = await response.read()
-                    # Save the audio content to a file
-                    with open('output/ttsoutput.wav', 'wb') as f:
-                        f.write(audio_data)
-                    print('Audio saved to output/ttsoutput.wav')
-                else:
-                    error_data = await response.json()
-                    print(f'Error: {response.status}')
-                    print(error_data)
-                    return
-    except aiohttp.ClientError as e:
-        print(f'An error occurred during the HTTP request: {e}')
-        return
-    except Exception as e:
-        print(f'An unexpected error occurred: {e}')
-        return
-
-
-    '''rvc = RVCInference(models_dir="./models", 
-                    device="cuda:0",
-                    f0method = "rmvpe",
-                    f0up_key=0,
-                    index_rate=0.5,
-                    filter_radius=3,
-                    resample_sr=0,
-                    rms_mix_rate=1,
-                    protect=0.33)
-    print("List of models: ", rvc.list_models())
-
-    rvc.load_model("baldi")
-    rvc.infer_file("output/ttsoutput.wav", "output/rvcoutput.wav")'''
-    
-    # Wait a moment to ensure audio file is ready
-    #await asyncio.sleep(1)
-
-    cfg.voice_client.play(discord.FFmpegPCMAudio(executable="C:/ffmpeg/bin/ffmpeg.exe", source="output/ttsoutput.wav"))
-    
-    print("\n--- GPT-SoVITS/RTC Generated & Played Audio. ---\n")
-
-async def gen_with_sovits_streaming(input_text, ctx):
-    
-    # API configuration
-    host = '127.0.0.1'
-    port = 9880
-    url = f'http://{host}:{port}/tts'
-
-    # Parameters for the request
-    params = {
-        'text': input_text,  
-        'text_lang': 'en',
-        'ref_audio_path': 'balditest.wav',
-        'prompt_lang': 'en',
-        'prompt_text': 'Oh, Hi. Welcome to my school house!',
-        'text_split_method': 'cut0',
-        'batch_size': 4,
-        'media_type': 'wav',
-        'streaming_mode': 'True',
-        'cumulation_amount': 10,
-    }
-    
-    try:
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url, params=params) as response:
-                if response.status == 200:
-                    buffer = b''  # Buffer to hold data until header is processed
-                    header_size = 44  # Standard WAV header size
-                    header_parsed = False
-                    temp_file = "temp_audio.wav"
-
-                    with open(temp_file, 'wb') as f:
-                        async for chunk in response.content.iter_chunked(4096):
-                            if chunk:
-                                if not header_parsed:
-                                    buffer += chunk
-                                    if len(buffer) >= header_size:
-                                        # Parse WAV header
-                                        wav_header = buffer[:header_size]
-                                        wav_file = wave.open(io.BytesIO(wav_header), 'rb')
-                                        channels = wav_file.getnchannels()
-                                        sample_rate = wav_file.getframerate()
-                                        wav_file.close()
-
-                                        # Write the header and remaining data to a temporary file
-                                        f.write(buffer)
-                                        header_parsed = True
-                                        buffer = b''  # Clear buffer
-                                else:
-                                    # Write remaining data to the temporary file
-                                    f.write(chunk)
-
-                    # Play the audio in the Discord voice channel
-                    audio_source = discord.FFmpegOpusAudio(executable="C:/ffmpeg/bin/ffmpeg.exe", source=temp_file)
-                    ctx.voice_client.play(audio_source)
-                else:
-                    print(f'Error: {response.status}')
-                    # Print the error message from the API
-                    try:
-                        error_message = await response.json()
-                        print(error_message)
-                    except ValueError:
-                        error_message = await response.text()
-                        print(error_message)
-    except Exception as e:
-        print(f'An error occurred: {e}')
-
-    print("\n--- GPT-SoVITS/RTC Generated & Played Audio. ---\n")
 
 # Text_to_audio_played function - This is used to generate a mp3 file from openai's reply and then play it
 async def text_to_audio_played(input_text, ctx):

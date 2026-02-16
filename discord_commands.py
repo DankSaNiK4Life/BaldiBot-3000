@@ -1,21 +1,11 @@
+import random, discord, os, asyncio, json, threading, sys, voice_chat
 from platform import system as get_os_name
-import random
-import discord
-import os
 from discord.ext import commands, voice_recv
-import asyncio
-from elevenlabs import save
-import json
 from config import Config as cfg
 from bot_utils import get_real_name, get_random_sound, start_http_server
 from voice_chat import start_listening, DummySink
 from openai_chat import chat_with_gpt
-import requests
-import voice_chat
 from personalities import Personalities as p
-import sys
-import logging
-import threading
 
 # ----------------------- INITIALIZATION ----------------------- #
 

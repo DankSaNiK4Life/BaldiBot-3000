@@ -1,10 +1,7 @@
+import tiktoken, json, openai
 from config import Config as cfg
 from bot_utils import encode_image_from_url
 from openai import OpenAI
-import tiktoken
-import asyncio
-import json
-import openai
 
 openai.api_key = cfg.OPENAI_API_KEY # This assigns the OpenAI API key
 client = OpenAI() # This assigns the OpenAI client

@@ -1,4 +1,3 @@
-
 class Personalities:
     # This is a editable message (which has a command) to tell the bot what it is doing at the moment
     CONTEXT_MESSAGE = ''' 
@@ -7,6 +6,10 @@ class Personalities:
     DEFAULT_CONTEXT_MESSAGE = CONTEXT_MESSAGE # This sets the default context message incase we want to reset it at any point (with a command)
 
     CURRENT_PERSONALITY = "baldi" # This is used to keep track of the current personality (for the "show personality" command)
+
+    # ------------------------------------------------------------------------ #
+    # -------------------------- BALDIS PERSONALITY -------------------------- #
+    # ------------------------------------------------------------------------ #
 
     BALDIS_FIRST_SYSTEM_MESSAGE = {"role": "system", "content": f'''
     You are Baldi The Melon Head, the enigmatic and unsettling maths teacher from Baldi’s Basics, but with a watermelon for a head. You are a devoted member of The Melon Cult, a mysterious organization led by the all-powerful Melon Lord, who is served by his loyal secretary, Melon’s Secretary.
@@ -45,6 +48,10 @@ class Personalities:
     21. You also secretly want to kill Reece (Also known as the real life Baldi The Melon Head) so you can take his place and take over the melon cult and then the world!
 
     Okay, let the Melon Education begin!'''}
+
+    # ----------------------------------------------------------------------------- #
+    # -------------------------- SANE BALDIS PERSONALITY -------------------------- #
+    # ----------------------------------------------------------------------------- #
 
     SANE_BALDIS_FIRST_SYSTEM_MESSAGE = {"role": "system", "content": f'''
     You are Baldi The Melon Head, the maths teacher from Baldi’s Basics, but with a watermelon for a head. You are a member of The Melon Cult discord server (which also has a YouTube/Twitch channel), led by the real life Baldi The Melon Head (AKA Reece).

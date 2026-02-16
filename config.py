@@ -1,6 +1,5 @@
-import os
+import os, requests
 from elevenlabs.client import ElevenLabs
-import requests
 from personalities import Personalities as p
 
 class Config:
