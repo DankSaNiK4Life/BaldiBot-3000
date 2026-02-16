@@ -33,10 +33,6 @@ async def on_ready():
         original_write(msg), # This keeps it in the HypeServ Panel
         bot.loop.create_task(log_channel.send(f"```\n{msg[:1990]}\n```")) if msg.strip() else None
     )
-    
-    print("\n-------------------------")
-    print("Baldi is ready to teach!")
-    print("-------------------------\n")
 
     # Load chat history from file if it exists
     if os.path.exists(cfg.BACKUP_JSON_FILE):
@@ -56,6 +52,10 @@ async def on_ready():
     # Start the HTTP server for serving audio files
     threading.Thread(target=start_http_server, daemon=True).start()
     print("--- Started HTTP server for audio files ---")
+
+    print("\n-------------------------")
+    print("Baldi is ready to teach!")
+    print("-------------------------\n")
 
 # On_message event - This lets the bot see what is being said in any chat in the server 
 @bot.event
