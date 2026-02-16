@@ -154,6 +154,7 @@ async def join(ctx):
 
         cfg.voice_client.play(discord.FFmpegPCMAudio(executable="ffmpeg", source=cfg.join_vc_audio))
 
+        cfg.random_sounds_enabled = True
         await play_random_sounds() # Start random sounds when the bot joins a channel
     else:
         await ctx.send("You are not in a voice channel buddy!")
@@ -213,6 +214,16 @@ async def sounds(ctx):
     await ctx.send("I have stopped playing random sounds in the background.")
 
 async def play_random_sounds():
+
+    if cfg.voice_client and cfg.voice_client.is_connected() and cfg.random_sounds_enabled:
+        print("Random sounds are now being played in the background.")
+    elif cfg.random_sounds_enabled:
+        print("Random sounds are enabled but the bot is not in a voice channel.")
+        return
+    elif cfg.voice_client and cfg.voice_client.is_connected():
+        print("The bot is in a voice channel but random sounds are not enabled.")
+        return
+
     while cfg.voice_client and cfg.voice_client.is_connected() and cfg.random_sounds_enabled:
 
         interval = random.randint(
@@ -223,10 +234,12 @@ async def play_random_sounds():
         # Interruptible sleep
         for _ in range(interval):
             if not cfg.random_sounds_enabled:
+                print("Random sounds have been disabled. Stopping playback.")
                 return
             await asyncio.sleep(1)
 
         if not cfg.voice_client.is_connected():
+            print("The bot has been disconnected from the voice channel. Stopping random sounds.")
             break
 
         if not cfg.voice_client.is_playing():
@@ -241,6 +254,10 @@ async def play_random_sounds():
             )
 
             print("Played Random Sound:", random_sound)
+        else:
+            print("Bot is currently playing something. Skipping random sound.")
+
+    print("Stopped playing random sounds in the background.")
 
 
 # sounds command - This makes the bot continue making random sounds in the background
@@ -250,6 +267,7 @@ async def sounds(ctx):
         await ctx.reply("You are not trusted, you cannot use this command!")
         return
     
+    cfg.random_sounds_enabled = True
     await ctx.send("I have started playing random sounds in the background.")
     await play_random_sounds()
 
