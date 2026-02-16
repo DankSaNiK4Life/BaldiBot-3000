@@ -268,6 +268,7 @@ async def sounds(ctx):
         return
     
     cfg.random_sounds_enabled = True
+    print("Random sounds enabled.")
     await ctx.send("I have started playing random sounds in the background.")
     await play_random_sounds()
 
