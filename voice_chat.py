@@ -135,11 +135,6 @@ async def gen_with_elevenlabs_remote(ws, audio_data, input_text, msg_type="norma
     
     ws.disconnect() # Disconnect from OBS WebSocket after we're done controlling the sources
 
-def connect_to_websockets():
-    ws = obsws(cfg.WEBSOCKET_HOST, cfg.WEBSOCKET_PORT, cfg.WEBSOCKET_PASSWORD, timeout=1)
-    ws.connect()
-
-
 async def gen_with_elevenlabs_streaming(input_text, voice, model, msg_type="normal", username="", bits=""):
     if (cfg.voice_client is None or not cfg.voice_client.is_connected()) and not cfg.obs_enabled:
          print("Bot is not in a voice channel & OBS is not on. Cannot generate with Elevenlabs")
@@ -166,11 +161,9 @@ async def gen_with_elevenlabs_streaming(input_text, voice, model, msg_type="norm
     
     if cfg.obs_enabled:
         # Connect to OBS WebSocket to control source visibility and streaming (if using OBS for audio playback)
-        
-        loop = asyncio.create_task(connect_to_websockets())
-        #await loop.run_in_executor(None, connect_to_websockets)
+        ws = obsws(cfg.WEBSOCKET_HOST, cfg.WEBSOCKET_PORT, cfg.WEBSOCKET_PASSWORD, timeout=1)
+        ws.connect() 
 
-        ws = None
         await gen_with_elevenlabs_remote(ws, audio_data, input_text, msg_type, username, bits) # Stream the audio to OBS (if using OBS for audio playback)
     
     #if ws.ws.connected:
