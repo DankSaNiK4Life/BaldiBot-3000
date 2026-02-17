@@ -36,37 +36,37 @@ class Config:
 
     # This is what shows when "baldi show commands" is used
     COMMANDS_LIST = f'''**Available commands for BaldiBot 3000: **
-    `@BaldiBot 3000 - Allows you to talk to the bot and get responses (Will play audio if in a vc)
-baldi show - used for sub commands:
-    last - Sends the last message of both user and bot
-    context - Sends the context message
-    personality - Sends the current personality name
-    commands - Sends this exact message!`
+    `@BaldiBot 3000 - Allows you to talk to the bot and get responses (Will play audio if in a vc)`
+    `baldi show - used for sub commands:`
+        `last - Sends the last message of both user and bot`
+        `context - Sends the context message`
+        `personality - Sends the current personality name`
+        `commands - Sends this exact message!`
 
     **For Trusted Members:**
-    `baldi join - Makes bot join voice channel that you are currently in
-baldi stop - used for sub commands:
-    listening - Stops the bot from listening to anyone 
-    playing (or singing) - Stops the bot from playing any audio files
-    sounds - Stops bot from playing random sounds every 5 - 60 minutes
-baldi listen - used for sub commands:
-    all - Makes bot listen to everyone in the voice chat (Will combine peoples sentences together)
-    to - Makes bot listen to a specific person (More stable option)
-baldi say - Makes bot generate anything you want using elevenlabs
-baldi sing - Makes bot play available audio files:
-    thick of it
-    like a prayer
-baldi set - used for sub commands:
-    context - Used to tell the bot what you and or they are doing right now
-    personality - Used to set how the bot will act (and can change voice):
-        baldi
-        sane baldi
-baldi leave - Makes bot leave the voice channel
-baldi sounds - This makes the bot continue making random sounds in the background`
+    `baldi join - Makes bot join voice channel that you are currently in`
+    `baldi stop - used for sub commands:`
+        `listening - Stops the bot from listening to anyone`
+        `playing (or singing) - Stops the bot from playing any audio files`
+        `sounds - Stops bot from playing random sounds every 5 - 60 minutes`
+    `baldi listen - used for sub commands:`
+        `all - Makes bot listen to everyone in the voice chat (Will combine peoples sentences together)`
+        `to - Makes bot listen to a specific person (More stable option)`
+    `baldi say - Makes bot generate anything you want using elevenlabs`
+    `baldi sing - Makes bot play available audio files:`
+        `thick of it`
+        `like a prayer`
+    `baldi set - used for sub commands:`
+        `context - Used to tell the bot what you and or they are doing right now`
+        `personality - Used to set how the bot will act (and can change voice):`
+            `baldi`
+            `sane baldi`
+    `baldi leave - Makes bot leave the voice channel`
+    `baldi sounds - This makes the bot continue making random sounds in the background`
 
     **For Owner ONLY:**
-    `baldi die - turns off the bot
-baldi set obs - Turns On/Off OBS websockets`'''
+    `baldi die - turns off the bot`
+    `baldi set obs - Turns On/Off OBS websockets`'''
 
     # This is a list of user IDs that the bot will trust to use important commands
     TRUSTED_USER_IDS = [                                        
