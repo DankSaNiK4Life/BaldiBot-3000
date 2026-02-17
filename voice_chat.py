@@ -167,8 +167,8 @@ async def gen_with_elevenlabs_streaming(input_text, voice, model, msg_type="norm
     if cfg.obs_enabled:
         # Connect to OBS WebSocket to control source visibility and streaming (if using OBS for audio playback)
         
-        loop = asyncio.get_running_loop()
-        await loop.run_in_executor(None, connect_to_websockets)
+        loop = asyncio.create_task(connect_to_websockets)
+        #await loop.run_in_executor(None, connect_to_websockets)
 
         ws = None
         await gen_with_elevenlabs_remote(ws, audio_data, input_text, msg_type, username, bits) # Stream the audio to OBS (if using OBS for audio playback)
