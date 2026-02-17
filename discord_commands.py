@@ -62,75 +62,67 @@ async def on_ready():
 # On_message event - This lets the bot see what is being said in any chat in the server 
 @bot.event
 async def on_message(message):
-        # Dont listen to its own messages
-        if message.author == bot.user:
-            return 
+    # Dont listen to its own messages
+    if message.author == bot.user:
+        return 
 
-        username = str(message.author)
-        real_name = get_real_name(username)
-        user_message = message.content.lower()
-        channel = str(message.channel)
-        message_attachments = message.attachments
+    username = str(message.author)
+    real_name = get_real_name(username)
+    user_message = message.content.lower()
+    channel = str(message.channel)
+    message_attachments = message.attachments
 
-        # Define a dictionary mapping keywords to their corresponding replies
-        keyword_responses = {
-            "hope": "Hope mentioned.... day ruined :(",
-            "ishaq": "I hate that guy smh",
-            "arma": "its time you lose some frames!",
-            "bee ": ""
-        }
+    # Define a dictionary mapping keywords to their corresponding replies
+    keyword_responses = {
+        "hope": "Hope mentioned.... day ruined :(",
+        "ishaq": "I hate that guy smh",
+        "arma": "its time you lose some frames!",
+        "bee ": ""
+    }
         
-        # Iterate over the dictionary and check if any keyword is in the user_message
-        for keyword, response in keyword_responses.items():
-            if keyword in user_message:
-                if keyword == "bee ":
-                    await message.reply(file=discord.File("images/bee_movie_script.jpg"))
-                else:
-                    await message.reply(response)
-                break  # Stop after the first match
+    # Iterate over the dictionary and check if any keyword is in the user_message
+    for keyword, response in keyword_responses.items():
+        if keyword in user_message:
+            if keyword == "bee ":
+                await message.reply(file=discord.File("images/bee_movie_script.jpg"))
+            else:
+                await message.reply(response)
+            break  # Stop after the first match
     
-        # This is used to grab Streamer.bot's messages and use them to get chatgpt replies
-        if channel == "streamerbot-to-baldibot":
-            if "speaker:" in user_message and not "!" in user_message:
-                streamerbot_msg = user_message.split(' ', 2)[2]
-                streamerbot_user = user_message.split(' ', 2)[1]
-                print("Username: " + streamerbot_user + " " + "SPEAKER MESSAGE: " + streamerbot_msg)
-                await message.reply("Received speaker message!")
+    # This is used to grab Streamer.bot's messages and use them to get chatgpt replies
+    if channel == "streamerbot-to-baldibot":
+        if "speaker:" in user_message and not "!" in user_message:
+            streamerbot_msg = user_message.split(' ', 2)[2], streamerbot_user = user_message.split(' ', 2)[1] # first num is how many splits, second is which split to take (0 indexed)
+            print("Username: " + streamerbot_user + " " + "SPEAKER MESSAGE: " + streamerbot_msg)
+            await message.reply("Received speaker message!")
                 
-                await voice_chat.gen_with_elevenlabs_streaming(streamerbot_msg, "h1IssowVS2h4nL5ZbkkK", "eleven_v3", msg_type="speaker", username=streamerbot_user)
-            elif "cheer:" in user_message:
-                streamerbot_msg = user_message.split(' ', 3)[3] # first num is how many splits, second is which split to take (0 indexed)
-                streamerbot_user = user_message.split(' ', 3)[1]
-                streamerbot_bits = user_message.split(' ', 3)[2] 
-                print("Username: " + streamerbot_user + " " + "CHEER MESSAGE: " + streamerbot_msg)
-                await message.reply("Cheer detected!")
+            await voice_chat.gen_with_elevenlabs_streaming(streamerbot_msg, "h1IssowVS2h4nL5ZbkkK", "eleven_v3", msg_type="speaker", username=streamerbot_user)
+        elif "cheer:" in user_message:
+            streamerbot_msg = user_message.split(' ', 3)[3], streamerbot_user = user_message.split(' ', 3)[1], streamerbot_bits = user_message.split(' ', 3)[2] 
+            print("Username: " + streamerbot_user + " " + "CHEER MESSAGE: " + streamerbot_msg)
+            await message.reply("Cheer detected!")
 
-                await voice_chat.gen_with_elevenlabs_streaming(streamerbot_msg, "h1IssowVS2h4nL5ZbkkK", "eleven_v3", msg_type="cheer", username=streamerbot_user, bits=streamerbot_bits)
-            elif not "speaker:" in user_message:
-                streamerbot_msg = user_message.split(' ', 1)[1]
-                streamerbot_user = user_message.split(' ', 1)[0]
-                print("Username: " + streamerbot_user + " " + "Message: " + streamerbot_msg)
+            await voice_chat.gen_with_elevenlabs_streaming(streamerbot_msg, "h1IssowVS2h4nL5ZbkkK", "eleven_v3", msg_type="cheer", username=streamerbot_user, bits=streamerbot_bits)
+        elif not "speaker:" in user_message:
+            streamerbot_msg = user_message.split(' ', 1)[1], streamerbot_user = user_message.split(' ', 1)[0]
+            print("Username: " + streamerbot_user + " " + "Message: " + streamerbot_msg)
 
-                gpt_response = await chat_with_gpt(streamerbot_msg, streamerbot_user, message_attachments)
+            gpt_response = await chat_with_gpt(streamerbot_msg, streamerbot_user, message_attachments)
+            await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.elevenlabs_voice, cfg.elevenlabs_model)
             
-                if discord.utils.get(bot.voice_clients):
-                    await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.elevenlabs_voice, cfg.elevenlabs_model)
-            
-                cfg.send_to_twitch(gpt_response)
-                print("Baldi's reply on Twitch: " + gpt_response)
-                await message.reply(gpt_response)
-        # Check if the bot is mentioned
-        elif  bot.user in message.mentions: 
-            print("Username: " + username + " " + "Real name: " + real_name + " " "Message: " + user_message)
-
-            gpt_response = await chat_with_gpt(user_message, real_name, message_attachments)
-
+            cfg.send_to_twitch(gpt_response)
+            print("Baldi's reply on Twitch: " + gpt_response)
             await message.reply(gpt_response)
+    # Check if the bot is mentioned
+    elif  bot.user in message.mentions: 
+        print("Username: " + username + " " + "Real name: " + real_name + " " "Message: " + user_message)
 
-            if discord.utils.get(bot.voice_clients, guild=message.guild):
-                await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.elevenlabs_voice, cfg.elevenlabs_model)
+        gpt_response = await chat_with_gpt(user_message, real_name, message_attachments)
+        await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.elevenlabs_voice, cfg.elevenlabs_model)
+        
+        await message.reply(gpt_response)
 
-        await bot.process_commands(message)  # Allows commands to still work
+    await bot.process_commands(message)  # Allows commands to still work
 
 # Join command - This makes the bot connect to the channel the user is in
 @bot.command()
