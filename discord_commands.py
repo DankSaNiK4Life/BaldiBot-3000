@@ -337,17 +337,26 @@ async def say(ctx):
         await ctx.send("Please provide some text for me to say!")
         return
 
+    generate_audio = False
+
     # Generate audio with ElevenLabs
-    try:
-        # Play the audio in the voice channel
-        if not vc.is_playing():
-            await voice_chat.gen_with_elevenlabs_streaming(text, cfg.elevenlabs_voice, cfg.elevenlabs_model)
-            print(f"Saying: {text}")
-        else:
-            await ctx.send("I am already playing something. Please wait!")
-    except Exception as e:
-        await ctx.send(f"An error occurred: {e}")
-        print(f"Error in say command: {e}")
+    if vc:
+        try:
+            # Play the audio in the voice channel
+            if not vc.is_playing():
+                generate_audio = True
+                print(f"Saying: {text}")
+            else:
+                await ctx.send("I am already playing something. Please wait!")
+        except Exception as e:
+            await ctx.send(f"An error occurred: {e}")
+            print(f"Error in say command: {e}")
+
+    if cfg.obs_enabled: 
+        generate_audio = True
+        print(f"Saying: {text}")
+    
+    if generate_audio: await voice_chat.gen_with_elevenlabs_streaming(text, cfg.elevenlabs_voice, cfg.elevenlabs_model)
 
 
 # Sing command - plays one of the mp3 files in "./songs"
