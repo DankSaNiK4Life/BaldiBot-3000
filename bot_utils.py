@@ -84,7 +84,7 @@ async def set_personality(personality_name, ctx, bot):
     print("--- Personality has been set ---")
 
 def check_obs_connection():
-    ws = obsws(cfg.WEBSOCKET_HOST, cfg.WEBSOCKET_PORT, cfg.WEBSOCKET_PASSWORD, timeout=3)
+    ws = obsws(cfg.WEBSOCKET_HOST, cfg.WEBSOCKET_PORT, cfg.WEBSOCKET_PASSWORD, timeout=int(3))
     try:
         ws.connect()
         print("Successfully connected to OBS WebSocket.")
