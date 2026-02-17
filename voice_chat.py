@@ -1,6 +1,6 @@
 import time, asyncio, discord, logging, io, speech_recognition as sr
 from config import Config as cfg
-from bot_utils import get_real_name, set_source_visibility
+from bot_utils import get_real_name, set_source_visibility, check_obs_connection
 from discord.ext import voice_recv
 from openai_chat import chat_with_gpt
 from obswebsocket import obsws, requests as obs_requests
@@ -68,6 +68,11 @@ async def process_response(final_result, ctx):
     await text_to_audio_played(openai_answer, ctx)  # Play response in voice chat
 
 async def gen_with_elevenlabs_remote(ws, audio_data, input_text, msg_type="normal", username="", bits=""):
+    is_connected = check_obs_connection()
+    if not is_connected:
+        print("Cancelling OBS Generation")
+        return
+
     # SAVE the audio to a web-accessible folder on your server
     with open("./sounds/temp_audio.mp3", "wb") as f:
         f.write(audio_data)
@@ -161,8 +166,9 @@ async def gen_with_elevenlabs_streaming(input_text, voice, model, msg_type="norm
     
     if cfg.obs_enabled:
         # Connect to OBS WebSocket to control source visibility and streaming (if using OBS for audio playback)
-        ws = obsws(cfg.WEBSOCKET_HOST, cfg.WEBSOCKET_PORT, cfg.WEBSOCKET_PASSWORD, timeout=1)
-        ws.connect() 
+        #ws = obsws(cfg.WEBSOCKET_HOST, cfg.WEBSOCKET_PORT, cfg.WEBSOCKET_PASSWORD, timeout=1)
+        #ws.connect() 
+        ws = None
 
         await gen_with_elevenlabs_remote(ws, audio_data, input_text, msg_type, username, bits) # Stream the audio to OBS (if using OBS for audio playback)
     

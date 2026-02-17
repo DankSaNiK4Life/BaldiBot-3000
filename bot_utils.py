@@ -1,6 +1,6 @@
 import base64, requests, random, os, uvicorn
 from config import Config as cfg
-from obswebsocket import requests as obs_requests
+from obswebsocket import obsws, requests as obs_requests
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from personalities import Personalities as p
@@ -82,3 +82,16 @@ async def set_personality(personality_name, ctx, bot):
     cfg.chat_history.insert(0, cfg.DEFAULT_SYSTEM_MESSAGE)
 
     print("--- Personality has been set ---")
+
+def check_obs_connection():
+    ws = obsws(cfg.WEBSOCKET_HOST, cfg.WEBSOCKET_PORT, cfg.WEBSOCKET_PASSWORD, timeout=3)
+    try:
+        ws.connect()
+        print("Successfully connected to OBS WebSocket.")
+        ws.disconnect()
+        return True
+    except ConnectionRefusedError:
+        print("OBS is not running or WebSocket is disabled.")
+    except Exception as e:
+        print(f"Connection failed: {e}")
+    return False
