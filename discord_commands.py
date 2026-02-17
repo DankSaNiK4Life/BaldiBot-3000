@@ -327,8 +327,8 @@ async def say(ctx):
         return
     
     vc = ctx.voice_client
-    if not vc:
-        await ctx.send("I am not in a voice channel")
+    if not vc and not cfg.obs_enabled:
+        await ctx.send("I am not in a voice channel & OBS is not enabled")
         return
     
     # Extract the text to say (remove the command prefix)
@@ -348,6 +348,7 @@ async def say(ctx):
     except Exception as e:
         await ctx.send(f"An error occurred: {e}")
         print(f"Error in say command: {e}")
+
 
 # Sing command - plays one of the mp3 files in "./songs"
 @bot.command()
