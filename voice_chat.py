@@ -136,6 +136,10 @@ async def gen_with_elevenlabs_remote(ws, audio_data, input_text, msg_type="norma
     ws.disconnect() # Disconnect from OBS WebSocket after we're done controlling the sources
 
 async def gen_with_elevenlabs_streaming(input_text, voice, model, msg_type="normal", username="", bits=""):
+    if not cfg.voice_client.is_connected() and not cfg.obs_enabled:
+         print("Bot is not in a voice channel & OBS is not on. Cannot generate with Elevenlabs")
+         return
+    
     from discord_commands import play_random_sounds, stop_random_sounds
     await stop_random_sounds() # Stop random sounds while the bot is speaking
     
@@ -151,13 +155,15 @@ async def gen_with_elevenlabs_streaming(input_text, voice, model, msg_type="norm
     
     # Create a BytesIO object from the collected bytes
     audio_buffer = io.BytesIO(audio_data)
-
-    # Connect to OBS WebSocket to control source visibility and streaming (if using OBS for audio playback)
-    ws = obsws(cfg.WEBSOCKET_HOST, cfg.WEBSOCKET_PORT, cfg.WEBSOCKET_PASSWORD, timeout=1)
-    ws.connect()
     
-    cfg.voice_client.play(discord.FFmpegPCMAudio(audio_buffer, pipe=True, executable="ffmpeg"))
-    await gen_with_elevenlabs_remote(ws, audio_data, input_text, msg_type, username, bits) # Stream the audio to OBS (if using OBS for audio playback)
+    if cfg.voice_client.is_connected(): cfg.voice_client.play(discord.FFmpegPCMAudio(audio_buffer, pipe=True, executable="ffmpeg"))
+    
+    if cfg.obs_enabled:
+        # Connect to OBS WebSocket to control source visibility and streaming (if using OBS for audio playback)
+        ws = obsws(cfg.WEBSOCKET_HOST, cfg.WEBSOCKET_PORT, cfg.WEBSOCKET_PASSWORD, timeout=1)
+        ws.connect() 
+
+        await gen_with_elevenlabs_remote(ws, audio_data, input_text, msg_type, username, bits) # Stream the audio to OBS (if using OBS for audio playback)
     
     #if ws.ws.connected:
     #    print("Connected to OBS WebSocket")

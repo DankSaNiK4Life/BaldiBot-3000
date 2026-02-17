@@ -163,6 +163,10 @@ async def join(ctx):
         await ctx.send("You are not in a voice channel buddy!")
         print("The user is not in a channel")
 
+# -------------------------------------------------#
+# ----------------- STOP COMMANDS -----------------#
+# -------------------------------------------------#
+
 # Stop command - command used to invoke sub commands
 @bot.group(name="stop", invoke_without_command=True)
 async def stop(ctx):
@@ -216,6 +220,10 @@ async def sounds(ctx):
     await stop_random_sounds()
     await ctx.send("I have stopped playing random sounds in the background.")
 
+# -------------------------------------------------#
+# ------------- END OF STOP COMMANDS --------------#
+# -------------------------------------------------#
+
 async def play_random_sounds():
 
     if cfg.voice_client and cfg.voice_client.is_connected() and cfg.random_sounds_enabled:
@@ -262,7 +270,6 @@ async def play_random_sounds():
 
     print("Stopped playing random sounds in the background.")
 
-
 # sounds command - This makes the bot continue making random sounds in the background
 @bot.command()
 async def sounds(ctx):
@@ -275,8 +282,9 @@ async def sounds(ctx):
     await ctx.send("I have started playing random sounds in the background.")
     await play_random_sounds()
 
-    
-
+# -------------------------------------------------#
+# ---------------- LISTEN COMMANDS ----------------#
+# -------------------------------------------------#
 
 # Listen command - command used to invoke sub commands
 @bot.group(name="listen", invoke_without_command=True)
@@ -306,6 +314,10 @@ async def to(ctx, user: str):
         return
 
     await start_listening(ctx, False)
+
+# -------------------------------------------------#
+# ------------ END OF LISTEN COMMANDS -------------#
+# -------------------------------------------------#
 
 # Say command - Makes the bot say what the user types
 @bot.command()
@@ -371,6 +383,10 @@ async def sing(ctx):
     else:
         await ctx.send("I dont know how to sing that one yet :(")
 
+# -------------------------------------------------#
+# ----------------- SET COMMANDS ------------------#
+# -------------------------------------------------#
+
 # Set command - command used to invoke sub commands
 @bot.group(name="set", invoke_without_command=True)
 async def set(ctx):
@@ -420,6 +436,33 @@ async def personality(ctx):
     print(f"New voice: {cfg.elevenlabs_voice}")
     print(f"New model: {cfg.elevenlabs_model}")
     await ctx.send(f"Personality has been set!")
+
+# OBS sub-command - Tells the bot if OBS Websockets is on or not
+@set.command()
+async def obs(ctx):
+    if (ctx.author.id != cfg.OWNER_ID):
+        await ctx.reply("You are not my owner, you cannot use this command!")
+        return
+    
+    # Extract the obs value (remove the command prefix)
+    obs_value = ctx.message.content[len(ctx.prefix) + len("set personality"):].strip()
+
+    if obs_value == "on": cfg.obs_enabled = True
+    elif obs_value == "off": cfg.obs_enabled = False
+    else:
+        await ctx.reply("Can only be set to 'on' or 'off'")
+        return
+
+    print(f"OBS has been set to: {cfg.obs_enabled}")
+    await ctx.send(f"OBS is now {obs_value}")
+
+# -------------------------------------------------#
+# -------------- END OF SET COMMANDS --------------#
+# -------------------------------------------------#
+
+# -------------------------------------------------#
+# ----------------- SHOW COMMANDS -----------------#
+# -------------------------------------------------#
 
 # Show command - command used to invoke sub commands
 @bot.group(name="show", invoke_without_command=True)
@@ -480,6 +523,10 @@ baldi sounds - This makes the bot continue making random sounds in the backgroun
 `baldi die - turns off the bot`'''
     
     await ctx.send(commands_message)
+
+# -------------------------------------------------#
+# ------------- END OF SHOW COMMANDS --------------#
+# -------------------------------------------------#
 
 # Leave command - Leaves the voice chat
 @bot.command()
