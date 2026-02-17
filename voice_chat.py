@@ -136,7 +136,7 @@ async def gen_with_elevenlabs_remote(ws, audio_data, input_text, msg_type="norma
     ws.disconnect() # Disconnect from OBS WebSocket after we're done controlling the sources
 
 async def gen_with_elevenlabs_streaming(input_text, voice, model, msg_type="normal", username="", bits=""):
-    if not cfg.voice_client.is_connected() and not cfg.obs_enabled:
+    if (cfg.voice_client is None or not cfg.voice_client.is_connected()) and not cfg.obs_enabled:
          print("Bot is not in a voice channel & OBS is not on. Cannot generate with Elevenlabs")
          return
     
