@@ -446,7 +446,7 @@ async def obs(ctx):
         return
     
     # Extract the obs value (remove the command prefix)
-    obs_value = ctx.message.content[len(ctx.prefix) + len("set personality"):].strip()
+    obs_value = ctx.message.content[len(ctx.prefix) + len("set obs"):].strip()
 
     if obs_value == "on": cfg.obs_enabled = True
     elif obs_value == "off": cfg.obs_enabled = False
