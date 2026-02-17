@@ -75,7 +75,7 @@ async def chat_with_gpt(prompt, user_name, image_attachment):
         # adds image to chat history
         #cfg.chat_history.append(image_message)
     else:
-        print("Asking ChatGPT a question...")
+        print("\nAsking ChatGPT a question...\n")
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=cfg.chat_history,

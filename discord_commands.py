@@ -94,7 +94,7 @@ async def on_message(message):
         if "speaker:" in user_message and not "!" in user_message:
             streamerbot_msg = user_message.split(' ', 2)[2] # first num is how many splits, second is which split to take (0 indexed)
             streamerbot_user = user_message.split(' ', 2)[1] 
-            print("Username: " + streamerbot_user + " " + "SPEAKER MESSAGE: " + streamerbot_msg)
+            print("\nUsername: " + streamerbot_user + " " + "SPEAKER MESSAGE: " + streamerbot_msg + "\n")
             await message.reply("Received speaker message!")
                 
             await voice_chat.gen_with_elevenlabs_streaming(streamerbot_msg, "h1IssowVS2h4nL5ZbkkK", "eleven_v3", msg_type="speaker", username=streamerbot_user)
@@ -102,24 +102,24 @@ async def on_message(message):
             streamerbot_msg = user_message.split(' ', 3)[3] 
             streamerbot_user = user_message.split(' ', 3)[1] 
             streamerbot_bits = user_message.split(' ', 3)[2] 
-            print("Username: " + streamerbot_user + " " + "CHEER MESSAGE: " + streamerbot_msg)
+            print("\nUsername: " + streamerbot_user + " " + "CHEER MESSAGE: " + streamerbot_msg + "\n")
             await message.reply("Cheer detected!")
 
             await voice_chat.gen_with_elevenlabs_streaming(streamerbot_msg, "h1IssowVS2h4nL5ZbkkK", "eleven_v3", msg_type="cheer", username=streamerbot_user, bits=streamerbot_bits)
         elif not "speaker:" in user_message:
             streamerbot_msg = user_message.split(' ', 1)[1] 
             streamerbot_user = user_message.split(' ', 1)[0]
-            print("Username: " + streamerbot_user + " " + "Message: " + streamerbot_msg)
+            print("\nUsername: " + streamerbot_user + " " + "Message: " + streamerbot_msg + "\n")
 
             gpt_response = await chat_with_gpt(streamerbot_msg, streamerbot_user, message_attachments)
             await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.elevenlabs_voice, cfg.elevenlabs_model)
             
             cfg.send_to_twitch(gpt_response)
-            print("Baldi's reply on Twitch: " + gpt_response)
+            print("\nBaldi's reply on Twitch: " + gpt_response + "\n")
             await message.reply(gpt_response)
     # Check if the bot is mentioned
     elif  bot.user in message.mentions: 
-        print("Username: " + username + " " + "Real name: " + real_name + " " "Message: " + user_message)
+        print("\nUsername: " + username + " " + "Real name: " + real_name + " " "Message: " + user_message + "\n")
 
         gpt_response = await chat_with_gpt(user_message, real_name, message_attachments)
         await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.elevenlabs_voice, cfg.elevenlabs_model)
@@ -260,7 +260,7 @@ async def play_random_sounds():
                 )
             )
 
-            print("Played Random Sound:", random_sound)
+            print("\nPlayed Random Sound:", random_sound + "\n")
         else:
             print("Bot is currently playing something. Skipping random sound.")
 
@@ -339,20 +339,17 @@ async def say(ctx):
     if vc:
         try:
             # Play the audio in the voice channel
-            if not vc.is_playing():
-                generate_audio = True
-                print(f"Saying: {text}")
-            else:
-                await ctx.send("I am already playing something. Please wait!")
+            if not vc.is_playing(): generate_audio = True
+            else: await ctx.send("I am already playing something. Please wait!")
         except Exception as e:
             await ctx.send(f"An error occurred: {e}")
             print(f"Error in say command: {e}")
 
-    if cfg.obs_enabled: 
-        generate_audio = True
-        print(f"Saying: {text}")
-    
-    if generate_audio: await voice_chat.gen_with_elevenlabs_streaming(text, cfg.elevenlabs_voice, cfg.elevenlabs_model)
+    if cfg.obs_enabled: generate_audio = True
+        
+    if generate_audio:
+        print(f"\nSaying: {text}\n") 
+        await voice_chat.gen_with_elevenlabs_streaming(text, cfg.elevenlabs_voice, cfg.elevenlabs_model)
 
 
 # Sing command - plays one of the mp3 files in "./songs"
@@ -422,7 +419,7 @@ async def context(ctx):
     cfg.chat_history.remove(cfg.chat_history[0])
     cfg.chat_history.insert(0, cfg.DEFAULT_SYSTEM_MESSAGE)
 
-    print(f"New context message has been set to: {p.CONTEXT_MESSAGE}")
+    print(f"\nNew context message has been set to: {p.CONTEXT_MESSAGE}\n")
     await ctx.send(f"Context message has been set!")
 
 # Personality sub-command - Sets the personality for the AI (different system messages)
@@ -438,9 +435,9 @@ async def personality(ctx):
     # Call the utility function to set the personality
     await set_personality(personality_name, ctx, bot)
 
-    print(f"New personality: {personality_name}")
+    print(f"\nNew personality: {personality_name}")
     print(f"New voice: {cfg.elevenlabs_voice}")
-    print(f"New model: {cfg.elevenlabs_model}")
+    print(f"New model: {cfg.elevenlabs_model}\n")
     await ctx.send(f"Personality has been set!")
 
 # OBS sub-command - Tells the bot if OBS Websockets is on or not

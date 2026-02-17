@@ -64,7 +64,7 @@ async def process_response(final_result, ctx):
     else: real_name = "Unknown_User"
 
     openai_answer = await chat_with_gpt(final_result, real_name, image_attachment=None)
-    print(f"Baldi says: {openai_answer}")
+    print(f"\nBaldi says: {openai_answer}\n")
     await text_to_audio_played(openai_answer, ctx)  # Play response in voice chat
 
 async def gen_with_elevenlabs_remote(ws, audio_data, input_text, msg_type="normal", username="", bits=""):
@@ -173,9 +173,9 @@ async def gen_with_elevenlabs_streaming(input_text, voice, model, msg_type="norm
     #    print("Failed to connect to OBS WebSocket. Playing audio directly in Discord.")
     #    cfg.voice_client.play(discord.FFmpegPCMAudio(audio_buffer, pipe=True, executable="ffmpeg"))
     
-    print("--- ElevenLabs Streaming Generated & Played Audio. ---")
+    print("\n--- ElevenLabs Streaming Generated & Played Audio. ---")
     print(f"Voice used: {voice}")
-    print(f"Model used: {model}")
+    print(f"Model used: {model}\n")
 
     await play_random_sounds() # Start random sounds again after the bot has finished speaking
 
@@ -190,7 +190,7 @@ async def text_to_audio_played(input_text, ctx):
     #await gen_with_sovits_streaming(input_text, ctx)
 
     response_time = time.time() - response_start_time
-    print(f"Response time: {int(response_time // 60):02d}:{int(response_time % 60):02d}.{int((response_time % 1) * 1000):03d}")
+    print(f"\nResponse time: {int(response_time // 60):02d}:{int(response_time % 60):02d}.{int((response_time % 1) * 1000):03d}\n")
 
 
     # POSSIBLY MOVE THIS INTO GEN FUNCTION 
@@ -251,7 +251,7 @@ async def start_listening(ctx, is_listen_all):
 
         cfg.voice_client.listen(voice_recv.UserFilter(voice_recv.extras.speechrecognition.SpeechRecognitionSink(process_cb=cb, phrase_time_limit=5), mentioned_user))
         await ctx.send(f"Now listening to {mentioned_user.display_name}!")
-        print(f"The bot is listening to {mentioned_user.display_name}")
+        print(f"\nThe bot is listening to {mentioned_user.display_name}\n")
 
 # Cb function - This is a callback function that vc.listen() uses to actually recognize and listen to the user (This calls wait_for_silence)
 def cb(user: discord.Member, audio: sr.AudioData, third=None):
