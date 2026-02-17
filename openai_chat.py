@@ -92,5 +92,6 @@ async def chat_with_gpt(prompt, user_name, image_attachment):
     # Save the last message sent by the bot (for the last command)
     cfg.last_bot_message = response.choices[0].message.content.strip()
     
+    print(f"\nChatGPT's Response: {response.choices[0].message.content.strip()}\n")
     # Process the answer
     return response.choices[0].message.content.strip()
