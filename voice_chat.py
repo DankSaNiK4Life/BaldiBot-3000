@@ -156,7 +156,8 @@ async def gen_with_elevenlabs_streaming(input_text, voice, model, msg_type="norm
     # Create a BytesIO object from the collected bytes
     audio_buffer = io.BytesIO(audio_data)
     
-    if cfg.voice_client.is_connected(): cfg.voice_client.play(discord.FFmpegPCMAudio(audio_buffer, pipe=True, executable="ffmpeg"))
+    if cfg.voice_client is not None and cfg.voice_client.is_connected(): 
+        cfg.voice_client.play(discord.FFmpegPCMAudio(audio_buffer, pipe=True, executable="ffmpeg"))
     
     if cfg.obs_enabled:
         # Connect to OBS WebSocket to control source visibility and streaming (if using OBS for audio playback)
