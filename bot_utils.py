@@ -73,7 +73,7 @@ async def set_personality(personality_name, ctx, bot):
 
     # --------- Sexy Baldi --------- #
     elif personality_name.lower() == "sexy baldi":
-        with open("./images/pfps/BaldiAI.png", "rb") as image:
+        with open("./images/pfps/SexyBaldiAI.png", "rb") as image:
             new_avatar = image.read()
         await bot.user.edit(avatar=new_avatar)
         cfg.DEFAULT_SYSTEM_MESSAGE = p.SEXY_BALDIS_FIRST_SYSTEM_MESSAGE

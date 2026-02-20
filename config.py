@@ -61,6 +61,7 @@ class Config:
         `personality - Used to set how the bot will act (and can change voice):`
             `baldi`
             `sane baldi`
+            `sexy baldi`
     `baldi leave - Makes bot leave the voice channel`
     `baldi sounds - This makes the bot continue making random sounds in the background`
 
