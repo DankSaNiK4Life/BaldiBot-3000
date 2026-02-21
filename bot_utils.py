@@ -80,8 +80,8 @@ async def set_personality(personality_name, ctx, bot):
         cfg.BACKUP_JSON_FILE = "backups/SexyBaldiHistoryJsonBackup.json"
         cfg.elevenlabs_voice = "TC0Zp7WVFzhA8zpTlRqV"
         cfg.elevenlabs_model = "eleven_v3"
-        cfg.ai_image_source = "RealisticBaldiAI"
-        cfg.message_source = "RealisticAIBaldiMessage"
+        cfg.ai_image_source = "SexyBaldiAI"
+        cfg.message_source = "SexyBaldiMessage"
         cfg.join_vc_audio = "./sounds/SexyBaldiAIVoiceTest.mp3"
         p.CURRENT_PERSONALITY = "sexy baldi"
     

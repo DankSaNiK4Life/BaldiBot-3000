@@ -26,6 +26,8 @@ bot = commands.Bot(command_prefix=prefixes, intents=intents)    # Creating the b
 async def on_ready():
     print("-------------------------------------------------------------------------------------------------------------------------------------------------\n")
 
+    # Removed discord console logging for now to prevent rate limiting
+    '''
     log_channel = bot.get_channel(cfg.LOG_CHANNEL_ID)
     
     # Saves original console 'write' function so we can still print to console while also sending logs to the channel
@@ -35,6 +37,7 @@ async def on_ready():
         original_write(msg), # This keeps it in the HypeServ Panel
         bot.loop.create_task(log_channel.send(f"```\n{msg[:1990]}\n```")) if msg.strip() else None
     )
+    '''
 
     # Load chat history from file if it exists
     if os.path.exists(cfg.BACKUP_JSON_FILE):
