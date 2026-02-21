@@ -82,7 +82,7 @@ async def set_personality(personality_name, ctx, bot):
         cfg.elevenlabs_model = "eleven_v3"
         cfg.ai_image_source = "RealisticBaldiAI"
         cfg.message_source = "RealisticAIBaldiMessage"
-        cfg.join_vc_audio = "./sounds/RealisticBaldiAIVoiceTest.mp3"
+        cfg.join_vc_audio = "./sounds/SexyBaldiAIVoiceTest.mp3"
         p.CURRENT_PERSONALITY = "sexy baldi"
     
     # If the personality name is not recognized, send an error message
