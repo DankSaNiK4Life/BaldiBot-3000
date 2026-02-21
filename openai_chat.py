@@ -88,13 +88,12 @@ async def chat_with_gpt(prompt, user_name, image_attachment):
     # Save updated chat history to file
     with open(cfg.BACKUP_JSON_FILE, "w") as file:
         json.dump(cfg.chat_history, file, indent=4)  # Save as readable JSON
+        print("\nSaving to:", cfg.BACKUP_JSON_FILE + "\n")
 
     # Save the last message sent by the bot (for the last command)
     cfg.last_bot_message = response.choices[0].message.content.strip()
     
     print(f"\nChatGPT's Response: {response.choices[0].message.content.strip()}\n")
 
-    print("Current history length:", len(cfg.chat_history))
-    print("Saving to:", cfg.BACKUP_JSON_FILE + "\n")
     # Process the answer
     return response.choices[0].message.content.strip()

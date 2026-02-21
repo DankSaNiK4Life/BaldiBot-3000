@@ -95,7 +95,6 @@ async def set_personality(personality_name, ctx, bot):
     if os.path.exists(cfg.BACKUP_JSON_FILE):
         with open(cfg.BACKUP_JSON_FILE, "r") as file:
             try:
-                cfg.chat_history.clear
                 cfg.chat_history = json.load(file)  # Load JSON data into cfg.chat_history list
                 print("--- Chat history was loaded. ---")
             except json.JSONDecodeError:
