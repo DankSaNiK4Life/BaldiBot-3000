@@ -1,4 +1,4 @@
-import base64, requests, random, os, uvicorn
+import base64, requests, random, os, uvicorn, json
 from config import Config as cfg
 from obswebsocket import requests as obs_requests
 from fastapi import FastAPI
@@ -91,8 +91,15 @@ async def set_personality(personality_name, ctx, bot):
         await ctx.send("Unknown personality! use 'baldi commands' to see the list of available personalities.")
         return
     
-    # After changing the personality, we need to update the system message in the chat history so the AI can use the new personality immediately
-    cfg.chat_history.remove(cfg.chat_history[0])
-    cfg.chat_history.insert(0, cfg.DEFAULT_SYSTEM_MESSAGE)
+    # Load chat history from file if it exists
+    if os.path.exists(cfg.BACKUP_JSON_FILE):
+        with open(cfg.BACKUP_JSON_FILE, "r") as file:
+            try:
+                cfg.chat_history = json.load(file)  # Load JSON data into cfg.chat_history list
+                print("--- Chat history was loaded. ---")
+            except json.JSONDecodeError:
+                print("--- Chat history file is empty or corrupted. Starting fresh. ---")
+    else:
+        print("--- JSON file does not exist. Will create a new one on the first message ---")
 
     print("--- Personality has been set ---")
