@@ -93,5 +93,8 @@ async def chat_with_gpt(prompt, user_name, image_attachment):
     cfg.last_bot_message = response.choices[0].message.content.strip()
     
     print(f"\nChatGPT's Response: {response.choices[0].message.content.strip()}\n")
+
+    print("Current history length:", len(cfg.chat_history))
+    print("Saving to:", cfg.BACKUP_JSON_FILE + "\n")
     # Process the answer
     return response.choices[0].message.content.strip()
