@@ -87,16 +87,16 @@ async def set_personality(personality_name, ctx, bot):
 
     # --------- Shadow Baldi --------- #
     elif personality_name.lower() == "shadow baldi":
-        with open("./images/pfps/SexyBaldiAI.png", "rb") as image:
+        with open("./images/pfps/ShadowTheMelon.png", "rb") as image:
             new_avatar = image.read()
         await bot.user.edit(avatar=new_avatar)
         cfg.DEFAULT_SYSTEM_MESSAGE = p.SHADOW_BALDIS_FIRST_SYSTEM_MESSAGE
         cfg.BACKUP_JSON_FILE = "backups/ShadowBaldiHistoryJsonBackup.json"
         cfg.elevenlabs_voice = "7squ7rvxEIZ2rYy7KYPP"
         cfg.elevenlabs_model = "eleven_v3"
-        cfg.ai_image_source = "SexyBaldiAI"
-        cfg.message_source = "SexyBaldiMessage"
-        cfg.join_vc_audio = "./sounds/SexyBaldiAIVoiceTest.mp3"
+        cfg.ai_image_source = "ShadowTheMelon"
+        cfg.message_source = "ShadowTheMelonMessage"
+        cfg.join_vc_audio = "./sounds/ShadowTheMelonVoiceTest.mp3"
         p.CURRENT_PERSONALITY = "shadow baldi"
     
     # If the personality name is not recognized, send an error message
