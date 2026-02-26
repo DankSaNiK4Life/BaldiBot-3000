@@ -62,6 +62,8 @@ class Config:
             `baldi`
             `sane baldi`
             `sexy baldi`
+            `shadow baldi`
+            `protectron`
     `baldi leave - Makes bot leave the voice channel`
     `baldi sounds - This makes the bot continue making random sounds in the background`
 
