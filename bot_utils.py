@@ -123,7 +123,7 @@ async def set_personality(personality_name, ctx, bot):
     # If the personality name is not recognized, send an error message
     else:
         print(f"Unknown personality: {personality_name}")
-        await ctx.send("Unknown personality! use 'baldi commands' to see the list of available personalities.")
+        if ctx != None: await ctx.send("Unknown personality! use 'baldi commands' to see the list of available personalities.")
         return
     
     # Load chat history from file if it exists
