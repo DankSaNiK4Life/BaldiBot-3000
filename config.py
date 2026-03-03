@@ -151,7 +151,7 @@ class Config:
         }
 
         try:
-            response = requests.post(Config.STREAMERBOT_WEBHOOK_URL, json=payload)
+            response = requests.post(Config.VOICE_STOPPED_WEBHOOK_URL, json=payload)
             if response.status_code == 200 or response.status_code == 201:
                 print("Message sent to Twitch successfully.")
             else:
