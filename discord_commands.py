@@ -118,21 +118,21 @@ async def on_message(message):
             og_personality = p.CURRENT_PERSONALITY # Remember what the original personality was set as
 
             if streamerbot_personality == "baldiai":
-                set_personality("baldi", ctx=None, bot=bot)
+                await set_personality("baldi", ctx=None, bot=bot)
             elif streamerbot_personality == "sanebaldi":
-                set_personality("sane baldi", ctx=None, bot=bot)
+                await set_personality("sane baldi", ctx=None, bot=bot)
             elif streamerbot_personality == "sexybaldi":
-                set_personality("sexy baldi", ctx=None, bot=bot)
+                await set_personality("sexy baldi", ctx=None, bot=bot)
             elif streamerbot_personality == "shadowbaldi":
-                set_personality("shadow baldi", ctx=None, bot=bot)
+                await set_personality("shadow baldi", ctx=None, bot=bot)
             elif streamerbot_personality == "protectron":
-                set_personality("protectron", ctx=None, bot=bot)
+                await set_personality("protectron", ctx=None, bot=bot)
 
             gpt_response = await chat_with_gpt(streamerbot_msg, streamerbot_user, message_attachments)
             cfg.send_to_twitch(gpt_response)
             print("\nBaldi's reply on Twitch: " + gpt_response + "\n")
             await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.elevenlabs_voice, cfg.elevenlabs_model)
-            set_personality(og_personality, ctx=None, bot=bot) # Change back to the original personality
+            await set_personality(og_personality, ctx=None, bot=bot) # Change back to the original personality
         elif not "speaker:" in user_message:
             streamerbot_msg = user_message.split(' ', 1)[1] 
             streamerbot_user = user_message.split(' ', 1)[0]
