@@ -41,6 +41,13 @@ def set_source_visibility(ws, scene_name, source_name, source_visible=True):
         myItemID = response.datain['sceneItemId']
         ws.call(obs_requests.SetSceneItemEnabled(sceneName=scene_name, sceneItemId=myItemID, sceneItemEnabled=source_visible))
 
+def get_source_visibility(ws, scene_name, source_name):
+    id_response = ws.call(obs_requests.GetSceneItemId(sceneName=scene_name, sourceName=source_name))
+    item_id = id_response.datain['sceneItemId']
+    status_response = ws.call(obs_requests.GetSceneItemEnabled(sceneName=scene_name, sceneItemId=item_id))
+
+    return status_response.datain['sceneItemEnabled']
+
 # This function is used to change the bot's personality (e.g. change the system message, change the avatar, change the ElevenLabs voice/model, etc.)
 async def set_personality(personality_name, ctx, bot):
     # ------- Sane Baldi ------- #

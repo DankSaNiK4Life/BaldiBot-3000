@@ -122,14 +122,19 @@ class Config:
 
     # MIGHT NEED TO MOVE THIS TO A SEPERATE FILE LATER
     # Uses Streamer.bots Webhook feature to send messages to Twitch (E.g. ChatGPT responses)
-    def send_to_twitch(reply_text):
+    def send_to_twitch(reply_text="", voice_stopped=False):
         if not Config.STREAMERBOT_WEBHOOK_URL:
             print("Streamer.bot webhook URL is not set. Cannot send message to Twitch.")
             return
 
-        payload = {
-            "gpt_response": reply_text
-        }
+        if reply_text != "":
+            payload = {
+                "gpt_response": reply_text
+            }
+        elif voice_stopped == True:
+            payload = {
+                "voice_stopped": voice_stopped
+            }
 
         try:
             response = requests.post(Config.STREAMERBOT_WEBHOOK_URL, json=payload)

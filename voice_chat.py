@@ -1,6 +1,6 @@
 import time, asyncio, discord, logging, io, speech_recognition as sr
 from config import Config as cfg
-from bot_utils import get_real_name, set_source_visibility
+from bot_utils import get_real_name, set_source_visibility, get_source_visibility
 from discord.ext import voice_recv
 from openai_chat import chat_with_gpt
 from obswebsocket import obsws, requests as obs_requests
@@ -132,7 +132,12 @@ async def gen_with_elevenlabs_remote(ws, audio_data, input_text, msg_type="norma
         # This is used to make the AI's image and audio source visible in OBS (if using OBS for audio playback)
         set_source_visibility(ws, scene_name="GLOBAL Scene", source_name=cfg.ai_image_source, source_visible=True)
         set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="RemoteAudio", source_visible=True)
-    
+
+    while get_source_visibility(ws, scene_name="GLOBAL Scene", source_name="RemoteAudio") == True:
+        await asyncio.sleep(2)
+        print("WAITING FOR VOICE TO END") 
+
+    cfg.send_to_twitch(voice_stopped=True)
     ws.disconnect() # Disconnect from OBS WebSocket after we're done controlling the sources
 
 async def gen_with_elevenlabs_streaming(input_text, voice, model, msg_type="normal", username="", bits=""):
