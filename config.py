@@ -13,6 +13,7 @@ class Config:
     ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY")
     ASSEMBLYAI_API_KEY = os.getenv("ASSEMBLYAI_API_KEY")
     STREAMERBOT_WEBHOOK_URL = os.getenv("STREAMERBOT_WEBHOOK_URL")
+    VOICE_STOPPED_WEBHOOK_URL = os.getenv("VOICE_STOPPED_WEBHOOK_URL")
     WEBSOCKET_HOST = os.getenv("WEBSOCKET_HOST")
     WEBSOCKET_PORT = os.getenv("WEBSOCKET_PORT")
     WEBSOCKET_PASSWORD = os.getenv("WEBSOCKET_PASSWORD")
@@ -122,19 +123,32 @@ class Config:
 
     # MIGHT NEED TO MOVE THIS TO A SEPERATE FILE LATER
     # Uses Streamer.bots Webhook feature to send messages to Twitch (E.g. ChatGPT responses)
-    def send_to_twitch(reply_text="", voice_stopped=False):
+    def send_to_twitch(reply_text):
         if not Config.STREAMERBOT_WEBHOOK_URL:
             print("Streamer.bot webhook URL is not set. Cannot send message to Twitch.")
             return
 
-        if reply_text != "":
-            payload = {
-                "gpt_response": reply_text
-            }
-        elif voice_stopped == True:
-            payload = {
-                "voice_stopped": voice_stopped
-            }
+        payload = {
+            "gpt_response": reply_text
+        }
+
+        try:
+            response = requests.post(Config.STREAMERBOT_WEBHOOK_URL, json=payload)
+            if response.status_code == 200 or response.status_code == 201:
+                print("Message sent to Twitch successfully.")
+            else:
+                print(f"Failed to send message to Twitch. Status code: {response.status_code}")
+        except Exception as e:
+            print(f"An error occurred while sending message to Twitch: {e}")
+
+    def send_to_streamer_bot(voice_stopped):
+        if not Config.VOICE_STOPPED_WEBHOOK_URL:
+            print("Streamer.bot webhook URL is not set. Cannot send message to Twitch.")
+            return
+
+        payload = {
+            "voice_stopped": voice_stopped
+        }
 
         try:
             response = requests.post(Config.STREAMERBOT_WEBHOOK_URL, json=payload)

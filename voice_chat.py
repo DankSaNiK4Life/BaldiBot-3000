@@ -137,7 +137,7 @@ async def gen_with_elevenlabs_remote(ws, audio_data, input_text, msg_type="norma
         await asyncio.sleep(2)
         print("WAITING FOR VOICE TO END") 
 
-    cfg.send_to_twitch(voice_stopped=True)
+    cfg.send_to_streamer_bot(voice_stopped=True)
     ws.disconnect() # Disconnect from OBS WebSocket after we're done controlling the sources
 
 async def gen_with_elevenlabs_streaming(input_text, voice, model, msg_type="normal", username="", bits=""):
