@@ -129,7 +129,7 @@ async def on_message(message):
                 await set_personality("protectron", ctx=None, bot=bot)
 
             gpt_response = await chat_with_gpt(streamerbot_msg, streamerbot_user, message_attachments)
-            cfg.send_to_twitch(gpt_response)
+            cfg.send_to_twitch(f"@{streamerbot_user} " + gpt_response)
             print("\nBaldi's reply on Twitch: " + gpt_response + "\n")
             await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.elevenlabs_voice, cfg.elevenlabs_model)
             await set_personality(og_personality, ctx=None, bot=bot) # Change back to the original personality
@@ -139,7 +139,7 @@ async def on_message(message):
             print("\nUsername: " + streamerbot_user + " " + "Message: " + streamerbot_msg + "\n")
 
             gpt_response = await chat_with_gpt(streamerbot_msg, streamerbot_user, message_attachments)
-            cfg.send_to_twitch(gpt_response)
+            cfg.send_to_twitch(f"@{streamerbot_user} " + gpt_response)
             print("\nBaldi's reply on Twitch: " + gpt_response + "\n")
             await message.reply(gpt_response)
             await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.elevenlabs_voice, cfg.elevenlabs_model)
