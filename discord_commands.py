@@ -136,6 +136,7 @@ async def on_message(message):
         elif not "speaker:" in user_message:
             streamerbot_msg = user_message.split(' ', 1)[1] 
             streamerbot_user = user_message.split(' ', 1)[0]
+            if streamerbot_user == "reece": streamerbot_user = "TheMelonCult"
             print("\nUsername: " + streamerbot_user + " " + "Message: " + streamerbot_msg + "\n")
 
             gpt_response = await chat_with_gpt(streamerbot_msg, streamerbot_user, message_attachments)
