@@ -137,7 +137,7 @@ async def gen_with_elevenlabs_remote(ws, audio_data, input_text, msg_type="norma
         await asyncio.sleep(2)
         print("WAITING FOR VOICE TO END") 
 
-    await asyncio.sleep(5) # Waits for the OBS image soure to disable before sending (To prevent two images on screen at once)
+    await asyncio.sleep(2.5) # Waits for the OBS image soure to disable before sending (To prevent two images on screen at once)
     cfg.send_to_streamer_bot(voice_stopped=True)
     ws.disconnect() # Disconnect from OBS WebSocket after we're done controlling the sources
 
