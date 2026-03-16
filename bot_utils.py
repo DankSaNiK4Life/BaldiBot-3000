@@ -119,6 +119,20 @@ async def set_personality(personality_name, ctx, bot):
         cfg.message_source = "ProtectronMessage"
         cfg.join_vc_audio = "./sounds/ProtectronVoiceTest.mp3"
         p.CURRENT_PERSONALITY = "protectron"
+
+    # --------- Grandpa Melon --------- #
+    elif personality_name.lower() == "grandpa":
+        with open("./images/pfps/GrandpaMelon.png", "rb") as image:
+            new_avatar = image.read()
+        await bot.user.edit(avatar=new_avatar)
+        cfg.DEFAULT_SYSTEM_MESSAGE = p.GRANDPA_FIRST_SYSTEM_MESSAGE
+        cfg.BACKUP_JSON_FILE = "backups/GrandpaMelonHistoryJsonBackup.json"
+        cfg.elevenlabs_voice = "MKlLqCItoCkvdhrxgtLv"
+        cfg.elevenlabs_model = "eleven_multilingual_v2"
+        cfg.ai_image_source = "GrandpaMelon"
+        cfg.message_source = "GrandpaMelonMessage"
+        cfg.join_vc_audio = "./sounds/GrandpaMelonVoiceTest.mp3"
+        p.CURRENT_PERSONALITY = "grandpa"
     
     # If the personality name is not recognized, send an error message
     else:

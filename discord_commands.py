@@ -127,6 +127,8 @@ async def on_message(message):
                 await set_personality("shadow baldi", ctx=None, bot=bot)
             elif streamerbot_personality == "protectron":
                 await set_personality("protectron", ctx=None, bot=bot)
+            elif streamerbot_personality == "grandpa":
+                await set_personality("grandpa", ctx=None, bot=bot)
 
             gpt_response = await chat_with_gpt(streamerbot_msg, streamerbot_user, message_attachments)
             cfg.send_to_twitch(f"@{streamerbot_user} " + gpt_response)
