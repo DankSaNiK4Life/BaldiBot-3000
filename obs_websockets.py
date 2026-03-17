@@ -11,7 +11,7 @@ class Obs_Websockets:
         ws.disconnect() # Disconnect from OBS WebSocket after we're done controlling the sources
 
     def on_visibility_change(message):
-        data = message.getDatain()
+        data = message.data['eventData']
         source_name = data.get('sourceName')
         is_visible = data.get('sceneItemEnabled')
 
