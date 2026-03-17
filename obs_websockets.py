@@ -1,5 +1,6 @@
-from obswebsocket import obsws, requests as obs_requests
+from obswebsocket import obsws, requests as obs_requests, events
 from config import Config as cfg
+from bot_utils import get_source_visibility, set_source_visibility
 
 ws = obsws(cfg.WEBSOCKET_HOST, cfg.WEBSOCKET_PORT, cfg.WEBSOCKET_PASSWORD, timeout=1)
 
@@ -9,3 +10,17 @@ class Obs_Websockets:
 
     def disconnect_ws():
         ws.disconnect() # Disconnect from OBS WebSocket after we're done controlling the sources
+
+    def on_visibility_change(message):
+        source_name = message.getItemName()
+        is_visible = message.getSceneItemEnabled()
+
+        if source_name == "ListeningIcon":
+            if is_visible:
+                print(">>> ListeningIcon is ON. Starting listening code...")
+                # CALL YOUR LISTENING FUNCTION HERE
+            else:
+                print(">>> ListeningIcon is OFF. Stopping/Ignoring.")
+    ws.register(on_visibility_change, events.SceneItemEnableStateChanged)
+
+    while get_source_visibility(scene_name="GLOBAL Scene", source_name="ListeningIcon") == True:

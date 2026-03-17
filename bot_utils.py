@@ -4,6 +4,7 @@ from obswebsocket import requests as obs_requests
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from personalities import Personalities as p
+from obs_websockets import ws
 
 def encode_image_from_url(url):
     response = requests.get(url)
@@ -36,12 +37,12 @@ async def get_audio():
 def start_http_server():
     uvicorn.run(app, host="0.0.0.0", port=10000, log_level="warning")
 
-def set_source_visibility(ws, scene_name, source_name, source_visible=True):
+def set_source_visibility(scene_name, source_name, source_visible=True):
         response = ws.call(obs_requests.GetSceneItemId(sceneName=scene_name, sourceName=source_name))
         myItemID = response.datain['sceneItemId']
         ws.call(obs_requests.SetSceneItemEnabled(sceneName=scene_name, sceneItemId=myItemID, sceneItemEnabled=source_visible))
 
-def get_source_visibility(ws, scene_name, source_name):
+def get_source_visibility(scene_name, source_name):
     id_response = ws.call(obs_requests.GetSceneItemId(sceneName=scene_name, sourceName=source_name))
     item_id = id_response.datain['sceneItemId']
     status_response = ws.call(obs_requests.GetSceneItemEnabled(sceneName=scene_name, sceneItemId=item_id))

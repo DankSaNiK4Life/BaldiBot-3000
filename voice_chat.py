@@ -98,8 +98,8 @@ async def gen_with_elevenlabs_remote(audio_data, input_text, msg_type="normal", 
         ws.call(obs_requests.SetInputSettings(inputName="ChatterTTSMelonUsername", inputSettings = {'text': username}))
         ws.call(obs_requests.SetInputSettings(inputName="ChatterTTSMelonBits", inputSettings = {'text': bits + " bits"}))
 
-        set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="ChatterTTSMelon", source_visible=True)
-        set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="RemoteAudio", source_visible=True)
+        set_source_visibility(scene_name="GLOBAL Scene", source_name="ChatterTTSMelon", source_visible=True)
+        set_source_visibility(scene_name="GLOBAL Scene", source_name="RemoteAudio", source_visible=True)
 
     # This is used if someone is the speaker on Twitch
     elif msg_type == "speaker":
@@ -115,8 +115,8 @@ async def gen_with_elevenlabs_remote(audio_data, input_text, msg_type="normal", 
         # This is used to set the username text in OBS (if using OBS for audio playback)
         ws.call(obs_requests.SetInputSettings(inputName="SpeakerMelonUsername", inputSettings = {'text': username}))
 
-        set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="SpeakerMelon", source_visible=True)
-        set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="RemoteAudio", source_visible=True)
+        set_source_visibility(scene_name="GLOBAL Scene", source_name="SpeakerMelon", source_visible=True)
+        set_source_visibility(scene_name="GLOBAL Scene", source_name="RemoteAudio", source_visible=True)
 
     # This is used for normal messages (e.g. from the user speaking)
     elif msg_type == "normal":
@@ -131,10 +131,10 @@ async def gen_with_elevenlabs_remote(audio_data, input_text, msg_type="normal", 
         )
 
         # This is used to make the AI's image and audio source visible in OBS (if using OBS for audio playback)
-        set_source_visibility(ws, scene_name="GLOBAL Scene", source_name=cfg.ai_image_source, source_visible=True)
-        set_source_visibility(ws, scene_name="GLOBAL Scene", source_name="RemoteAudio", source_visible=True)
+        set_source_visibility(scene_name="GLOBAL Scene", source_name=cfg.ai_image_source, source_visible=True)
+        set_source_visibility(scene_name="GLOBAL Scene", source_name="RemoteAudio", source_visible=True)
 
-    while get_source_visibility(ws, scene_name="GLOBAL Scene", source_name="RemoteAudio") == True:
+    while get_source_visibility(scene_name="GLOBAL Scene", source_name="RemoteAudio") == True:
         await asyncio.sleep(2)
         print("WAITING FOR VOICE TO END") 
 
