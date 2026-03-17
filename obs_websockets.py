@@ -12,9 +12,10 @@ class Obs_Websockets:
 
     def on_visibility_change(message):
         print(message)
-        data = message.data['eventData']
-        source_name = data.get('sourceName')
-        is_visible = data.get('sceneItemEnabled')
+        source_id = message.datain['sceneItemId']
+        scene_name = message.datain['sceneName']
+        source_name = ws.call(obs_requests.GetSceneItemSource(sceneName=scene_name, sceneItemId=source_id))
+        is_visible = message.datain['sceneItemEnabled']
 
         if source_name == "ListeningIcon":
             if is_visible:
