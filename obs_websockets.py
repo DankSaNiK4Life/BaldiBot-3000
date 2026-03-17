@@ -13,15 +13,11 @@ class Obs_Websockets:
     def on_visibility_change(message):
         print(message)
         source_id = message.getSceneItemId()
-        print(source_id)
-        scene_name = message.getSceneName()
-        print(scene_name)
         is_visible = message.getSceneItemEnabled()
-        print(is_visible)
-        source_name = ws.call(obs_requests.GetSceneItemSource(sceneName=scene_name, sceneItemId=source_id))
-        
+        #scene_name = message.getSceneName()
+        #source_name = ws.call(obs_requests.GetSceneItemSource(sceneName=scene_name, sceneItemId=source_id))
 
-        if source_name == "ListeningIcon":
+        if source_id == "82": # ListeningIcon
             if is_visible:
                 print(">>> ListeningIcon is ON. Starting listening code...")
                 # CALL YOUR LISTENING FUNCTION HERE
