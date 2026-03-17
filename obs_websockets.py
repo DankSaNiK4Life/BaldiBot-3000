@@ -17,7 +17,7 @@ class Obs_Websockets:
         #scene_name = message.getSceneName()
         #source_name = ws.call(obs_requests.GetSceneItemSource(sceneName=scene_name, sceneItemId=source_id))
 
-        if source_id == "82": # ListeningIcon
+        if source_id == 82: # ListeningIcon
             if is_visible:
                 print(">>> ListeningIcon is ON. Starting listening code...")
                 # CALL YOUR LISTENING FUNCTION HERE
