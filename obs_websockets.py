@@ -1,6 +1,5 @@
 from obswebsocket import obsws, requests as obs_requests, events
 from config import Config as cfg
-from bot_utils import get_source_visibility, set_source_visibility
 
 ws = obsws(cfg.WEBSOCKET_HOST, cfg.WEBSOCKET_PORT, cfg.WEBSOCKET_PASSWORD, timeout=1)
 
