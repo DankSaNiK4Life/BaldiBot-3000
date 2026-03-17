@@ -22,5 +22,3 @@ class Obs_Websockets:
             else:
                 print(">>> ListeningIcon is OFF. Stopping/Ignoring.")
     ws.register(on_visibility_change, events.SceneItemEnableStateChanged)
-
-    while get_source_visibility(scene_name="GLOBAL Scene", source_name="ListeningIcon") == True:
