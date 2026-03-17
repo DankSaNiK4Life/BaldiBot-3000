@@ -6,6 +6,7 @@ from bot_utils import get_real_name, get_random_sound, start_http_server, set_pe
 from voice_chat import start_listening, DummySink
 from openai_chat import chat_with_gpt
 from personalities import Personalities as p
+from obs_websockets import Obs_Websockets as obs_ws
 
 # ----------------------- INITIALIZATION ----------------------- #
 
@@ -480,8 +481,13 @@ async def obs(ctx):
     # Extract the obs value (remove the command prefix)
     obs_value = ctx.message.content[len(ctx.prefix) + len("set obs"):].strip()
 
-    if obs_value == "on": cfg.obs_enabled = True
-    elif obs_value == "off": cfg.obs_enabled = False
+    if obs_value == "on": 
+        cfg.obs_enabled = True
+        obs_ws.connect_ws()
+        
+    elif obs_value == "off": 
+        cfg.obs_enabled = False
+        obs_ws.disconnect_ws()
     else:
         await ctx.reply("Can only be set to 'on' or 'off'")
         return

@@ -4,6 +4,7 @@ from bot_utils import get_real_name, set_source_visibility, get_source_visibilit
 from discord.ext import voice_recv
 from openai_chat import chat_with_gpt
 from obswebsocket import obsws, requests as obs_requests
+from obs_websockets import ws
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', handlers=[logging.StreamHandler()])
@@ -67,7 +68,7 @@ async def process_response(final_result, ctx):
     print(f"\nBaldi says: {openai_answer}\n")
     await text_to_audio_played(openai_answer, ctx)  # Play response in voice chat
 
-async def gen_with_elevenlabs_remote(ws, audio_data, input_text, msg_type="normal", username="", bits=""):
+async def gen_with_elevenlabs_remote(audio_data, input_text, msg_type="normal", username="", bits=""):
     # SAVE the audio to a web-accessible folder on your server
     with open("./sounds/temp_audio.mp3", "wb") as f:
         f.write(audio_data)
@@ -139,7 +140,6 @@ async def gen_with_elevenlabs_remote(ws, audio_data, input_text, msg_type="norma
 
     await asyncio.sleep(2.5) # Waits for the OBS image soure to disable before sending (To prevent two images on screen at once)
     cfg.send_to_streamer_bot(voice_stopped=True)
-    ws.disconnect() # Disconnect from OBS WebSocket after we're done controlling the sources
 
 async def gen_with_elevenlabs_streaming(input_text, voice, model, msg_type="normal", username="", bits=""):
     if (cfg.voice_client is None or not cfg.voice_client.is_connected()) and not cfg.obs_enabled:
@@ -166,11 +166,7 @@ async def gen_with_elevenlabs_streaming(input_text, voice, model, msg_type="norm
         cfg.voice_client.play(discord.FFmpegPCMAudio(audio_buffer, pipe=True, executable="ffmpeg"))
     
     if cfg.obs_enabled:
-        # Connect to OBS WebSocket to control source visibility and streaming (if using OBS for audio playback)
-        ws = obsws(cfg.WEBSOCKET_HOST, cfg.WEBSOCKET_PORT, cfg.WEBSOCKET_PASSWORD, timeout=1)
-        ws.connect() 
-
-        await gen_with_elevenlabs_remote(ws, audio_data, input_text, msg_type, username, bits) # Stream the audio to OBS (if using OBS for audio playback)
+        await gen_with_elevenlabs_remote(audio_data, input_text, msg_type, username, bits) # Stream the audio to OBS (if using OBS for audio playback)
     
     #if ws.ws.connected:
     #    print("Connected to OBS WebSocket")
