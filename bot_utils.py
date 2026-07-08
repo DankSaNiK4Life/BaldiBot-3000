@@ -153,7 +153,7 @@ async def set_personality(personality_name, ctx, bot):
         print("--- JSON file does not exist. Will create a new one on the first message ---")
 
     # After changing the personality, we need to update the system message in the chat history so the AI can use the new personality immediately
-    cfg.chat_history.remove(cfg.chat_history[0])
+    if getattr(cfg, 'chat_history', None): cfg.chat_history.pop(0)
     cfg.chat_history.insert(0, cfg.DEFAULT_SYSTEM_MESSAGE)
 
     print("--- Personality has been set ---")
