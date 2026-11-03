@@ -5,6 +5,7 @@ from discord.ext import voice_recv
 from openai_chat import chat_with_gpt
 from obswebsocket import obsws, requests as obs_requests
 from obs_websockets import ws
+from fishaudio import AsyncFishAudio
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', handlers=[logging.StreamHandler()])
@@ -181,15 +182,60 @@ async def gen_with_elevenlabs_streaming(input_text, voice, model, msg_type="norm
 
     await play_random_sounds() # Start random sounds again after the bot has finished speaking
 
+async def gen_with_fishaudio_streaming(input_text, voice, model, msg_type="normal", username="", bits=""):
+    if (cfg.voice_client is None or not cfg.voice_client.is_connected()) and not cfg.obs_enabled:
+         print("Bot is not in a voice channel & OBS is not on. Cannot generate with Elevenlabs")
+         return
+    
+    from discord_commands import play_random_sounds, stop_random_sounds
+    await stop_random_sounds() # Stop random sounds while the bot is speaking
+
+    # Fish Audio expects an iterable of text chunks
+    async def text_chunks():
+        yield input_text
+
+    # Start WebSocket TTS streaming
+    audio_stream = await cfg.fishaudio_client.tts.stream_websocket(
+        text_chunks(),
+        reference_id="9a9cf47702da476aa4629e2506d4a857",
+        model="s2.1-pro-free",
+        latency="balanced",
+        format="mp3"
+    )
+
+    # Collect audio chunks into bytes
+    audio_chunks = []
+
+    async for chunk in audio_stream:
+        if chunk:
+            audio_chunks.append(chunk)
+
+    audio_data = b"".join(audio_chunks)
+
+    # Create BytesIO buffer
+    audio_buffer = io.BytesIO(audio_data)
+
+    if cfg.voice_client is not None and cfg.voice_client.is_connected(): 
+        cfg.voice_client.play(discord.FFmpegPCMAudio(audio_buffer, pipe=True, executable="ffmpeg"))
+    
+    if cfg.obs_enabled:
+        await gen_with_elevenlabs_remote(audio_data, input_text, msg_type, username, bits) # Stream the audio to OBS (if using OBS for audio playback)
+    
+    print("\n--- FishAudio Streaming Generated & Played Audio. ---")
+    print(f"Voice used: {voice}")
+    print(f"Model used: {model}\n")
+
+    await play_random_sounds() # Start random sounds again after the bot has finished speaking
+
+
 # Text_to_audio_played function - This is used to generate a mp3 file from openai's reply and then play it
 async def text_to_audio_played(input_text, ctx):
 
     if cfg.voice_client.is_playing(): return
 
     response_start_time = time.time()
-    await gen_with_elevenlabs_streaming(input_text)
-    #await gen_with_sovits(input_text, ctx)
-    #await gen_with_sovits_streaming(input_text, ctx)
+    #await gen_with_elevenlabs_streaming(input_text)
+    await gen_with_fishaudio_streaming(input_text)
 
     response_time = time.time() - response_start_time
     print(f"\nResponse time: {int(response_time // 60):02d}:{int(response_time % 60):02d}.{int((response_time % 1) * 1000):03d}\n")

@@ -1,6 +1,7 @@
 import os, requests
 from elevenlabs.client import ElevenLabs
 from personalities import Personalities as p
+from fishaudio.client import AsyncFishAudio
 
 class Config:
     
@@ -12,6 +13,7 @@ class Config:
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY")
     ASSEMBLYAI_API_KEY = os.getenv("ASSEMBLYAI_API_KEY")
+    FISH_API_KEY= os.getenv("FISH_API_KEY")
     STREAMERBOT_WEBHOOK_URL = os.getenv("STREAMERBOT_WEBHOOK_URL")
     VOICE_STOPPED_WEBHOOK_URL = os.getenv("VOICE_STOPPED_WEBHOOK_URL")
     WEBSOCKET_HOST = os.getenv("WEBSOCKET_HOST")
@@ -116,7 +118,8 @@ class Config:
     join_vc_audio = "./sounds/BaldiAIVoiceTest.mp3" # This plays test audio when bot joins a vc to stop the sound cutting off at the start of first vc messages
     obs_enabled = False                             # This controls if the bot should use obs websockets or not
 
-    eleven_client = ElevenLabs(api_key=ELEVENLABS_API_KEY) # This assigns the ElevenLabs client
+    eleven_client = ElevenLabs(api_key=ELEVENLABS_API_KEY)  # This assigns the ElevenLabs client
+    fishaudio_client = AsyncFishAudio(api_key=FISH_API_KEY) # This assigns the FishAudio client
 
     is_waiting_for_silence = False  # This is used to call the waiting_for_silence function in the cb function
     is_listen_to_all = False        # This is used to determine if the bot should listen to everyone or just someone specific

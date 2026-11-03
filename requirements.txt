@@ -16,3 +16,4 @@ obs_websocket_py
 fastapi 
 uvicorn
 davey
+fish-audio-sdk[utils]
