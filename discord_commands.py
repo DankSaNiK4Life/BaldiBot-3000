@@ -381,6 +381,7 @@ async def say(ctx):
     if generate_audio:
         print(f"\nSaying: {text}\n") 
         #await voice_chat.gen_with_elevenlabs_streaming(text, cfg.elevenlabs_voice, cfg.elevenlabs_model)
+        await voice_chat.gen_with_fishaudio_streaming(text)
 
 
 # Sing command - plays one of the mp3 files in "./songs"
