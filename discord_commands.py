@@ -101,7 +101,7 @@ async def on_message(message):
             print("\nUsername: " + streamerbot_user + " " + "SPEAKER MESSAGE: " + streamerbot_msg + "\n")
             await message.reply("Received speaker message!")
                 
-            await voice_chat.gen_with_elevenlabs_streaming(streamerbot_msg, "h1IssowVS2h4nL5ZbkkK", "eleven_v3", msg_type="speaker", username=streamerbot_user)
+            #await voice_chat.gen_with_elevenlabs_streaming(streamerbot_msg, "h1IssowVS2h4nL5ZbkkK", "eleven_v3", msg_type="speaker", username=streamerbot_user)
         elif "cheer:" in user_message:
             streamerbot_msg = user_message.split(' ', 3)[3] 
             streamerbot_user = user_message.split(' ', 3)[1] 
@@ -109,7 +109,7 @@ async def on_message(message):
             print("\nUsername: " + streamerbot_user + " " + "CHEER MESSAGE: " + streamerbot_msg + "\n")
             await message.reply("Cheer detected!")
 
-            await voice_chat.gen_with_elevenlabs_streaming(streamerbot_msg, "h1IssowVS2h4nL5ZbkkK", "eleven_v3", msg_type="cheer", username=streamerbot_user, bits=streamerbot_bits)
+            #await voice_chat.gen_with_elevenlabs_streaming(streamerbot_msg, "h1IssowVS2h4nL5ZbkkK", "eleven_v3", msg_type="cheer", username=streamerbot_user, bits=streamerbot_bits)
         elif "question:" in user_message:
             streamerbot_msg = user_message.split(' ', 3)[3] 
             streamerbot_user = user_message.split(' ', 3)[2]
@@ -134,7 +134,7 @@ async def on_message(message):
             gpt_response = await chat_with_gpt(streamerbot_msg, streamerbot_user, message_attachments)
             cfg.send_to_twitch(f"@{streamerbot_user} " + gpt_response)
             print("\nBaldi's reply on Twitch: " + gpt_response + "\n")
-            await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.elevenlabs_voice, cfg.elevenlabs_model)
+            #await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.elevenlabs_voice, cfg.elevenlabs_model)
             await set_personality(og_personality, ctx=None, bot=bot) # Change back to the original personality
         elif not "speaker:" in user_message:
             streamerbot_msg = user_message.split(' ', 1)[1] 
@@ -146,14 +146,14 @@ async def on_message(message):
             cfg.send_to_twitch(f"@{streamerbot_user} " + gpt_response)
             print("\nBaldi's reply on Twitch: " + gpt_response + "\n")
             await message.reply(gpt_response)
-            await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.elevenlabs_voice, cfg.elevenlabs_model)
+            #await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.elevenlabs_voice, cfg.elevenlabs_model)
             
     # Check if the bot is mentioned
     elif  bot.user in message.mentions: 
         print("\nUsername: " + username + " " + "Real name: " + real_name + " " "Message: " + user_message + "\n")
 
         gpt_response = await chat_with_gpt(user_message, real_name, message_attachments)
-        await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.elevenlabs_voice, cfg.elevenlabs_model)
+        #await voice_chat.gen_with_elevenlabs_streaming(gpt_response, cfg.elevenlabs_voice, cfg.elevenlabs_model)
         
         await message.reply(gpt_response)
 
@@ -380,7 +380,7 @@ async def say(ctx):
         
     if generate_audio:
         print(f"\nSaying: {text}\n") 
-        await voice_chat.gen_with_elevenlabs_streaming(text, cfg.elevenlabs_voice, cfg.elevenlabs_model)
+        #await voice_chat.gen_with_elevenlabs_streaming(text, cfg.elevenlabs_voice, cfg.elevenlabs_model)
 
 
 # Sing command - plays one of the mp3 files in "./songs"
