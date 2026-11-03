@@ -141,6 +141,21 @@ async def set_personality(personality_name, ctx, bot):
         cfg.join_vc_audio = "./sounds/GrandpaMelonVoiceTest.mp3"
         p.CURRENT_PERSONALITY = "grandpa"
     
+    # --------- Verity --------- #
+    elif personality_name.lower() == "verity":
+        with open("./images/pfps/Verity.png", "rb") as image:
+            new_avatar = image.read()
+        await bot.user.edit(avatar=new_avatar)
+        cfg.DEFAULT_SYSTEM_MESSAGE = p.VERITY_FIRST_SYSTEM_MESSAGE
+        cfg.BACKUP_JSON_FILE = "backups/VerityHistoryJsonBackup.json"
+        #cfg.elevenlabs_voice = "MKlLqCItoCkvdhrxgtLv"
+        #cfg.elevenlabs_model = "eleven_multilingual_v2"
+        cfg.fishaudio_voice = "8d21b053e2804e2a890e1cf62f267b6f"
+        cfg.ai_image_source = "Verity"
+        cfg.message_source = "VerityMessage"
+        cfg.join_vc_audio = "./sounds/GrandpaMelonVoiceTest.mp3"
+        p.CURRENT_PERSONALITY = "verity"
+
     # If the personality name is not recognized, send an error message
     else:
         print(f"Unknown personality: {personality_name}")
