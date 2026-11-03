@@ -113,6 +113,8 @@ class Config:
     random_sounds_enabled = True                    # This is used to enable or disable the random sounds feature
     elevenlabs_voice = "CGOMbDUL52Yuc7oiDIm8"       # Replace this with the name of whatever voice you have created on Elevenlabs (Baldi The Melon Head V2 - vrkuGKtvocSoZvsaAeUM, Baldi The Melon Head - CGOMbDUL52Yuc7oiDIm8)
     elevenlabs_model = "eleven_multilingual_v2"     # This is the ElevenLabs model we will be using for TTS
+    fishaudio_voice = "8d21b053e2804e2a890e1cf62f267b6f" # This is the FishAudio voice we will be using for TTS
+    fishaudio_model = "s2.1-pro-free"                    # This is the FishAudio model we will be using for TTS
     ai_image_source = "BaldiAI"                     # This is the name of the image source in OBS that will show the AI's image (if using OBS for audio playback)
     message_source = "AIBaldiMessage"               # This is the name of the text source in OBS that will show the user's message (if using OBS for audio playback)
     join_vc_audio = "./sounds/BaldiAIVoiceTest.mp3" # This plays test audio when bot joins a vc to stop the sound cutting off at the start of first vc messages

@@ -69,7 +69,7 @@ async def process_response(final_result, ctx):
     print(f"\nBaldi says: {openai_answer}\n")
     await text_to_audio_played(openai_answer, ctx)  # Play response in voice chat
 
-async def gen_with_elevenlabs_remote(audio_data, input_text, msg_type="normal", username="", bits=""):
+async def play_remote_audio(audio_data, input_text, msg_type="normal", username="", bits=""):
     # SAVE the audio to a web-accessible folder on your server
     with open("./sounds/temp_audio.mp3", "wb") as f:
         f.write(audio_data)
@@ -168,11 +168,11 @@ async def gen_with_elevenlabs_streaming(input_text, voice, model, msg_type="norm
         cfg.voice_client.play(discord.FFmpegPCMAudio(audio_buffer, pipe=True, executable="ffmpeg"))
     
     if cfg.obs_enabled:
-        await gen_with_elevenlabs_remote(audio_data, input_text, msg_type, username, bits) # Stream the audio to OBS (if using OBS for audio playback)
+        await play_remote_audio(audio_data, input_text, msg_type, username, bits) # Stream the audio to OBS (if using OBS for audio playback)
     
     #if ws.ws.connected:
     #    print("Connected to OBS WebSocket")
-    #    await gen_with_elevenlabs_remote(ws, audio_data, input_text) # Stream the audio to OBS (if using OBS for audio playback)
+    #    await play_remote_audio(ws, audio_data, input_text) # Stream the audio to OBS (if using OBS for audio playback)
     #else:
     #    print("Failed to connect to OBS WebSocket. Playing audio directly in Discord.")
     #    cfg.voice_client.play(discord.FFmpegPCMAudio(audio_buffer, pipe=True, executable="ffmpeg"))
@@ -183,6 +183,7 @@ async def gen_with_elevenlabs_streaming(input_text, voice, model, msg_type="norm
 
     await play_random_sounds() # Start random sounds again after the bot has finished speaking
 """
+
 async def gen_with_fishaudio_streaming(input_text, voice, model, msg_type="normal", username="", bits=""):
     if (cfg.voice_client is None or not cfg.voice_client.is_connected()) and not cfg.obs_enabled:
          print("Bot is not in a voice channel & OBS is not on. Cannot generate with Elevenlabs")
@@ -220,7 +221,7 @@ async def gen_with_fishaudio_streaming(input_text, voice, model, msg_type="norma
         cfg.voice_client.play(discord.FFmpegPCMAudio(audio_buffer, pipe=True, executable="ffmpeg"))
     
     if cfg.obs_enabled:
-        await gen_with_elevenlabs_remote(audio_data, input_text, msg_type, username, bits) # Stream the audio to OBS (if using OBS for audio playback)
+        await play_remote_audio(audio_data, input_text, msg_type, username, bits) # Stream the audio to OBS (if using OBS for audio playback)
     
     print("\n--- FishAudio Streaming Generated & Played Audio. ---")
     print(f"Voice used: {voice}")
