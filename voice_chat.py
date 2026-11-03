@@ -199,7 +199,7 @@ async def gen_with_fishaudio_streaming(input_text, voice, model, msg_type="norma
     # Start WebSocket TTS streaming
     audio_stream = cfg.fishaudio_client.tts.stream_websocket(
         text_chunks(),
-        reference_id="8d21b053e2804e2a890e1cf62f267b6f",
+        reference_id=voice,
         model="s2.1-pro-free",
         latency="balanced",
         format="mp3"
